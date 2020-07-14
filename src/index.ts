@@ -5,6 +5,31 @@ const app = express()
 
 app
   .use(bodyParser.json())
+  .post('/hubspot', (req, res, next) => {
+    console.log(req.body)
+    res.json({
+      botMessage: 'j hjbhbhbhjbhjbhjb',
+      nextModuleNickname: 'PromptForCollectUserInput',
+      responseExpected: true,
+      images: [
+        {
+          src:
+            'https://i1.wp.com/crackedkey.org/wp-content/uploads/2019/08/UBot-Studio-Cracked.jpg?resize=592%2C229&ssl=1'
+        }
+      ],
+      quickReplies: [
+        // A list of quick reply options selected by the visitor
+        {
+          value: 'YES',
+          label: 'YES'
+        },
+        {
+          value: 'NO',
+          label: 'NO'
+        }
+      ]
+    })
+  })
   .post('/webhooks', async (req, res, next) => {
     res.sendStatus(200)
     const {
@@ -21,7 +46,7 @@ app
         {
           message_type: 'comment',
           type: 'admin',
-          body: '<button>hello guys </button>',
+          body: `<div class="composer-suggestions-container intercom-1ttta75 e1y2xk9v0"><div class="intercom-xbrvud e1y2xk9v2"><div height="0" class="intercom-18khmar e1y2xk9v3"><div class="intercom-36wep1 e1y2xk9v5"><div class="intercom-1baulvz e1y2xk9v6"><button value="" class=" intercom-15uc034 e1y2xk9v4" style="max-width: 304px; display: none;">I'm good, thanks</button></div></div><button value="[object Object]" class=" intercom-15uc034 e1y2xk9v4" style="transform: translate3d(-131px, 0px, 0px); max-width: 304px; opacity: 1; visibility: hidden;">Yes, let's chat</button><button value="[object Object]" class=" intercom-15uc034 e1y2xk9v4" style="transform: translate3d(0px, 0px, 0px); max-width: 304px; opacity: 1; visibility: hidden;">I'm good, thanks</button></div></div></div>`,
           intercom_user_id: req.body.data.item.user.id,
           admin_id: admins[0]?.id
         },
