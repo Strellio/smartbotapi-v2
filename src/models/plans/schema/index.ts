@@ -3,18 +3,22 @@ import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema(
   {
-    email: {
+    name: {
       type: String,
       required: true,
       unique: true,
-      sparse: true,
       index: true
     },
-    full_name: {
-      type: String
+    display_name: {
+      type: String,
+      required: true
     },
-    country: {
-      type: String
+    price: {
+      type: Number
+    },
+    features: {
+      type: Object,
+      default: {}
     }
   },
   {
