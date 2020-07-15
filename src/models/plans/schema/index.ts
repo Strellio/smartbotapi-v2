@@ -14,7 +14,9 @@ const schema = new mongoose.Schema(
       required: true
     },
     price: {
-      type: Number
+      type: Number,
+      required: true,
+      min:0
     },
     features: {
       type: Object,
