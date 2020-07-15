@@ -2,26 +2,27 @@
 
 import mongoose from 'mongoose'
 
-export enum AGENT_TYPE {
-  PERSON = 'person',
-  BOT = 'bot'
-}
-
 export default new mongoose.Schema(
   {
-    external_id: {
-      required: true,
-      type: String
-    },
     name: {
       type: String,
       required: true
     },
     profile_url: String,
+    is_online: {
+      type: Boolean,
+      default: false
+    },
     is_person: {
       type: Boolean,
       required: true
-    }
+    },
+    linked_chat_agents: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'chat_platforms.agents'
+      }
+    ]
   },
   {
     timestamps: {
