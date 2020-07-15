@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 
 export default new mongoose.Schema(
   {
-    id: {
+    external_id: {
       type: String,
       required: true
     },

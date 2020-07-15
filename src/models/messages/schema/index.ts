@@ -51,8 +51,8 @@ export default new mongoose.Schema(
         return that === MESSAGE_TYPE.TEXT
       }
     },
-    is_message_from_admin: Boolean,
-    is_message_sent: Boolean
+    is_message_from_admin: { type: Boolean, default: false },
+    is_message_sent: { type: Boolean, default: false }
   },
   {
     timestamps: {
