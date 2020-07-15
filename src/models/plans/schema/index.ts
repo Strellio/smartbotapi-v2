@@ -17,6 +17,7 @@ const schema = new mongoose.Schema(
       type: Number,
       required:true,
       min:0
+
     },
     features: {
       type: Object,
