@@ -2,7 +2,7 @@
 import mongoose from 'mongoose'
 import schema from './schema'
 import BaseModel from '../common/base-model'
-const Model = mongoose.model('plans', schema)
-const PlanModel = BaseModel(Model)
+const Model = mongoose.model('products', schema)
+const ProductModel = BaseModel(Model)
 
-export default PlanModel
+export default ProductModel
