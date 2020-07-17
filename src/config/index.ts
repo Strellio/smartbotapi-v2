@@ -40,6 +40,16 @@ const config = convict({
     env: 'DASHBOARD_URL',
     format: 'url',
     default: process.env.DASHBOARD_URL
+  },
+  FB_CLIENT_SECRET: {
+    doc: 'Facebook secret',
+    env: 'FB_CLIENT_SECRET',
+    default: process.env.FB_CLIENT_SECRET
+  },
+  FB_CLIENT_ID: {
+    doc: 'Facebook client',
+    env: 'FB_CLIENT_ID',
+    default: process.env.FB_CLIENT_ID
   }
 })
 
