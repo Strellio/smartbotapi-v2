@@ -9,7 +9,7 @@ const create = (Model: MongooseModel<any>) => async ({
   populate
 }: {
   data: any
-  populate: any
+  populate?: any
 }) => {
   const item = new Model(data)
   let doc = await item.save()
@@ -49,7 +49,7 @@ const updateOne = (Model: MongooseModel<any>) => async ({
   query: object
   populate?: any
   options?: object
-}) => {
+}): Promise<any> => {
   const opts = Object.assign({}, { new: true, runValidators: true }, options)
 
   let doc = Model.findOneAndUpdate(query, update, opts).populate(populate)
@@ -63,7 +63,7 @@ const upsert = (Model: MongooseModel<any>) => async ({
 }: {
   query: object
   update: object
-  populate: any
+  populate?: any
 }) => {
   const doc = await findOne(Model)({ query })
   if (doc) return updateOne(Model)({ query, update })
@@ -80,9 +80,9 @@ const fetch = (Model: MongooseModel<any>) => ({
 }: {
   populate: string | Array<any>
   query: object
-  lean: boolean
-  batchSize: number
-  timeout: boolean
+  lean?: boolean
+  batchSize?: number
+  timeout?: boolean
   mapper?: any
 }): QueryCursor<any> => {
   const doc = Model.find(query)
@@ -142,7 +142,14 @@ const BaseModel = (Model: MongooseModel<any>) => {
      */
     paginate: paginate(Model),
     upsert: upsert(Model),
-    updateOne: updateOne(Model)
+    updateOne: updateOne(Model),
+    ensureExists: async (query: object = required('query')) => {
+      const doc = await findOne(Model)({ query })
+      if (!doc) {
+        throw new Error('query does not exist')
+      }
+      return doc
+    }
   }
 }
 

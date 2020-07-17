@@ -40,7 +40,6 @@ const schema = new mongoose.Schema(
     },
     plan: {
       type: mongoose.Types.ObjectId,
-      required: true,
       ref: 'plans'
     },
     business_name: String,

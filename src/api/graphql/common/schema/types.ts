@@ -6,15 +6,17 @@ import {
   CHAT_PLATFORMS,
   CHAT_TYPE
 } from '../../../../models/chat-platforms/schema'
+import { STATUS_MAP } from '../../../../models/common'
 
 const platforms = Object.values(PLATFORM_MAP)
 const chatPlatforms = Object.values(CHAT_PLATFORMS)
 const chatTypes = Object.values(CHAT_TYPE)
+const statusTypes = Object.values(STATUS_MAP)
+
 export default gql`
   # Scalars
   enum StatusEnum {
-    A
-    D
+    ${statusTypes}
   }
 
   enum PlatformEnum {
