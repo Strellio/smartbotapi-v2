@@ -3,6 +3,7 @@
 import { required } from '../../../lib/utils'
 import { Model as MongooseModel, QueryCursor } from 'mongoose'
 import paginate from './paginate'
+import errors from '../../../lib/errors'
 
 const create = (Model: MongooseModel<any>) => async ({
   data = required('data'),
@@ -143,10 +144,17 @@ const BaseModel = (Model: MongooseModel<any>) => {
     paginate: paginate(Model),
     upsert: upsert(Model),
     updateOne: updateOne(Model),
-    ensureExists: async (query: object = required('query')) => {
-      const doc = await findOne(Model)({ query })
+    ensureExists: async (
+      query: object = required('query'),
+      populate?: string,
+      lean?: boolean
+    ) => {
+      const doc = await findOne(Model)({ query, populate, lean })
       if (!doc) {
-        throw new Error('query does not exist')
+        throw errors.throwError({
+          name: errors.ResourceDoesNotExists,
+          message: `resource does not exist ${Object.keys(query).join(',')}`
+        })
       }
       return doc
     }
