@@ -22,22 +22,18 @@ const create = (Model: MongooseModel<any>) => async ({
 
 const findOne = (Model: MongooseModel<any>) => async ({
   query = required('query'),
-  populate,
-  lean
+  populate
 }: {
   populate?: string | Array<any>
   query: object
-  lean?: boolean
 }) => {
   const doc = Model.findOne(query)
   if (populate) {
     doc.populate(populate)
   }
-  if (lean) {
-    doc.lean(lean)
-  }
+
   const item = await doc.exec()
-  return item.toObject()
+  return item ? item.toObject() : item
 }
 
 const updateOne = (Model: MongooseModel<any>) => async ({
@@ -149,7 +145,7 @@ const BaseModel = (Model: MongooseModel<any>) => {
       populate?: string,
       lean?: boolean
     ) => {
-      const doc = await findOne(Model)({ query, populate, lean })
+      const doc = await findOne(Model)({ query, populate })
       if (!doc) {
         throw errors.throwError({
           name: errors.ResourceDoesNotExists,

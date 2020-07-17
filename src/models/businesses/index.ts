@@ -13,10 +13,12 @@ const getByEmail = (email: string = required('email')): Promise<Business> =>
   })
 
 const getByExternalPlatformDomain = (
-  domain: string = required('domain')
+  externalPlatformDomain: string = required('domain')
 ): Promise<Business> =>
-  BusinessBaseModel.ensureExists({
-    domain
+  BusinessBaseModel.get({
+    query: {
+      'shop.external_platform_domain': externalPlatformDomain
+    }
   })
 
 const getById = (email: string = required('email')): Promise<Business> =>

@@ -1,6 +1,6 @@
 'use strict'
 import { curry } from 'lodash/fp'
-import joi from 'joi'
+import joiLib, { Schema } from 'joi'
 import errors from './errors'
 
 export const required = (data: any) => {
@@ -10,10 +10,10 @@ export const required = (data: any) => {
   })
 }
 
-export const validate = curry((schema: any, data: any) => {
-  const { error } = joi.validate(data, schema)
+export const validate = curry((schema: Schema, data: any) => {
+  const { error, value } = schema.validate(data, { stripUnknown: true })
   if (error) {
     throw error
   }
-  return data
+  return value
 })

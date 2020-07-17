@@ -1,3 +1,6 @@
 'use strict'
+import * as db from '../lib/db'
 
-import './server'
+db.connect().then(() => {
+  require('./server')
+})

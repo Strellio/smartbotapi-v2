@@ -1,7 +1,7 @@
 'use strict'
 import joi from 'joi'
 import { STATUS_MAP } from '../../../models/common'
-const status_map = Object.values(STATUS_MAP)
+const status_map = Object.values(STATUS_MAP).join(',')
 
 export default joi.object({
   id: joi.string(),

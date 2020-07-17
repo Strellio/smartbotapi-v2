@@ -22,7 +22,7 @@ export default new mongoose.Schema({
   external_refresh_token: {
     type: String
   },
-  currency: String,
+  money_format: String,
   external_platform_secret: {
     type: String,
     required: function () {
