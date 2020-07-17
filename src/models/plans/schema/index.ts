@@ -15,9 +15,13 @@ const schema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      required:true,
-      min:0
-
+      required: true,
+      min: 0,
+      default: 0
+    },
+    free_trial_days: {
+      type: Number,
+      default: 0
     },
     features: {
       type: Object,

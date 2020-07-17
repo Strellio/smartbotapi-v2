@@ -3,6 +3,7 @@ import { CHAT_PLATFORMS, CHAT_TYPE } from '../chat-platforms/schema'
 import { STATUS_MAP } from '../common'
 
 export type Business = {
+  id: string
   domain: string
   email: string
   status: string
@@ -49,6 +50,8 @@ export type Shop = {
   external_updated_at: Date
   external_platform_domain: string
   currency: String
+  external_access_token: string
+  charge_id: string
 }
 
 export type Agent = {

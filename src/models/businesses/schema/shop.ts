@@ -36,5 +36,6 @@ export default new mongoose.Schema({
       const that = this as any
       return that.platform === PLATFORM_MAP.WORDPRESS
     }
-  }
+  },
+  charge_id: String
 })

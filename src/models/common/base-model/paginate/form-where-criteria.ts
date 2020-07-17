@@ -22,7 +22,7 @@ export default function formWhereCriteria ({
   if (!after) return
   const { afterSortKey, after: cursor } = formCursorAndSortValue(after)
 
-  const mainSortKey = sortCriteria?.keys().next().value
+  const mainSortKey = sortCriteria.keys().next().value
   const hasNonIdSortAndAfterSortKey = afterSortKey && mainSortKey !== '_id'
 
   const sortKey = hasNonIdSortAndAfterSortKey ? mainSortKey : '_id'
