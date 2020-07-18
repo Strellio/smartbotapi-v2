@@ -1,4 +1,4 @@
 'use strict'
 import types from './types'
-
-export default [types]
+import mutations from './mutations'
+export default [types, mutations]

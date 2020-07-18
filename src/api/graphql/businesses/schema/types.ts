@@ -63,4 +63,9 @@ export default gql`
     type: ChatTypeEnum!
     status: StatusEnum!
   }
+
+  # inputs
+  input AddIntercomInput {
+    business_id: ObjectID!
+  }
 `

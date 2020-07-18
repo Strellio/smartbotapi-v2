@@ -4,6 +4,7 @@ import schema from './schema'
 import BaseModel from '../common/base-model'
 import { required } from '../../lib/utils'
 import { ChatPlatform } from '../businesses/types'
+import { omitBy, isNil } from 'lodash'
 const Model = mongoose.model('chat_platforms', schema)
 const chatPlatformModel = BaseModel(Model)
 
@@ -13,14 +14,19 @@ const getById = (id: string = required('id')): Promise<ChatPlatform> =>
   })
 
 const getByExternalIdAndPlatform = (
-  id: string = required('id'),
-  platform: string = required('platform')
+  platform: string = required('platform'),
+  businessId: string = required('businessId'),
+  externalId?: string
 ) =>
   chatPlatformModel.get({
-    query: {
-      platform,
-      _id: id
-    }
+    query: omitBy(
+      {
+        platform,
+        external_id: externalId,
+        business: businessId
+      },
+      isNil
+    )
   })
 
 const updateById = (
@@ -34,9 +40,15 @@ const updateById = (
     update
   })
 
+const create = (data = required('data')) =>
+  chatPlatformModel.create({
+    data
+  })
+
 export default function () {
   return {
     ...chatPlatformModel,
+    create,
     updateById,
     getById,
     getByExternalIdAndPlatform

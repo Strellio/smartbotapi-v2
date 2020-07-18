@@ -39,6 +39,8 @@ app
         Authorization: `Bearer dG9rOjgwNWVkMTU2XzJhZDdfNGQ2ZF85ZDZkXzEwNDg1OGQ2Mjc5YzoxOjA=`
       }
     })
+    console.log(admins)
+
     console.log(req.body.data.item.conversation_message)
     await axios
       .post(
@@ -48,7 +50,7 @@ app
           type: 'admin',
           body: 'ok tanks are you ok?',
           intercom_user_id: req.body.data.item.user.id,
-          admin_id: admins[0]?.id
+          admin_id: admins[0].id
         },
         {
           headers: {

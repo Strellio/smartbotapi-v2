@@ -1,6 +1,6 @@
 'use strict'
 import request from '../request'
-import { required, createHmac, parseString } from '../utils'
+import { required, createHmac } from '../utils'
 import config from '../../config'
 const FB_LONG_ACCESS_TOKEN_URL = `https://graph.facebook.com/oauth/access_token`
 
@@ -20,14 +20,14 @@ function generateLongAccessToken (
 ) {
   return request
     .get(FB_LONG_ACCESS_TOKEN_URL, {
-      searchParams: {
+      params: {
         grant_type: 'fb_exchange_token',
         client_id: config.get('FB_CLIENT_ID'),
         client_secret: config.get('FB_CLIENT_SECRET'),
         fb_exchange_token: accessToken
       }
     })
-    .then(({ body }) => parseString(body))
+    .then(response => response.data)
 }
 
 /***
@@ -41,12 +41,12 @@ function generatePageAccessToken ({
   accessToken: string
 }) {
   return request(formPageUrl(pageId), {
-    searchParams: {
+    params: {
       fields: 'access_token',
       access_token: accessToken,
       appsecret_proof: generateAppProf(accessToken)
     }
-  }).then(({ body }) => parseString(body))
+  }).then(response => response.data)
 }
 
 export { generateLongAccessToken, generatePageAccessToken }

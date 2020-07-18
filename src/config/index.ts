@@ -50,6 +50,16 @@ const config = convict({
     doc: 'Facebook client',
     env: 'FB_CLIENT_ID',
     default: process.env.FB_CLIENT_ID
+  },
+  INTERCOM_CLIENT_ID: {
+    doc: 'Intercom client',
+    env: 'INTERCOM_CLIENT_ID',
+    default: process.env.INTERCOM_CLIENT_ID
+  },
+  INTERCOM_CLIENT_SECRET: {
+    doc: 'Intercom Secret',
+    env: 'INTERCOM_CLIENT_SECRET',
+    default: process.env.INTERCOM_CLIENT_SECRET
   }
 })
 

@@ -30,7 +30,6 @@ export default new mongoose.Schema({
   },
   external_id: {
     type: String,
-    required: true,
     unique: true,
     sparse: true,
     index: true

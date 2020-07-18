@@ -1,13 +1,9 @@
 'use strict'
-import got from 'got'
+import axios from 'axios'
+import axiosRetry from 'axios-retry'
 
-const maxRetryAfterInSeconds = 5000
 const retryLimit = 3
 
-export default got.extend({
-  retry: {
-    limit: retryLimit,
-    maxRetryAfter: maxRetryAfterInSeconds,
-    methods: ['POST']
-  }
-})
+axiosRetry(axios, { retries: retryLimit })
+
+export default axios

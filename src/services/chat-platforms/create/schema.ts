@@ -1,5 +1,5 @@
 'use strict'
-import joi from 'joi'
+import { objectId, joi } from '../../../lib/joi'
 import {
   CHAT_PLATFORMS,
   CHAT_TYPE
@@ -9,10 +9,7 @@ const chatPlatforms = Object.values(CHAT_PLATFORMS)
 const chatTypes = Object.values(CHAT_TYPE)
 
 export default joi.object({
-  business_id: joi
-    .string()
-    .guid()
-    .required(),
+  business_id: objectId().required(),
   platform: joi
     .string()
     .valid(...chatPlatforms)
@@ -34,7 +31,7 @@ export default joi.object({
     then: joi.required()
   }),
   external_access_token: joi.string(),
-  external_id: joi.string().required(),
+  external_id: joi.string(),
   type: joi
     .string()
     .valid(...chatTypes)
