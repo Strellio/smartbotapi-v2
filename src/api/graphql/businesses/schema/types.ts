@@ -60,7 +60,12 @@ export default gql`
     external_user_name: String
     external_access_token: String
     external_refresh_token: String
-    type: ChatTypes!
+    type: ChatTypeEnum!
     status: StatusEnum!
+  }
+
+  # inputs
+  input AddIntercomInput {
+    business_id: ObjectID!
   }
 `

@@ -16,27 +16,27 @@ export default gql`
     updated_at: DateTime!
   }
 
-
-  type ProductAnalytic{
+  type ProductAnalytic {
     product: [Product!]
     id: ID!
-    geo_location: geoLocationSchema
-    device:String
+    geo_location: GeoLocationSchema
+    device: String
     user_agent: JSONObject
   }
 
-  type geoLocationSchema  {
-  range: Array
-  country: String
-  region: String
-  eu: String
-  timezone: String
-  city: String
-  ll: {
-    type: String,
-    coordinates: []
-  },
-  metro: Number
-  area: Number
-}
+  type LL {
+    coordinates: [String]
+  }
+
+  type GeoLocationSchema {
+    range: [String!]
+    country: String
+    region: String
+    eu: String
+    timezone: String
+    city: String
+    ll: LL
+    metro: Int
+    area: Int
+  }
 `

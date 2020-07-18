@@ -11,7 +11,7 @@ import usersSchema from './users/schema'
 
 // Business
 import businessesSchema from './businesses/schema'
-
+import businessResolvers from './businesses/resolvers'
 //Plan
 
 import planSchema from './plans/schema'
@@ -50,4 +50,4 @@ export const schemas = [
   ...customerSchema,
   ...productAndAnalytics
 ] as any
-export const resolvers = [scalarResolvers]
+export const resolvers = [scalarResolvers, ...businessResolvers]

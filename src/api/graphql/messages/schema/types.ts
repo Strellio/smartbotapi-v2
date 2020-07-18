@@ -8,8 +8,8 @@ const message_type = Object.values(MESSAGE_TYPE)
 export default gql`
 enum MessageTypeEnum{
   ${message_type}
-
 }
+
   type Message {
     customer: Customer!
     agent: Agent

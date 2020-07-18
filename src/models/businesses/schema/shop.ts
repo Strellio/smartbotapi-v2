@@ -22,7 +22,7 @@ export default new mongoose.Schema({
   external_refresh_token: {
     type: String
   },
-  currency: String,
+  money_format: String,
   external_platform_secret: {
     type: String,
     required: function () {
@@ -36,5 +36,6 @@ export default new mongoose.Schema({
       const that = this as any
       return that.platform === PLATFORM_MAP.WORDPRESS
     }
-  }
+  },
+  charge_id: String
 })

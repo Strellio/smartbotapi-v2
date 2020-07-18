@@ -28,7 +28,12 @@ export default new mongoose.Schema({
     required: true,
     enum: Object.values(CHAT_PLATFORMS)
   },
-  external_id: String,
+  external_id: {
+    type: String,
+    unique: true,
+    sparse: true,
+    index: true
+  },
   agents: {
     type: [agent],
     default: []
