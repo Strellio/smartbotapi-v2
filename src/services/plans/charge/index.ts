@@ -26,7 +26,9 @@ export default async function charge (
     )?.days,
     return_url: `${config.get('APP_URL')}/plans/charge?business_id=${
       business.id
-    }&plan_id=${plan.id}`
+    }&plan_id=${plan.id}`,
+    test: config.get('NODE_ENV') !== 'production'
   })
+
   return recurringCharge.confirmation_url
 }

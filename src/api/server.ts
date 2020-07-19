@@ -1,6 +1,7 @@
 'use strict'
 
 import express from 'express'
+import { formatError } from 'apollo-errors'
 import { ApolloServer } from 'apollo-server-express'
 import bodyParser from 'body-parser'
 import { schemas, resolvers } from './graphql'
@@ -14,7 +15,11 @@ const reqLogger = require('express-pino-logger')({
 
 const app = express()
 
-const graphqlServer = new ApolloServer({ typeDefs: schemas, resolvers })
+const graphqlServer = new ApolloServer({
+  typeDefs: schemas,
+  resolvers,
+  formatError: formatError as any
+})
 
 app
   .use(bodyParser.json())

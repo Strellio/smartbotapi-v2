@@ -15,9 +15,9 @@ import businessResolvers from './businesses/resolvers'
 //Plan
 
 import planSchema from './plans/schema'
+import planResolver from './plans/resolvers'
 
 //message
-
 import messageSchema from './messages/schema'
 
 //customers
@@ -50,4 +50,8 @@ export const schemas = [
   ...customerSchema,
   ...productAndAnalytics
 ] as any
-export const resolvers = [scalarResolvers, ...businessResolvers]
+export const resolvers = [
+  scalarResolvers,
+  ...businessResolvers,
+  ...planResolver
+]
