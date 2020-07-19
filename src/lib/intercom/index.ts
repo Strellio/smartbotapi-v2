@@ -42,7 +42,7 @@ export default function intercomLib () {
               Authorization: `Bearer ${accessToken}`
             }
           })
-          .then(response => response.data)
+          .then(response => response.data.admins)
     }
   }
 }

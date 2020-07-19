@@ -1,4 +1,5 @@
 'use strict'
 import mutations from './mutations'
+import queries from './queries'
 
-export default [mutations]
+export default [mutations, queries]

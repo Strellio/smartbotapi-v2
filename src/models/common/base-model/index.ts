@@ -49,8 +49,10 @@ const updateOne = (Model: MongooseModel<any>) => async ({
 }): Promise<any> => {
   const opts = Object.assign({}, { new: true, runValidators: true }, options)
 
-  let doc = Model.findOneAndUpdate(query, update, opts).populate(populate)
-  return doc.lean().exec()
+  let doc = await Model.findOneAndUpdate(query, update, opts)
+    .populate(populate)
+    .exec()
+  return doc?.toObject()
 }
 
 const upsert = (Model: MongooseModel<any>) => async ({
@@ -70,14 +72,12 @@ const upsert = (Model: MongooseModel<any>) => async ({
 const fetch = (Model: MongooseModel<any>) => ({
   query = required('query'),
   populate,
-  lean,
   batchSize,
   timeout = true,
   mapper
 }: {
-  populate: string | Array<any>
+  populate?: string | Array<any>
   query: object
-  lean?: boolean
   batchSize?: number
   timeout?: boolean
   mapper?: any

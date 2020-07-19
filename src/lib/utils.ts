@@ -15,7 +15,10 @@ export const required = (data: any) => {
 export const validate = curry((schema: Schema, data: any) => {
   const { error, value } = schema.validate(data, { stripUnknown: true })
   if (error) {
-    throw error
+    throw errors.throwError({
+      name: errors.ValidationError,
+      message: error.message
+    })
   }
   return value
 })

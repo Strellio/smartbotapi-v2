@@ -11,6 +11,9 @@ export default new mongoose.Schema(
   {
     external_id: {
       required: true,
+      unique: true,
+      index: true,
+      sparse: true,
       type: String
     },
     name: {
