@@ -1,11 +1,11 @@
 'use strict'
 
-import conversationService from '../../../../services/conversation'
-
+import conversationService from '../../../../services/conversations'
+import H from 'highland'
 export default {
   Query: {
-    getConversation: async ({ input }: any) => {
-      return conversationService().getCustomerConversation(input)
+    listConversations: async (parent: any, { input }: any) => {
+      return conversationService().listByBusiness(input)
     }
   }
 }

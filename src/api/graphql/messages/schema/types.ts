@@ -23,12 +23,14 @@ enum MessageTypeEnum{
     is_message_sent:Boolean!
   }
 
+  type ListMessages{
+    data: [Message!]
+    count: Int!
+  }
+
   #Input
- input GetConversationInput{
-   customer_id:String!
-   business_id:String!
- }
- input GetConversationsInput{
-   business_id:String!
+ input ListConversationsInput{
+  business_id:ObjectID!
+   customer_id:String
  }
 `

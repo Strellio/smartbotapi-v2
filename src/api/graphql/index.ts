@@ -19,7 +19,7 @@ import planResolver from './plans/resolvers'
 
 //message
 import messageSchema from './messages/schema'
-
+import messageResolver from './messages/resolvers'
 //customers
 
 import customerSchema from './customers/schema'
@@ -53,5 +53,6 @@ export const schemas = [
 export const resolvers = [
   scalarResolvers,
   ...businessResolvers,
-  ...planResolver
+  ...planResolver,
+  ...messageResolver
 ]

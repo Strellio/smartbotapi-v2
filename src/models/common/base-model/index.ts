@@ -1,11 +1,11 @@
 'use strict'
 
 import { required } from '../../../lib/utils'
-import { Model as MongooseModel, QueryCursor } from 'mongoose'
+import { Model as MongooseModel, QueryCursor, Document } from 'mongoose'
 import paginate from './paginate'
 import errors from '../../../lib/errors'
 
-const create = (Model: MongooseModel<any>) => async ({
+const create = (Model: MongooseModel<Document>) => async ({
   data = required('data'),
   populate
 }: {
@@ -20,7 +20,7 @@ const create = (Model: MongooseModel<any>) => async ({
   return doc.toObject()
 }
 
-const findOne = (Model: MongooseModel<any>) => async ({
+const findOne = (Model: MongooseModel<Document>) => async ({
   query = required('query'),
   populate
 }: {
@@ -36,7 +36,7 @@ const findOne = (Model: MongooseModel<any>) => async ({
   return item ? item.toObject() : item
 }
 
-const updateOne = (Model: MongooseModel<any>) => async ({
+const updateOne = (Model: MongooseModel<Document>) => async ({
   query = required('query'),
   update,
   populate,
@@ -55,7 +55,7 @@ const updateOne = (Model: MongooseModel<any>) => async ({
   return doc?.toObject()
 }
 
-const upsert = (Model: MongooseModel<any>) => async ({
+const upsert = (Model: MongooseModel<Document>) => async ({
   query,
   update,
   populate
@@ -69,7 +69,7 @@ const upsert = (Model: MongooseModel<any>) => async ({
   return create(Model)({ data: update, populate })
 }
 
-const fetch = (Model: MongooseModel<any>) => ({
+const fetch = (Model: MongooseModel<Document>) => ({
   query = required('query'),
   populate,
   batchSize,
@@ -89,6 +89,16 @@ const fetch = (Model: MongooseModel<any>) => ({
     .populate(populate)
     .cursor()
     .map(mapper || (doc => doc))
+}
+
+const count = (Model: MongooseModel<Document>) => async (
+  query = required('query')
+) => {
+  const count = Model.countDocuments
+    ? await Model.countDocuments(query).exec()
+    : await Model.count(query).exec()
+
+  return count
 }
 
 const deleteOne = (Model: MongooseModel<any>) => async ({
@@ -137,7 +147,7 @@ const BaseModel = (Model: MongooseModel<any>) => {
     /**
      * Paginate resources
      */
-    paginate: paginate(Model),
+    paginate: paginate(Model, count(Model)),
     upsert: upsert(Model),
     updateOne: updateOne(Model),
     ensureExists: async (
