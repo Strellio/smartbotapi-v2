@@ -56,10 +56,7 @@ export default gql`
     external_id: String
     agents: [ChatAgent!]
     external_user_id: String
-    external_user_access_token: String
     external_user_name: String
-    external_access_token: String
-    external_refresh_token: String
     type: ChatTypeEnum!
     status: StatusEnum!
   }

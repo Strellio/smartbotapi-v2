@@ -42,7 +42,7 @@ export interface PaginateParams {
 /**
  * Performs a pagination query
  */
-const paginate = (Model: MongooseModel<any>) => ({
+const paginate = (Model: MongooseModel<any>, count: Function) => async ({
   query = {},
   search,
   sort,
@@ -74,13 +74,15 @@ const paginate = (Model: MongooseModel<any>) => ({
     tempModel.where(whereCriteria)
   }
 
-  return tempModel
-    .limit(parsedLimit)
-    .lean(lean)
-    .populate(populate)
-    .sort(Array.from(sortCriteria))
-    .cursor()
-    .map(transform || (doc => doc))
+  return {
+    data: await tempModel
+      .limit(parsedLimit)
+      .lean(lean)
+      .populate(populate)
+      .sort(Array.from(sortCriteria))
+      .exec(),
+    count: (await count(query)) as number
+  }
 }
 
 export default paginate
