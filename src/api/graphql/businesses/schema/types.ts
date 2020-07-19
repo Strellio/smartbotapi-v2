@@ -63,9 +63,59 @@ export default gql`
     type: ChatTypeEnum!
     status: StatusEnum!
   }
+  type IntercomAgent {
+    id: ID!
+    email: EmailAddress!
+    type: String
+    name: String
+    away_mode_enabled: String
+    away_mode_reassign: String
+    has_inbox_seat: String
+  }
 
   # inputs
   input AddIntercomInput {
     business_id: ObjectID!
+  }
+  input ListIntercomAgents {
+    business_id: ObjectID!
+    chat_platform_id: ObjectID!
+  }
+  input CreateChatPlatformInput {
+    business_id: ObjectID!
+    platform: ObjectID!
+    external_page_name: String
+    external_user_access_token: String
+    external_user_id: String
+    external_user_name: String
+    external_access_token: String
+    external_id: String
+    type: String
+  }
+
+  input UpdateChatPlatformInput {
+    id: ID!
+    status: String
+    external_page_name: String
+    external_user_access_token: String
+    external_user_id: String
+    external_user_name: String
+    external_access_token: String
+    external_id: String
+    agents: [ChatAgentInput!]
+  }
+
+  input ChatAgentInput {
+    external_id: String!
+    name: String!
+    is_person: Boolean!
+    profile_url: String
+  }
+
+  input ListChatPlatformsInput {
+    business_id: ObjectID!
+    status: StatusEnum
+    type: ChatTypeEnum
+    platform: ChatPlatformEnum
   }
 `

@@ -21,7 +21,7 @@ const shopifyClient = ({
   accessToken: string
 }) => {
   const shopify = new Shopify({
-    shopName: shop,
+    shopName: shop.replace(/(^\w+:|^)\/\//, ''),
     accessToken,
     autoLimit: true,
     apiVersion: API_VERSION

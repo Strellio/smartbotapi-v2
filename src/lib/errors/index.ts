@@ -5,5 +5,6 @@ export default {
   throwError: customError,
   MissingFunctionParamError: 'MissingFunctionParamError',
   ResourceAlreadyExists: 'ResourceAlreadyExists',
-  ResourceDoesNotExists: 'ResourceDoesNotExists'
+  ResourceDoesNotExists: 'ResourceDoesNotExists',
+  ValidationError: 'ValidationError'
 }

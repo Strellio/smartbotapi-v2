@@ -17,40 +17,54 @@ export enum CHAT_TYPE {
   OFF_SITE = 'off_site'
 }
 
-export default new mongoose.Schema({
-  business: {
-    type: mongoose.Types.ObjectId,
-    ref: 'businesses',
-    required: true
+export default new mongoose.Schema(
+  {
+    business: {
+      type: mongoose.Types.ObjectId,
+      ref: 'businesses',
+      required: true
+    },
+    platform: {
+      type: String,
+      required: true,
+      enum: Object.values(CHAT_PLATFORMS)
+    },
+    external_id: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true
+    },
+    agents: {
+      type: [agent],
+      default: []
+    },
+    external_user_id: String,
+    external_user_access_token: String,
+    external_user_name: String,
+    external_access_token: String,
+    external_refresh_token: String,
+    type: {
+      type: String,
+      enum: Object.values(CHAT_TYPE),
+      required: true
+    },
+    status: {
+      type: String,
+      enum: Object.values(STATUS_MAP),
+      default: STATUS_MAP.DEACTIVATED
+    }
   },
-  platform: {
-    type: String,
-    required: true,
-    enum: Object.values(CHAT_PLATFORMS)
-  },
-  external_id: {
-    type: String,
-    unique: true,
-    sparse: true,
-    index: true
-  },
-  agents: {
-    type: [agent],
-    default: []
-  },
-  external_user_id: String,
-  external_user_access_token: String,
-  external_user_name: String,
-  external_access_token: String,
-  external_refresh_token: String,
-  type: {
-    type: String,
-    enum: Object.values(CHAT_TYPE),
-    required: true
-  },
-  status: {
-    type: String,
-    enum: Object.values(STATUS_MAP),
-    default: STATUS_MAP.DEACTIVATED
+  {
+    timestamps: {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
+    },
+    toJSON: {
+      virtuals: true
+    },
+    toObject: {
+      virtuals: true
+    }
   }
-})
+)

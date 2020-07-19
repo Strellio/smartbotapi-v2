@@ -45,12 +45,24 @@ const create = (data = required('data')) =>
     data
   })
 
+const listByBusinessId = (
+  businessId: string = required('businessId'),
+  payload = {}
+) =>
+  chatPlatformModel.fetch({
+    query: {
+      business: businessId,
+      ...payload
+    }
+  })
+
 export default function () {
   return {
     ...chatPlatformModel,
     create,
     updateById,
     getById,
-    getByExternalIdAndPlatform
+    getByExternalIdAndPlatform,
+    listByBusinessId
   }
 }

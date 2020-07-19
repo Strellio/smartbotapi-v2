@@ -23,10 +23,11 @@ export default new mongoose.Schema(
       type: String,
       required: true
     },
-    // business: {
-    //   ref: 'businesses',
-    //   required: true
-    // },
+    business: {
+      type: mongoose.Types.ObjectId,
+      ref: 'businesses',
+      required: true
+    },
     source: {
       type: mongoose.Types.ObjectId,
       ref: 'chat_platforms',
