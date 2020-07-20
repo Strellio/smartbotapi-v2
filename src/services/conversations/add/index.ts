@@ -3,7 +3,7 @@
 import messageModel from '../../../models/messages'
 import { validate } from '../../../lib/utils'
 import schema from './schema'
-// import sendMessageToCustomer from '../chat-platforms'
+import chatPlatformService from "../../chat-platforms"
 
 interface addMessageParams {
   customer_id: string
@@ -34,10 +34,11 @@ export default async function addMessage (params: addMessageParams) {
       source: chat_platform_id,
       ...rest
     },
-    populate: ['agent', 'source', 'business']
+    populate: ['agent', {path:"source", populate:'business'}]
   })
 
   if (params.is_message_from_admin) {
-    // sendMessageToCustomer(params)
+    chatPlatformService().sendMessageToCustomer(params)
+  
   }
 }
