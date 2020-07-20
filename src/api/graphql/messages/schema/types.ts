@@ -33,4 +33,16 @@ enum MessageTypeEnum{
   business_id:ObjectID!
    customer_id:String
  }
+
+ input AddMessageInput{
+  customer_id:ObjectID!
+  agent_id:ObjectID
+  external_id:string
+  chat_platform_id:ObjectID
+  type:MessageTypeEnum!
+  media_url:string
+  text:string
+  is_message_from_admin:Boolean
+
+ }
 `
