@@ -72,9 +72,6 @@ export default gql`
   }
 
   # inputs
-  input AddIntercomInput {
-    business_id: ObjectID!
-  }
   input ListIntercomAgents {
     chat_platform_id: ObjectID!
   }
