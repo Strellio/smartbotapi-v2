@@ -12,16 +12,17 @@ export default gql`
     external_created_at: DateTime
     external_updated_at: DateTime
     external_platform_domain: String!
-    currency: String
+    money_format: String
   }
 
   type Business {
-    domain: String!
+    id: ID!
+    domain: URL!
     email: EmailAddress!
     status: StatusEnum!
     external_id: String!
     platform: PlatformEnum!
-    plan: Plan!
+    plan: Plan
     business_name: String!
     location: Location!
     trial_expiry_date: DateTime
@@ -75,7 +76,6 @@ export default gql`
     business_id: ObjectID!
   }
   input ListIntercomAgents {
-    business_id: ObjectID!
     chat_platform_id: ObjectID!
   }
   input CreateChatPlatformInput {
@@ -110,7 +110,6 @@ export default gql`
   }
 
   input ListChatPlatformsInput {
-    business_id: ObjectID!
     status: StatusEnum
     type: ChatTypeEnum
     platform: ChatPlatformEnum

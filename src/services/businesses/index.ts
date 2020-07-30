@@ -8,6 +8,7 @@ export default function businessService () {
     create,
     updateById,
     getByEmail: businessModel().getByEmail,
-    getByExternalPlatformDomain: businessModel().getByExternalPlatformDomain
+    getByExternalPlatformDomain: businessModel().getByExternalPlatformDomain,
+    getById: businessModel().getById
   }
 }
