@@ -26,10 +26,7 @@ export default joi.object({
     is: CHAT_PLATFORMS.FACEBOOK,
     then: joi.required()
   }),
-  external_user_name: joi.string().when('platform', {
-    is: CHAT_PLATFORMS.FACEBOOK,
-    then: joi.required()
-  }),
+  external_user_name: joi.string(),
   external_access_token: joi.string(),
   external_id: joi.string(),
   type: joi

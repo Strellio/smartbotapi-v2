@@ -8,7 +8,7 @@ import { required } from '../../../../../lib/utils'
 export default async function transformData (
   payload: any = required('payload')
 ) {
-  if (payload.external_user_access_token) {
+  if (payload.external_user_access_token) { 
     const { access_token } = await generateLongAccessToken(
       payload.external_user_access_token
     )

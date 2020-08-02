@@ -76,15 +76,13 @@ export default gql`
     chat_platform_id: ObjectID!
   }
   input CreateChatPlatformInput {
-    business_id: ObjectID!
-    platform: ObjectID!
+    platform: ChatPlatformEnum!
     external_page_name: String
     external_user_access_token: String
     external_user_id: String
     external_user_name: String
-    external_access_token: String
     external_id: String
-    type: String
+    type: ChatTypeEnum
   }
 
   input UpdateChatPlatformInput {
@@ -94,7 +92,6 @@ export default gql`
     external_user_access_token: String
     external_user_id: String
     external_user_name: String
-    external_access_token: String
     external_id: String
     agents: [ChatAgentInput!]
   }

@@ -11,8 +11,11 @@ export default {
     updateChatPlatform: (parent: any, { input }: any) => {
       return chatPlatformService().update(input)
     },
-    createChatPlatform: (parent: any, { input }: any) => {
-      return chatPlatformService().create(input)
+    createChatPlatform: (parent: any, { input }: any, {business}: any) => {
+      return chatPlatformService().create({
+        ...input,
+        business_id: business.id,
+      })
     }
   }
 }

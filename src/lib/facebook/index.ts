@@ -24,7 +24,7 @@ function generateLongAccessToken (
         grant_type: 'fb_exchange_token',
         client_id: config.get('FB_CLIENT_ID'),
         client_secret: config.get('FB_CLIENT_SECRET'),
-        fb_exchange_token: accessToken
+        fb_exchange_token: accessToken 
       }
     })
     .then(response => response.data)
