@@ -5,8 +5,8 @@ import chatPlatformService from '../../../../services/chat-platforms'
 
 export default {
   Mutation: {
-    addIntercom: async (parent: any, { input }: any) => {
-      return intercomService.add(input.business_id)
+    addIntercom: async (parent: any, { input }: any, {business}:any) => {
+      return intercomService.add(business.id)
     },
     updateChatPlatform: (parent: any, { input }: any) => {
       return chatPlatformService().update(input)

@@ -152,7 +152,7 @@ const BaseModel = (Model: MongooseModel<any>) => {
     updateOne: updateOne(Model),
     ensureExists: async (
       query: object = required('query'),
-      populate?: string,
+      populate?: string[],
       lean?: boolean
     ) => {
       const doc = await findOne(Model)({ query, populate })

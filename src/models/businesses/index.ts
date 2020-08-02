@@ -24,7 +24,7 @@ const getByExternalPlatformDomain = (
 const getById = (id: string = required('id')): Promise<Business> =>
   BusinessBaseModel.ensureExists({
     _id: id
-  })
+  }, ["plans"])
 
 const updateById = (
   id: string = required('id'),

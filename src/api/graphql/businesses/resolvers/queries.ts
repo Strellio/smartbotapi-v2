@@ -3,11 +3,12 @@ import chatPlatformService from '../../../../services/chat-platforms'
 
 export default {
   Query: {
-    listIntercomAgents: (parent: any, { input }: any) => {
-      return listAgents(input.business_id, input.chat_platform_id)
+    listIntercomAgents: (parent: any, { input }: any, {business}: any) => {
+      return listAgents(business.id, input.chat_platform_id)
     },
-    listChatPlatforms: (parent: any, { input }: any) => {
-      return chatPlatformService().list(input)
-    }
+    listChatPlatforms: (parent: any, { input }: any, {business}: any) => {
+      return chatPlatformService().list({ ...input,business_id: business.id })
+    },
+    getBusiness: (parent:any, {input}: any, {business}: any)=>business
   }
 }

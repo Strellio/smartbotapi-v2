@@ -1,9 +1,28 @@
 'use strict'
-import { curry } from 'lodash/fp'
+import { curry, reject } from 'lodash/fp'
 import { Schema } from 'joi'
-import errors from './errors'
 import moment from 'moment'
 import crypto from 'crypto'
+import jsonWebToken from 'jsonwebtoken'
+import errors from './errors'
+import config from '../config'
+
+
+export const generateJwt = (payload: any, expiresIn = "10days")=>{
+  return jsonWebToken.sign(payload, config.get("APP_KEY") as any, {
+    expiresIn,
+    algorithm: "HS512"
+  })
+}
+
+export const decodeJwt = (token: string  =require("token"))=>{
+return  new Promise((resolve, reject)=>{
+  jsonWebToken.verify(token, config.get("APP_KEY") as any, (err:any, decoded:any)=>{    
+    if(err) return reject(err)
+    resolve(decoded)
+  })
+})
+}
 
 export const required = (data: any) => {
   throw errors.throwError({

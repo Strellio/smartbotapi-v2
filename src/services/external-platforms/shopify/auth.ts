@@ -1,7 +1,7 @@
 'use strict'
 
 import shopifyLib from '../../../lib/shopify'
-import { required, validate } from '../../../lib/utils'
+import { required, validate, generateJwt } from '../../../lib/utils'
 import businessService from '../../businesses'
 import schema from './schema'
 import { STATUS_MAP } from '../../../models/common'
@@ -15,20 +15,20 @@ export function install ({ shop = required('shop') }) {
 export async function callback (params: CallbackParams): Promise<string> {
   const payload = validate(schema, params)
   const { access_token }: any = await shopifyLib().shopifyToken.getAccessToken(
-    params.shop,
-    params.code
+    payload.shop,
+    payload.code
   )
   const shopDetails = await shopifyLib()
-    .shopifyClient({ shop: params.shop, accessToken: access_token })
+    .shopifyClient({ shop: payload.shop, accessToken: access_token })
     .shop.get()
 
   const createBusinessPayload = {
     status: STATUS_MAP.ACTIVE,
-    domain: `https://${shopDetails.myshopify_domain}`,
+    domain: `https://${shopDetails.domain}`,
     email: shopDetails.email,
     phone_number: shopDetails.phone,
     shop: {
-      external_platform_domain: `https://${shopDetails.domain}`,
+      external_platform_domain: `https://${shopDetails.myshopify_domain}`,
       external_created_at: shopDetails.created_at,
       money_format: shopDetails.money_format,
       external_access_token: access_token
@@ -42,14 +42,16 @@ export async function callback (params: CallbackParams): Promise<string> {
     platform: PLATFORM_MAP.SHOPIFY
   }
 
-  const business = await businessService().getByExternalPlatformDomain(
+  let business = await businessService().getByExternalPlatformDomain(
     createBusinessPayload.shop.external_platform_domain
   )
   if (!business) {
-    await businessService().create(createBusinessPayload)
+    business = await businessService().create(createBusinessPayload)
   }
 
-  return config.get('DASHBOARD_URL') as any
+  return `${config.get('DASHBOARD_URL')}/api/auth?token=${generateJwt({
+    business_id: business.id
+  })}&business_id=${business.id}` as any
 }
 
 interface CallbackParams {
