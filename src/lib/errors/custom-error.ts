@@ -12,7 +12,7 @@ export default function customError ({
   data?: object
 }) {
   const CustomError = createError(name, {
-    message
+    message 
   })
 
   return new CustomError(data)

@@ -1,5 +1,4 @@
 'use strict'
-
 import { required, decodeJwt } from "../../lib/utils";
 import customError from "../../lib/errors/custom-error";
 import businessService from '../../services/businesses'
