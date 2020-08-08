@@ -18,12 +18,16 @@ export default async function addCallback (
   try {
     const business = await businessModel().getById(businessId)
     const { access_token } = await intercomLib().geToken(code)
+    const workspace = await intercomLib().getWorkSpace(access_token)    
+
     await create({
       business_id: business.id,
       external_access_token: access_token,
       platform: CHAT_PLATFORMS.INTERCOM,
-      type: CHAT_TYPE.ON_SITE
-    })
+      type: CHAT_TYPE.ON_SITE,
+      workspace_id: workspace.app.id_code
+    }) 
+
     redirectUrl = `${config.get(
       'DASHBOARD_URL'
     )}/chat-platforms?intercom_connect_state=success`

@@ -29,6 +29,7 @@ export default joi.object({
   external_user_name: joi.string(),
   external_access_token: joi.string(),
   external_id: joi.string(),
+  workspace_id: joi.string(),
   type: joi
     .string()
     .valid(...chatTypes)

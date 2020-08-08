@@ -16,6 +16,7 @@ interface createParams {
   external_access_token?: string
   external_id?: string
   type: string
+  workspace_id?: string
 }
 
 const ensureChatPlatformNotAddedByExternalId = async (

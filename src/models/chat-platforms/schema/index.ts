@@ -44,6 +44,22 @@ export default new mongoose.Schema(
     external_user_name: String,
     external_access_token: String,
     external_refresh_token: String,
+    workspace_id: String,
+    logged_in_greetings: {
+      type: String,
+      default: "Have any questions?",
+      maxlength: 80
+    }, 
+    logged_out_greetings: {
+      type: String,
+      default: "See you soon",
+      maxlength: 80
+    },
+    theme_color: {
+      type: String,
+      default: "#0084FF"
+    },
+    settings: {},
     type: {
       type: String,
       enum: Object.values(CHAT_TYPE),
