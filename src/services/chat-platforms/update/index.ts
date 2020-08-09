@@ -27,6 +27,6 @@ interface updateParams {
 export default async function update (params: updateParams) {
   const { id, ...rest } = validate(schema, params)
   await chatPlatformModel().getById(id)
-  const transformedPayload = await chatPlatforms.transformByPlatform(rest)
+  const transformedPayload = await chatPlatforms.transformByPlatform(rest) 
   return chatPlatformModel().updateById(id, transformedPayload)
 }

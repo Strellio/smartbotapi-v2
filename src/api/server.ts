@@ -10,6 +10,8 @@ import config from '../config'
 import loggerMaker from '../lib/logger'
 import isAuthenticated from './middlewares/is-authenticated'
 
+const PORT = config.get("PORT")
+
 const reqLogger = require('express-pino-logger')({
   logger: loggerMaker()
 })
@@ -21,7 +23,7 @@ const graphqlServer = new ApolloServer({
   resolvers,
   formatError: formatError as any,
   context: ({ req })=>{
-    const token = req.headers.authorization?.split(" ")[1]
+    const token = req.headers.authorization?.split(" ")[1]    
     return isAuthenticated(token)
   }
 })
@@ -32,6 +34,6 @@ app
   .use(reqLogger)
   .use(routes())
   .use(graphqlServer.getMiddleware())
-  .listen(config.get('PORT'), () => {
-    loggerMaker().info('Server started on http://localhost:4000')
+  .listen(PORT, () => {
+    loggerMaker().info(`Server started on http://localhost:${PORT}`)
   })

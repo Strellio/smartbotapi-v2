@@ -15,6 +15,21 @@ type Admin = {
   has_inbox_seat: string
 }
 
+type WorkSpace = {
+  type: string
+  id: string
+  email: string
+  app:{
+    type: string
+    id_code: string
+    name: string
+  }
+  avatar:{
+    type: string
+    image_url: strng
+  }
+}
+
 type Auth = {
   access_token: string
   token: string
@@ -34,6 +49,13 @@ export default function intercomLib () {
           client_secret: config.get('INTERCOM_CLIENT_SECRET')
         })
         .then(response => response.data),
+    getWorkSpace: (accessToken:string =required("accessToken")): Promise<WorkSpace>=>{
+      return request.get(`${INTERCOM_BASE_URL}/me`,{
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }).then(response => response.data)
+    },
     admins: {
       get: (accessToken: string = required('accessToken')): Promise<Admin> =>
         request

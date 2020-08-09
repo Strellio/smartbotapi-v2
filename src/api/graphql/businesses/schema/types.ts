@@ -60,6 +60,9 @@ export default gql`
     external_user_name: String
     type: ChatTypeEnum!
     status: StatusEnum!
+    logged_in_greetings: String
+    logged_out_greetings: String
+    theme_color: String
   }
   type IntercomAgent {
     id: ID!
@@ -87,13 +90,17 @@ export default gql`
 
   input UpdateChatPlatformInput {
     id: ID!
-    status: String
     external_page_name: String
     external_user_access_token: String
     external_user_id: String
     external_user_name: String
     external_id: String
     agents: [ChatAgentInput!]
+    logged_in_greetings: String
+    logged_out_greetings: String
+    theme_color: String
+    type: ChatTypeEnum!
+    status: StatusEnum!
   }
 
   input ChatAgentInput {
