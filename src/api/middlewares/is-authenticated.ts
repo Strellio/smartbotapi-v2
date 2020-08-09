@@ -4,7 +4,7 @@ import customError from "../../lib/errors/custom-error";
 import businessService from '../../services/businesses'
 
 const throwAuthError = () =>customError({
-    name: "UnAuthorizedError",
+    name: "UnAuthenticatedError",
     message: "you are not authorized to access this resource"
 })
 

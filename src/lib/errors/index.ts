@@ -6,5 +6,6 @@ export default {
   MissingFunctionParamError: 'MissingFunctionParamError',
   ResourceAlreadyExists: 'ResourceAlreadyExists',
   ResourceDoesNotExists: 'ResourceDoesNotExists',
-  ValidationError: 'ValidationError'
+  ValidationError: 'ValidationError',
+  OnlyOneChatPlatformCanBeOnSiteAndActiveError: 'OnlyOneChatPlatformCanBeOnSiteAndActiveError'
 }

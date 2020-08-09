@@ -15,7 +15,7 @@ export enum CHAT_PLATFORMS {
 export enum CHAT_TYPE {
   ON_SITE = 'on_site',
   OFF_SITE = 'off_site',
-  BOTH = 'both'
+  BOTH = 'both' 
 }
 
 export default new mongoose.Schema(
@@ -60,7 +60,6 @@ export default new mongoose.Schema(
       type: String,
       default: "#0084FF"
     },
-    settings: {},
     type: {
       type: String,
       enum: Object.values(CHAT_TYPE),

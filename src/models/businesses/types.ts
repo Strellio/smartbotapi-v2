@@ -28,7 +28,7 @@ export type ChatAgent = {
 
 export type ChatPlatform = {
   id: string
-  platform: [CHAT_PLATFORMS]
+  platform: CHAT_PLATFORMS
   external_id: string
   agents: [ChatAgent]
   external_user_id: string

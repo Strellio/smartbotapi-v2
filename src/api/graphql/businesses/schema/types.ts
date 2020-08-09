@@ -95,16 +95,16 @@ export default gql`
     external_user_id: String
     external_user_name: String
     external_id: String
-    agents: [ChatAgentInput!]
+    agent: ChatAgentInput
     logged_in_greetings: String
     logged_out_greetings: String
     theme_color: String
-    type: ChatTypeEnum!
-    status: StatusEnum!
+    type: ChatTypeEnum
+    status: StatusEnum
   }
 
   input ChatAgentInput {
-    external_id: String!
+    external_id: String
     name: String!
     is_person: Boolean!
     profile_url: String

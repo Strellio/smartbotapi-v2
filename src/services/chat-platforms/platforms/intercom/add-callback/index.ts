@@ -30,11 +30,11 @@ export default async function addCallback (
 
     redirectUrl = `${config.get(
       'DASHBOARD_URL'
-    )}/chat-platforms?intercom_connect_state=success`
+    )}/chat-platforms?intercom_connection=successfully`
   } catch (error) {
     redirectUrl = `${config.get(
       'DASHBOARD_URL'
-    )}/chat-platforms?intercom_connect_state=failed&errorMessage=${error.message}`
+    )}/chat-platforms?intercom_connection=failed&errorMessage=${error.message}`
   }
   return redirectUrl
 }
