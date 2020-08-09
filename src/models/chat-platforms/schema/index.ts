@@ -14,7 +14,8 @@ export enum CHAT_PLATFORMS {
 
 export enum CHAT_TYPE {
   ON_SITE = 'on_site',
-  OFF_SITE = 'off_site'
+  OFF_SITE = 'off_site',
+  BOTH = 'both'
 }
 
 export default new mongoose.Schema(

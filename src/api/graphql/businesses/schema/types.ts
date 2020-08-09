@@ -90,7 +90,6 @@ export default gql`
 
   input UpdateChatPlatformInput {
     id: ID!
-    status: String
     external_page_name: String
     external_user_access_token: String
     external_user_id: String
@@ -100,6 +99,8 @@ export default gql`
     logged_in_greetings: String
     logged_out_greetings: String
     theme_color: String
+    type: ChatTypeEnum!
+    status: StatusEnum!
   }
 
   input ChatAgentInput {
