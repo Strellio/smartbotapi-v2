@@ -6,7 +6,7 @@ import { validate } from "../../../lib/utils";
 import * as chatPlatforms from "../platforms";
 import { STATUS_MAP } from "../../../models/common";
 import H from "highland";
-import { CHAT_TYPE ,CHAT_PLATFORMS, } from "../../../models/chat-platforms/schema";
+import { CHAT_TYPE, CHAT_PLATFORMS, } from "../../../models/chat-platforms/schema";
 import errors from "../errors";
 
 interface updateParams {
@@ -43,7 +43,7 @@ const ensureNoPlatformIsOnsiteAndActive = async (
   )
     .collect()
     .toPromise(Promise);
-    const isTypeBothOrOnSite =  type == CHAT_TYPE.BOTH|| type === CHAT_TYPE.ON_SITE
+  const isTypeBothOrOnSite = type == CHAT_TYPE.BOTH || type === CHAT_TYPE.ON_SITE
   if (list.length && list[0].platform !== platform && isTypeBothOrOnSite) {
     throw errors.onlyOneChatPlatformCanBeOnSiteAndActiveError(list[0].platform);
   }
@@ -55,14 +55,15 @@ export default async function update(params: updateParams) {
     params
   );
   const chatPlatform = await chatPlatformModel().getById(id);
-  await ensureNoPlatformIsOnsiteAndActive(rest.status as any, businessId, chatPlatform.platform, rest.type );
+
+  await ensureNoPlatformIsOnsiteAndActive(rest.status as any, businessId, chatPlatform.platform, rest.type);
   const transformedPayload = await chatPlatforms.transformByPlatform({
     payload: {
       ...rest,
       platform: chatPlatform.platform,
     },
     dbPayload: chatPlatform,
-  });  
+  });
 
   return chatPlatformModel().updateById(id, transformedPayload);
 }

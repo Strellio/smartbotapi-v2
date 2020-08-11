@@ -1,8 +1,9 @@
 "use strict";
 import * as facebook from "./facebook";
+import *  as intercom from "./intercom"
 import { required } from "../../../lib/utils";
 
-export const chatPlatforms = { facebook };
+export const chatPlatforms = { facebook, intercom };
 
 export const transformByPlatform = ({
   payload = required("payload"),

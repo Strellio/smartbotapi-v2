@@ -108,6 +108,7 @@ export default gql`
     name: String!
     is_person: Boolean!
     profile_url: String
+    action_type: ActionTypes = CREATE
   }
 
   input ListChatPlatformsInput {

@@ -19,12 +19,12 @@ type WorkSpace = {
   type: string
   id: string
   email: string
-  app:{
+  app: {
     type: string
     id_code: string
     name: string
   }
-  avatar:{
+  avatar: {
     type: string
     image_url: strng
   }
@@ -35,7 +35,7 @@ type Auth = {
   token: string
 }
 
-export default function intercomLib () {
+export default function intercomLib() {
   return {
     getAuthRedirect: (businessId: string = required('businessId')) =>
       `${INTERCOM_BASE_URL}/a/oauth/connect?client_id=${config.get(
@@ -49,15 +49,15 @@ export default function intercomLib () {
           client_secret: config.get('INTERCOM_CLIENT_SECRET')
         })
         .then(response => response.data),
-    getWorkSpace: (accessToken:string =required("accessToken")): Promise<WorkSpace>=>{
-      return request.get(`${INTERCOM_BASE_URL}/me`,{
+    getWorkSpace: (accessToken: string = required("accessToken")): Promise<WorkSpace> => {
+      return request.get(`${INTERCOM_BASE_URL}/me`, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
       }).then(response => response.data)
     },
     admins: {
-      get: (accessToken: string = required('accessToken')): Promise<Admin> =>
+      get: (accessToken: string = required('accessToken')): Promise<Array<Admin>> =>
         request
           .get(`${INTERCOM_BASE_URL}/admins`, {
             headers: {
