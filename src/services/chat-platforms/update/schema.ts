@@ -25,6 +25,7 @@ export default joi.object({
   type: joi.string().valid(...chatTypes),
   external_id: joi.string(),
   agent: joi.object({
+    id: objectId(),
     external_id: joi.string(),
     name: joi.string().required(),
     profile_url: joi.string(),

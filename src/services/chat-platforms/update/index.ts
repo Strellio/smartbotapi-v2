@@ -21,6 +21,7 @@ interface updateParams {
   type: CHAT_TYPE
   external_id?: string;
   agent?: {
+    id?:string
     external_id: string;
     name: string;
     profile_url: string;
@@ -64,6 +65,5 @@ export default async function update(params: updateParams) {
     },
     dbPayload: chatPlatform,
   });
-
   return chatPlatformModel().updateById(id, transformedPayload);
 }

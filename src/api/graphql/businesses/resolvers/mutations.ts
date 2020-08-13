@@ -8,7 +8,7 @@ export default {
     addIntercom: async (parent: any, { input }: any, {business}:any) => {
       return intercomService.add(business.id)
     },
-    updateChatPlatform: (parent: any, { input }: any,  {business}: any) => {      
+    updateChatPlatform: (parent: any, { input }: any,  {business}: any) => {  
       return chatPlatformService().update({
         ...input,
         business_id: business.id,

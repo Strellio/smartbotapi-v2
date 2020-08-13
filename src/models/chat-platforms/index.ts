@@ -5,7 +5,8 @@ import BaseModel from "../common/base-model";
 import { required } from "../../lib/utils";
 import { ChatPlatform } from "../businesses/types";
 import { omitBy, isNil } from "lodash";
-import { STATUS_MAP, convertObjectBasedOnActionType } from "../common";
+import { STATUS_MAP, convertObjectBasedOnActionType, ACTION_TYPE_TO_MONGODB_FIELD } from "../common";
+import agents from "./schema/agents";
 const Model = mongoose.model("chat_platforms", schema);
 const chatPlatformModel = BaseModel(Model);
 
@@ -34,13 +35,15 @@ const updateById = (
   id: string = required("id"),
   update: any = required("update")
 ): Promise<ChatPlatform> => {
+  const query = update.agent && update.agent.action_type===ACTION_TYPE_TO_MONGODB_FIELD.EDIT ? {
+    _id: id, "agents._id": update.agent.id
+  } : {
+      _id: id
+    }
   const newUpdate = convertObjectBasedOnActionType({ payloadFieldName: "agent", updatePayload: update, dbFieldName: "agents" })
-
   return chatPlatformModel.updateOne({
-    query: {
-      _id: id,
-    },
-    update: newUpdate,
+    query,
+    update: newUpdate
   });
 };
 

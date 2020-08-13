@@ -30,11 +30,12 @@ export const convertObjectBasedOnActionType = ({ payloadFieldName = required("fi
   delete updatePayload[payloadFieldName]
 
   const { action_type, ...rest } = objectField
+  console.log(action_type, "is action type type")
 
 
   if (action_type === ACTION_TYPE_TO_MONGODB_FIELD.EDIT) {
     return {
-      $set: convertObjectToDotNotation(payloadFieldName, rest),
+      $set: convertObjectToDotNotation(dbFieldName, rest),
       ...updatePayload
     }
   }
