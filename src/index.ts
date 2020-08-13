@@ -72,4 +72,4 @@ app
       }
     )
   })
-  .listen(4000, () => console.log('lsitenning on port http://localhost:4000'))
+  .listen(4000, () => console.log('listening on port http://localhost:4000'))

@@ -35,11 +35,12 @@ const updateById = (
   id: string = required("id"),
   update: any = required("update")
 ): Promise<ChatPlatform> => {
-  const query = update.agent && update.agent.action_type===ACTION_TYPE_TO_MONGODB_FIELD.EDIT ? {
+  const query = update.agent?.action_type === ACTION_TYPE_TO_MONGODB_FIELD.EDIT ? {
     _id: id, "agents._id": update.agent.id
   } : {
       _id: id
     }
+
   const newUpdate = convertObjectBasedOnActionType({ payloadFieldName: "agent", updatePayload: update, dbFieldName: "agents" })
   return chatPlatformModel.updateOne({
     query,
