@@ -26,7 +26,7 @@ type WorkSpace = {
   }
   avatar: {
     type: string
-    image_url: strng
+    image_url: string
   }
 }
 

@@ -7,15 +7,15 @@ import { required } from '../../lib/utils'
 const Model = mongoose.model('plans', schema)
 const PlanBaseModel = BaseModel(Model)
 
-function getAll () {
-  return PlanBaseModel.fetch({ query: {}, populate: [], lean: true })
+function getAll() {
+  return PlanBaseModel.fetch({ query: {}, populate: [] })
 }
 
-function getById (id: string = required('id')) {
+function getById(id: string = required('id')) {
   return PlanBaseModel.ensureExists({ _id: id })
 }
 
-function updateOrCreateByName (
+function updateOrCreateByName(
   name: string = required('name'),
   update: object = required('update')
 ) {

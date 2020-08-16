@@ -1,5 +1,5 @@
 'use strict'
-
+import path from 'path'
 import express from 'express'
 import { formatError } from 'apollo-errors'
 import { ApolloServer } from 'apollo-server-express'
@@ -22,13 +22,15 @@ const graphqlServer = new ApolloServer({
   typeDefs: schemas,
   resolvers,
   formatError: formatError as any,
-  context: ({ req })=>{
-    const token = req.headers.authorization?.split(" ")[1]    
+  context: ({ req }) => {
+    const token = req.headers.authorization?.split(" ")[1]
     return isAuthenticated(token)
   }
 })
 
+
 app
+  .use('/static', express.static(path.join(__dirname, "../public")))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }))
   .use(reqLogger)

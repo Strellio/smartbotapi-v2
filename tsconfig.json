@@ -9,7 +9,7 @@
     "inlineSources": true,
     "outDir": "dist",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "declaration": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
