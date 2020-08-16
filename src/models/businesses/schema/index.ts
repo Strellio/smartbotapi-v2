@@ -65,4 +65,12 @@ const schema = new mongoose.Schema(
   }
 )
 
+
+schema.virtual("chat_platforms",{
+  ref: "chat_platforms",
+  localField: '_id', 
+  foreignField: 'business',
+  options: { sort: { created_at: -1 } }
+})
+
 export default schema

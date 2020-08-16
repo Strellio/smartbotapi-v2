@@ -6,5 +6,6 @@ export default gql`
     listIntercomAgents(input: ListIntercomAgents!): [IntercomAgent!]
     listChatPlatforms(input: ListChatPlatformsInput): [ChatPlatform!]
     getBusiness: Business!
+    getWidgetSettings: ChatPlatform
   }
 `

@@ -7,6 +7,8 @@ import { Business } from './types'
 const Model = mongoose.model('businesses', schema)
 const BusinessBaseModel = BaseModel(Model)
 
+const POPULATE = ["plans", "chat_platforms"]
+
 const getByEmail = (email: string = required('email')): Promise<Business> =>
   BusinessBaseModel.ensureExists({
     email
@@ -18,13 +20,14 @@ const getByExternalPlatformDomain = (
   BusinessBaseModel.get({
     query: {
       'shop.external_platform_domain': externalPlatformDomain
-    }
+    },
+    populate:POPULATE
   })
 
 const getById = (id: string = required('id')): Promise<Business> =>
   BusinessBaseModel.ensureExists({
     _id: id
-  }, ["plans"])
+  }, POPULATE) 
 
 const updateById = (
   id: string = required('id'),
