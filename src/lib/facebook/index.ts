@@ -2,7 +2,10 @@
 import request from "../request";
 import { required, createHmac } from "../utils";
 import config from "../../config";
+import { omitBy } from "lodash/fp";
+import { isNil } from "highland";
 const FB_LONG_ACCESS_TOKEN_URL = `https://graph.facebook.com/oauth/access_token`;
+const MESSENGER_PROFILE_BASE_URL = 'https://graph.facebook.com/v8.0/me/messenger_profile'
 
 const formPageOrPersonaUrl = (pageId: string) =>
   `https://graph.facebook.com/${pageId}`;
@@ -93,7 +96,21 @@ const deletePersona = ({
     },
   });
 
+const updateMessengerProfile = ({
+  pageAccessToken = required("pageAccessToken"),
+  whitelistedDomains
+}: {
+  pageAccessToken: string;
+  whitelistedDomains?: Array<String>
+}) => request.post(MESSENGER_PROFILE_BASE_URL, omitBy(isNil, { whitelisted_domains: whitelistedDomains }), {
+  params: {
+    access_token: pageAccessToken,
+    appsecret_proof: generateAppProf(pageAccessToken),
+  }
+})
+
 export {
+  updateMessengerProfile,
   generateLongAccessToken,
   generatePageAccessToken,
   deletePersona,

@@ -66,10 +66,15 @@ const config = convict({
     env: 'INTERCOM_CLIENT_SECRET',
     default: process.env.INTERCOM_CLIENT_SECRET
   },
-  APP_KEY:{
+  APP_KEY: {
     doc: 'Application Encryption key',
     env: 'APP_KEY',
     default: process.env.APP_KEY
+  },
+  WIDGET_URL: {
+    doc: "WIDGET_URL ",
+    env: "WIDGET_URL",
+    default: process.env.WIDGET_URL
   }
 })
 

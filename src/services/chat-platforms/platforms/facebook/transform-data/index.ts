@@ -4,6 +4,7 @@ import {
   generatePageAccessToken,
   deletePersona,
   createPersona,
+  updateMessengerProfile,
 } from "../../../../../lib/facebook";
 import { required } from "../../../../../lib/utils";
 import { ChatPlatform } from "../../../../../models/businesses/types";
@@ -38,6 +39,10 @@ export default async function transformData({
       pageId: payload.external_id,
       accessToken: payload.external_user_access_token,
     });
+    await updateMessengerProfile({
+      pageAccessToken: pageResponse.access_token,
+      whitelistedDomains: payload.whitelistedDomains
+    })
     payload.external_access_token = pageResponse.access_token;
   }
 

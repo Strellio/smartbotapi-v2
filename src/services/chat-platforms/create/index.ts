@@ -5,7 +5,8 @@ import schema from "./schema";
 import * as chatPlatforms from "../platforms";
 import chatPlatformModel from "../../../models/chat-platforms";
 import errors from "../../../lib/errors";
-import AgentModel from "../../../models/agents";
+import { compact } from "lodash";
+import config from "../../../config";
 
 interface createParams {
   business_id: string;
@@ -48,7 +49,10 @@ export default async function create(params: createParams) {
   );
 
   const transformedPayload = await chatPlatforms.transformByPlatform({
-    payload,
+    payload: {
+      ...payload,
+      whitelistedDomains: compact([business.domain, business.shop.external_platform_domain, config.get("WIDGET_URL")])
+    }
   });
 
   return chatPlatformModel().create({
