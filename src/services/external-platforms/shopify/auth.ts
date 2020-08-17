@@ -8,8 +8,13 @@ import { STATUS_MAP } from '../../../models/common'
 import config from '../../../config'
 import { PLATFORM_MAP } from '../../../models/businesses/schema/enums'
 
+
 export function install ({ shop = required('shop') }) {
   return shopifyLib().shopifyToken.generateAuthUrl(shop)
+}
+
+const getWidgetCode =(businessId: string)=>{
+  return `${config.get("APP_URL")}?token=${generateJwt({business_id: businessId}, "1year")}`
 }
 
 export async function callback (params: CallbackParams): Promise<string> {
@@ -18,9 +23,9 @@ export async function callback (params: CallbackParams): Promise<string> {
     payload.shop,
     payload.code
   )
-  const shopDetails = await shopifyLib()
-    .shopifyClient({ shop: payload.shop, accessToken: access_token })
-    .shop.get()
+  const shopifyClient = shopifyLib().shopifyClient({ shop: payload.shop, accessToken: access_token })
+  const shopDetails = await  shopifyClient.shop.get()
+
 
   const createBusinessPayload = {
     status: STATUS_MAP.ACTIVE,
@@ -47,6 +52,15 @@ export async function callback (params: CallbackParams): Promise<string> {
   )
   if (!business) {
     business = await businessService().create(createBusinessPayload)
+    console.log(getWidgetCode(business.id));
+    
+    await shopifyClient.scriptTag.create({
+      src: getWidgetCode(business.id),
+      event: "onload"
+    }).catch(err=>{
+      console.log(err.message);
+      
+    })
   }
 
   return `${config.get('DASHBOARD_URL')}/api/auth?token=${generateJwt({

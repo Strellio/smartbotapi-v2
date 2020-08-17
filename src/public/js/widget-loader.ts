@@ -51,10 +51,8 @@ window.onload = function () {
         token: getParameter(location.href, "token"),
         business_id: getParameter(location.href, "business_id")
     }, getParams("js/widget-loader"))
-
     const jsSrc = `${WIDGET_URL}/smartbot-widget.min.js`
     const cssSrc = `${WIDGET_URL}/smartbot-widget.min.css`
-
     addJsScriptToHeader(jsSrc)
     addCssScriptToHeader(cssSrc)
 }
