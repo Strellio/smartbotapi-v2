@@ -5,7 +5,8 @@ import {
   shopifyAuthCallback,
   shopifyAuthInstall,
   intercomAuthCallback,
-  activePlatformCharge
+  activePlatformCharge,
+  insertSeeds
 } from './actions'
 
 export default function router () {
@@ -14,4 +15,5 @@ export default function router () {
     .get('/shopify/callback', shopifyAuthCallback)
     .get('/plans/charge', activePlatformCharge)
     .get('/intercom/callback', intercomAuthCallback)
+    .get('/seeds', insertSeeds)
 }

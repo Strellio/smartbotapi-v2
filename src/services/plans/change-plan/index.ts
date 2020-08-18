@@ -14,6 +14,7 @@ export default async function changePlan ({
 }) {
   await businessModel().ensureExists({ _id: business_id })
   await planModel().getById(plan_id)
+  console.log("plan id is ", plan_id)
   const upgrade = {
     plan: plan_id,
     'shop.charge_id': charge_id,

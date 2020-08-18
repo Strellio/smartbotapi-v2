@@ -24,6 +24,7 @@ const graphqlServer = new ApolloServer({
   formatError: formatError as any,
   context: ({ req }) => {
     const token = req.headers.authorization?.split(" ")[1]
+    console.log(token)
     return isAuthenticated(token)
   }
 })

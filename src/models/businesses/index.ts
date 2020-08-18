@@ -7,7 +7,7 @@ import { Business } from './types'
 const Model = mongoose.model('businesses', schema)
 const BusinessBaseModel = BaseModel(Model)
 
-const POPULATE = ["plans", "chat_platforms"]
+const POPULATE = ["plan", "chat_platforms"]
 
 const getByEmail = (email: string = required('email')): Promise<Business> =>
   BusinessBaseModel.ensureExists({

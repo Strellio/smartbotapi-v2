@@ -1,5 +1,6 @@
 'use strict'
 import mongoose from 'mongoose'
+import { string } from 'joi'
 
 const schema = new mongoose.Schema(
   {
@@ -13,6 +14,17 @@ const schema = new mongoose.Schema(
       type: String,
       required: true
     },
+    duration:{
+      type:String,
+      required:true,
+      default:"per month"
+    },
+
+    icon_class:{
+      type:String,
+      required:true
+    },
+
     price: {
       type: Number,
       required: true,
@@ -24,8 +36,8 @@ const schema = new mongoose.Schema(
       default: 0
     },
     features: {
-      type: Object,
-      default: {}
+      type: [Object],
+      default: []
     }
   },
   {

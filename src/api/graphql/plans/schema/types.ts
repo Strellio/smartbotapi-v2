@@ -8,7 +8,9 @@ export default gql`
     name: String!
     display_name: String!
     price: NonNegativeFloat!
-    features: JSONObject
+    duration:String
+    icon_class:String
+    features: [JSONObject]
   }
 
   # input
