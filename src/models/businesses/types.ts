@@ -38,6 +38,7 @@ export type ChatPlatform = {
   external_refresh_token: string
   type: CHAT_TYPE
   status: STATUS_MAP
+  business: Business
 }
 
 export type Location = {

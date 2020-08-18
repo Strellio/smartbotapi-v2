@@ -7,5 +7,6 @@ export default {
   ResourceAlreadyExists: 'ResourceAlreadyExists',
   ResourceDoesNotExists: 'ResourceDoesNotExists',
   ValidationError: 'ValidationError',
-  OnlyOneChatPlatformCanBeOnSiteAndActiveError: 'OnlyOneChatPlatformCanBeOnSiteAndActiveError'
+  OnlyOneChatPlatformCanBeOnSiteAndActiveError: 'OnlyOneChatPlatformCanBeOnSiteAndActiveError',
+  WebhookValidationFailed: "WebhookValidationFailed"
 }

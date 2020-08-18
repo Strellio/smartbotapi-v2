@@ -21,13 +21,13 @@ const getByExternalPlatformDomain = (
     query: {
       'shop.external_platform_domain': externalPlatformDomain
     },
-    populate:POPULATE
+    populate: POPULATE
   })
 
 const getById = (id: string = required('id')): Promise<Business> =>
   BusinessBaseModel.ensureExists({
     _id: id
-  }, POPULATE) 
+  }, POPULATE)
 
 const updateById = (
   id: string = required('id'),

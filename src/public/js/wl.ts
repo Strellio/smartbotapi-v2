@@ -45,14 +45,12 @@ function addCssScriptToHeader(src: string) {
 
 
 
-window.onload = function () {
-    const thisWindow: any = window
-    thisWindow.smartbotBotScript = Object.assign({}, {
-        token: getParameter(location.href, "token"),
-        business_id: getParameter(location.href, "business_id")
-    }, getParams("js/widget-loader"))
-    const jsSrc = `${WIDGET_URL}/smartbot-widget.min.js`
-    const cssSrc = `${WIDGET_URL}/smartbot-widget.min.css`
-    addJsScriptToHeader(jsSrc)
-    addCssScriptToHeader(cssSrc)
-}
+const thisWindow: any = window
+thisWindow.smartbotBotScript = Object.assign({}, {
+    token: getParameter(location.href, "token"),
+}, getParams("js/wl"))
+
+const jsSrc = `${WIDGET_URL}/smartbot-widget.min.js`
+const cssSrc = `${WIDGET_URL}/smartbot-widget.min.css`
+addJsScriptToHeader(jsSrc)
+addCssScriptToHeader(cssSrc)

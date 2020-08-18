@@ -65,6 +65,11 @@ export default function intercomLib() {
             }
           })
           .then(response => response.data.admins)
+    },
+    conversations: {
+      create: (accessToken: string = required("accessToken")) => {
+
+      }
     }
   }
 }

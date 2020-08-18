@@ -1,19 +1,27 @@
 "use strict";
 import mongoose from "mongoose";
-import schema, { CHAT_TYPE } from "./schema";
+import schema from "./schema";
 import BaseModel from "../common/base-model";
 import { required } from "../../lib/utils";
 import { ChatPlatform } from "../businesses/types";
 import { omitBy, isNil } from "lodash";
-import { STATUS_MAP, convertObjectBasedOnActionType, ACTION_TYPE_TO_MONGODB_FIELD } from "../common";
-import agents from "./schema/agents";
+import { convertObjectBasedOnActionType, ACTION_TYPE_TO_MONGODB_FIELD } from "../common";
 const Model = mongoose.model("chat_platforms", schema);
 const chatPlatformModel = BaseModel(Model);
+
+const FIELDS_TO_POPULATE = ["business"]
 
 const getById = (id: string = required("id")): Promise<ChatPlatform> =>
   chatPlatformModel.ensureExists({
     _id: id,
   });
+
+const getByWorkSpaceId = (workSpaceId: string = required("workSpaceId")): Promise<ChatPlatform> => chatPlatformModel.ensureExists(
+  {
+    workspace_id: workSpaceId
+  },
+  FIELDS_TO_POPULATE
+)
 
 const getByExternalIdAndPlatform = (
   platform: string = required("platform"),
@@ -77,5 +85,6 @@ export default function () {
     getById,
     getByExternalIdAndPlatform,
     listByBusinessId,
+    getByWorkSpaceId
   };
 }

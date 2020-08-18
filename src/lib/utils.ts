@@ -3,25 +3,26 @@ import { curry, reject } from 'lodash/fp'
 import { Schema } from 'joi'
 import moment from 'moment'
 import crypto from 'crypto'
-import jsonWebToken from 'jsonwebtoken'
+import jsonWebToken, { Algorithm } from 'jsonwebtoken'
 import errors from './errors'
 import config from '../config'
 
 
-export const generateJwt = (payload: any, expiresIn = "10days")=>{
+export const generateJwt = (payload: any, expiresIn = "10days", algorithm: Algorithm = "HS512") => {
   return jsonWebToken.sign(payload, config.get("APP_KEY") as any, {
     expiresIn,
-    algorithm: "HS512"
+    algorithm
   })
 }
 
-export const decodeJwt = (token: string  =require("token"))=>{
-return  new Promise((resolve, reject)=>{
-  jsonWebToken.verify(token, config.get("APP_KEY") as any, (err:any, decoded:any)=>{    
-    if(err) return reject(err)
-    resolve(decoded)
+
+export const decodeJwt = (token: string = require("token")) => {
+  return new Promise((resolve, reject) => {
+    jsonWebToken.verify(token, config.get("APP_KEY") as any, (err: any, decoded: any) => {
+      if (err) return reject(err)
+      resolve(decoded)
+    })
   })
-})
 }
 
 export const required = (data: any) => {
@@ -67,12 +68,14 @@ export const parseString = (str: string) => {
 
 export const createHmac = ({
   secret,
-  data
+  data,
+  algorithm = "sha256"
 }: {
   secret: string
   data: string
+  algorithm?: string
 }) =>
   crypto
-    .createHmac('sha256', secret)
+    .createHmac(algorithm, secret)
     .update(Buffer.from(data) as any, 'utf8')
     .digest('hex')

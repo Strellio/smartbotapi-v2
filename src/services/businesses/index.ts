@@ -4,7 +4,7 @@ import create from './create'
 import businessModel from '../../models/businesses'
 import getSettings from './get-settings'
 
-export default function businessService () {
+export default function businessService() {
   return {
     create,
     updateById,
