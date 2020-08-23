@@ -44,7 +44,7 @@ const handleAsBot = async ({ facebookPayload, chatPlatform }: {
                 }
             }
             await sendTextMessage(payload)
-        } else if (singleEntity.custom.type == 'list') {
+        } else if (singleEntity.custom?.type == 'list') {
             await sendGenericTemplate({
                 accessToken: chatPlatform.external_access_token,
                 recipientId: singleEntity.recipient_id,

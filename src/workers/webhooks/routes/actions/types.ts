@@ -51,3 +51,38 @@ export type FaceBookWebhookPayload = {
     }
     read?: { watermark: number }
 }
+
+export type HubspotWebhookPayload = {
+    portalId: number
+    userMessage: { message: string, quickReply: any }
+    parsedResult: any
+    bot: { nickname: string, conversationChannelType: string }
+    module: {
+        botNickname: string
+        fallbackNextModuleNickname: any
+        failureNextModuleNickname: any
+        moduleType: string
+        nickname: string
+        prompt: null
+        promptHtml: null
+        config: {
+            id: number
+            timeout: number
+            customPayload: string
+            expectingResponse: boolean
+        }
+    },
+    session: {
+        vid: string
+        conversationId: number
+        botNickname: string
+        currentModuleNickname: string
+        sessionStartedAt: number
+        lastInteractionAt: number
+        state: string
+        customState: any
+        responseExpected: boolean
+        parsedResponses: any
+        properties: any
+    },
+}

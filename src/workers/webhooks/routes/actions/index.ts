@@ -4,6 +4,7 @@ import config from "../../../../config";
 import facebookWebhookController from "./facebook";
 import { FaceBookWebhookPayload } from "./types";
 import intercomWebhookController from "./intercom";
+import hubSpotController from "./hubspot";
 
 
 export const intercomWebhook = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,4 +28,8 @@ export const facebookWebhook = async (req: Request, res: Response, next: NextFun
     body.entry.forEach((singleEntry: { messaging: FaceBookWebhookPayload[] }) => {
         return singleEntry.messaging.map(facebookWebhookController)
     });
+}
+
+export const hubspotWebhook = async (req: Request, res: Response, next: NextFunction) => {
+    return hubSpotController(req.body).then(data => res.json(data))
 }

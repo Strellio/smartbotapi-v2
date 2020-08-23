@@ -27,7 +27,12 @@ type BotResponse = {
     recipient_id: string
     custom?: {
         data: BotResponseCustomData[]
+        type: string
     }
+    buttons?: {
+        title: string,
+        payload: string
+    }[]
 }
 
 
