@@ -15,7 +15,7 @@ const replyWithTemplate = (intercomPayload: any = {}) => (templates: Array<any>,
         return intercomLib().conversations.create({
             ...intercomPayload,
             recipientId,
-            text: `<span>  ${template.title} <br> ${template.subtitle} <br/> <a href="${template.buttons[1]?.url}"> Buy </a>  <a href="${template.default_action.url}"> View site </a>   <a href='${template.default_action.url}'> <img src='${template.image_url}'  /> </a> </span>`
+            text: `<span>  ${template.title} <br> ${template.subtitle} <br/> <a href="${template.buttons[1]?.url}"> Buy </a>  <a href="${template.default_action.url}">See product</a>   <a href='${template.default_action.url}'> <img src='${template.image_url}'  /> </a> </span>`
         })
     })
 )
@@ -53,8 +53,6 @@ const handleAsBot = async ({ intercomPayload, chatPlatform }: {
         } else if (singleElement.custom?.data) {
             await doReplyWithTemplate(singleElement.custom?.data, singleElement.recipient_id)
         }
-
-
     }
 }
 
