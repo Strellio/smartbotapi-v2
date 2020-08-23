@@ -98,6 +98,7 @@ export default gql`
     external_user_name: String
     external_id: String
     agent: ChatAgentInput
+    workspace_id:String
     logged_in_greetings: String
     logged_out_greetings: String
     theme_color: String

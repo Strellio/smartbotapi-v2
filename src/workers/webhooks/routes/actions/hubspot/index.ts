@@ -43,13 +43,7 @@ const handleAsBot = async ({ hubspotPayload, chatPlatform }: {
         nextModuleNickname: 'PromptForCollectUserInput',
         responseExpected: true,
         botMessage: "<span> <hi> Title here </strong> <br /> <a target='_blank' rel='noopener' href='https://strellio.com'> <img style='width: 100%' src='https://i1.wp.com/crackedkey.org/wp-content/uploads/2019/08/UBot-Studio-Cracked.jpg?resize=592%2C229&ssl=1' />  </a> </span>",
-        quickReplies: [],
-        botMedia: [
-            {
-                src:
-                    'https://i1.wp.com/crackedkey.org/wp-content/uploads/2019/08/UBot-Studio-Cracked.jpg?resize=592%2C229&ssl=1'
-            }
-        ],
+        quickReplies: []
     })
 
     return result

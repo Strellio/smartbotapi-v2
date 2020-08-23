@@ -21,7 +21,7 @@ interface updateParams {
   type: CHAT_TYPE
   external_id?: string;
   agent?: {
-    id?:string
+    id?: string
     external_id: string;
     name: string;
     profile_url: string;

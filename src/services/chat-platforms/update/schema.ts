@@ -24,6 +24,7 @@ export default joi.object({
   theme_color: joi.string(),
   type: joi.string().valid(...chatTypes),
   external_id: joi.string(),
+  workspace_id: joi.string(),
   agent: joi.object({
     id: objectId(),
     external_id: joi.string(),
