@@ -67,9 +67,25 @@ export default function intercomLib() {
           .then(response => response.data.admins)
     },
     conversations: {
-      create: (accessToken: string = required("accessToken")) => {
-
-      }
+      create: ({ conversationId = required("conversationId"), recipientId = required("recipientId"), accessToken = required("accessToken"), personaId = required("personaId"), text = "", attachments = [] }: {
+        conversationId: string
+        recipientId: string
+        accessToken: string
+        personaId: string
+        text?: string
+        attachments?: string[]
+      }) => request.post(`${INTERCOM_BASE_URL}/conversations/${conversationId}/reply`, {
+        message_type: 'comment',
+        type: 'admin',
+        body: text,
+        intercom_user_id: recipientId,
+        admin_id: personaId,
+        attachment_urls: attachments
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
     }
   }
 }

@@ -25,9 +25,9 @@ const getByWorkSpaceId = (workSpaceId: string = required("workSpaceId")): Promis
 
 const getByExternalIdAndPlatform = (
   platform: string = required("platform"),
-  businessId: string = required("businessId"),
+  businessId?: string,
   externalId?: string
-) =>
+): Promise<ChatPlatform> =>
   chatPlatformModel.get({
     query: omitBy(
       {
@@ -37,6 +37,7 @@ const getByExternalIdAndPlatform = (
       },
       isNil
     ),
+    populate: FIELDS_TO_POPULATE
   });
 
 const updateById = (

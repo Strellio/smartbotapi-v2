@@ -31,11 +31,13 @@
     "intercom-client": "2.11.0",
     "joi": "17.1.1",
     "jsonwebtoken": "8.5.1",
+    "messaging-api-messenger": "0.8.5",
     "moment": "2.27.0",
     "mongoose": "5.9.24",
     "pino": "6.4.0",
     "shopify-api-node": "3.3.2",
-    "shopify-token": "4.0.0"
+    "shopify-token": "4.0.0",
+    "striptags": "3.1.1"
   },
   "devDependencies": {
     "@babel/cli": "7.10.4",

@@ -1,7 +1,6 @@
 'use strict'
 import { Request, Response, NextFunction } from "express";
 import { createHmac } from "../../../../lib/utils";
-import config from "../../../../config";
 import errors from "../../../../lib/errors";
 import { get } from "lodash/fp";
 
@@ -14,12 +13,12 @@ export const verifyWebhook = ({ path, secret, hasSplit = false }: {
     secret: string
     hasSplit: boolean
 }) => (req: Request, res: Response, next: NextFunction) => {
-    const hubSignature: string = get(path, req)
+    const hubSignature: string = get(path, req) || ""
     const [algorithm, signature] = hubSignature.split("=")
     const hmacFromHeader = hasSplit ? signature : hubSignature
-    const hmacAlgorithm = - hasSplit ? algorithm : "sha256"
+    const hmacAlgorithm = - hasSplit ? algorithm : "sha1"
     try {
-        const hmac = createHmac({ secret: config.get("INTERCOM_CLIENT_SECRET") as any, data: JSON.stringify(req.body), algorithm: hmacAlgorithm })
+        const hmac = createHmac({ secret, data: JSON.stringify(req.body), algorithm: hmacAlgorithm })
         if (hmac !== hmacFromHeader) {
             throw errors.throwError({
                 name: errors.WebhookValidationFailed,
@@ -28,7 +27,10 @@ export const verifyWebhook = ({ path, secret, hasSplit = false }: {
         }
         next()
     } catch (error) {
-        next(error)
-
+        res.status(403).json({
+            message: error.message,
+            name: error.name,
+            time_thrown: error.time_thrown
+        })
     }
 }

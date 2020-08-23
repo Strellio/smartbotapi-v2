@@ -8,5 +8,5 @@ import chatPlatformModel from '../../models/chat-platforms'
 
 
 export default function chatPlatformService() {
-  return { create, update, list, sendMessageToCustomer, getByWorkSpaceId: chatPlatformModel().getByWorkSpaceId }
+  return { create, update, list, sendMessageToCustomer, getByWorkSpaceId: chatPlatformModel().getByWorkSpaceId, getByExternalIdAndPlatform: chatPlatformModel().getByExternalIdAndPlatform }
 }

@@ -4,6 +4,7 @@ import { required, createHmac } from "../utils";
 import config from "../../config";
 import { omitBy } from "lodash/fp";
 import { isNil } from "highland";
+const { MessengerClient } = require('messaging-api-messenger');
 const FB_LONG_ACCESS_TOKEN_URL = `https://graph.facebook.com/oauth/access_token`;
 const MESSENGER_PROFILE_BASE_URL = 'https://graph.facebook.com/v8.0/me/messenger_profile'
 
@@ -109,7 +110,30 @@ const updateMessengerProfile = ({
   }
 })
 
+const messengerClient = (accessToken: string) => MessengerClient.connect({
+  accessToken,
+  appId: config.get("FB_CLIENT_ID"),
+  appSecret: config.get("FB_CLIENT_SECRET"),
+  version: '8.0',
+})
+
+const sendTextMessage = async ({ accessToken = required("accessToken"), recipientId = required("recipientId"), text = required("text"), personaId, options = { persona_id: personaId } }: any) => {
+  const client = messengerClient(accessToken)
+  await client.sendSenderAction(recipientId, 'typing_on')
+
+  return client.sendText(recipientId, text, options)
+}
+
+const sendGenericTemplate = async ({ accessToken = required("accessToken"), recipientId = required("recipientId"), elements = required("elements"), personaId, options = { persona_id: personaId } }: any) => {
+  const client = messengerClient(accessToken)
+  await client.sendSenderAction(recipientId, 'typing_on')
+
+  return client.sendGenericTemplate(recipientId, elements, options)
+}
+
 export {
+  sendGenericTemplate,
+  sendTextMessage,
   updateMessengerProfile,
   generateLongAccessToken,
   generatePageAccessToken,

@@ -56,6 +56,11 @@ const config = convict({
     env: 'FB_CLIENT_ID',
     default: process.env.FB_CLIENT_ID
   },
+  FB_VALIDATION_TOKEN: {
+    doc: "FB_VALIDATION_TOKEN",
+    env: "FB_VALIDATION_TOKEN",
+    default: process.env.FB_VALIDATION_TOKEN
+  },
   INTERCOM_CLIENT_ID: {
     doc: 'Intercom client',
     env: 'INTERCOM_CLIENT_ID',
@@ -75,6 +80,11 @@ const config = convict({
     doc: "WIDGET_URL ",
     env: "WIDGET_URL",
     default: process.env.WIDGET_URL
+  },
+  BOT_API: {
+    doc: "BOT_API",
+    env: "BOT_API",
+    default: process.env.BOT_API
   }
 })
 
