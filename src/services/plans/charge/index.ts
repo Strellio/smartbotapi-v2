@@ -6,7 +6,7 @@ import planModel from '../../../models/plans'
 import shopifyLib from '../../../lib/shopify'
 import config from '../../../config'
 
-export default async function charge (
+export default async function charge(
   businessId: string = required('business'),
   planId: string = required('planId')
 ) {
@@ -26,7 +26,7 @@ export default async function charge (
     )?.days,
     return_url: `${config.get('APP_URL')}/plans/charge?business_id=${
       business.id
-    }&plan_id=${plan.id}`,
+      }&plan_id=${plan.id}`,
     test: config.get('NODE_ENV') !== 'production'
   })
 

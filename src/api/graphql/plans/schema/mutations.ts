@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-express'
 
 export default gql`
   extend type Mutation {
-    changePlan(input: ChangePlanInput!): Business!
+    activateCharge(input: ActivateChargeInput!): String!
     charge(input: ChargeInput!): String!
   }
 `

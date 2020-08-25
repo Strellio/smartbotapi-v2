@@ -14,10 +14,10 @@ export default gql`
   }
 
   # input
-  input ChangePlanInput {
+  input ActivateChargeInput {
     business_id: ObjectID!
     plan_id: ObjectID!
-    charge_id: String!
+    charge_id: String
   }
 
   input ChargeInput {
