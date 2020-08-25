@@ -85,7 +85,12 @@ const config = convict({
     doc: "BOT_API",
     env: "BOT_API",
     default: process.env.BOT_API
-  }
+  },
+  REDIS_URL: {
+    doc: "REDIS_URL",
+    env: "REDIS_URL",
+    default: process.env.REDIS_URL
+  },
 })
 
 config.validate({ allowed: 'strict' })

@@ -91,7 +91,7 @@ const createNewMessage = ({ customer, chatPlatform, facebookPayload }: {
 export default async function facebookWebhookController(facebookPayload: FaceBookWebhookPayload) {
     const chatPlatform = await chatPlatformService().getByExternalIdAndPlatform(CHAT_PLATFORMS.FACEBOOK, undefined, facebookPayload.recipient.id)
     // message reads should not be handled yet
-    if (facebookPayload.read) return console.log("handle message reads")
+    if (facebookPayload.read) return //console.log("handle message reads")
     const userProfile = await getChatUserProfile({ accessToken: chatPlatform.external_access_token, userId: facebookPayload.sender.id })
     const customer = await customerService.createOrUpdate({
         external_id: facebookPayload.sender.id,
