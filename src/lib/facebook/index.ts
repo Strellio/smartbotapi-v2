@@ -131,7 +131,16 @@ const sendGenericTemplate = async ({ accessToken = required("accessToken"), reci
   return client.sendGenericTemplate(recipientId, elements, options)
 }
 
+const getChatUserProfile = ({ accessToken = required("accessToken"), userId = required("userId") }: {
+  accessToken: string
+  userId: string
+}) => {
+  const client = messengerClient(accessToken)
+  return client.getUserProfile(userId, ["id", "name", "first_name", "last_name", "profile_pic", "locale", "timezone", "gender"])
+}
+
 export {
+  getChatUserProfile,
   sendGenericTemplate,
   sendTextMessage,
   updateMessengerProfile,

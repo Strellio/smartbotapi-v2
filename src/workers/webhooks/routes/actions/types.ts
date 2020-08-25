@@ -1,3 +1,5 @@
+import { MESSAGE_MEDIA_TYPE } from "../../../../models/messages/schema"
+
 export type IntercomWebhookPayload = {
     type: string
     app_id: string
@@ -40,6 +42,7 @@ export type IntercomWebhookPayload = {
     }
 }
 
+
 export type FaceBookWebhookPayload = {
     sender: { id: string }
     recipient: { id: string }
@@ -48,6 +51,10 @@ export type FaceBookWebhookPayload = {
         mid: string
         text: string
         tags: { source: string }
+        attachments?: {
+            type: MESSAGE_MEDIA_TYPE,
+            payload: { url: string }
+        }[]
     }
     read?: { watermark: number }
 }

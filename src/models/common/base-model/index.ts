@@ -65,7 +65,7 @@ const upsert = (Model: MongooseModel<Document>) => async ({
   populate?: any
 }) => {
   const doc = await findOne(Model)({ query })
-  if (doc) return updateOne(Model)({ query, update })
+  if (doc) return updateOne(Model)({ query, update, populate })
   return create(Model)({ data: update, populate })
 }
 

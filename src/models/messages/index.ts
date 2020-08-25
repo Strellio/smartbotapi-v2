@@ -7,7 +7,10 @@ import { omitBy, isNil } from 'lodash'
 const Model = mongoose.model('messages', schema)
 const MessageBaseModel = BaseModel(Model)
 
-function listByBusiness ({
+const FIELDS_TO_POPULATE = ['agent', "source"]
+
+
+function listByBusiness({
   business_id = required('business_id'),
   customer_id
 }: {
@@ -19,9 +22,11 @@ function listByBusiness ({
   })
 }
 
+const create = (data: any = required("data")) => MessageBaseModel.create({ data, populate: FIELDS_TO_POPULATE })
+
 export default () => {
   return {
-    ...MessageBaseModel,
+    create,
     listByBusiness
   }
 }
