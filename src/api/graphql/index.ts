@@ -20,10 +20,10 @@ import planResolver from './plans/resolvers'
 //message
 import messageSchema from './messages/schema'
 import messageResolver from './messages/resolvers'
+
 //customers
-
 import customerSchema from './customers/schema'
-
+import customerResolver from './customers/resolvers'
 // product and analytics
 import productAndAnalytics from './products-and-analytics/schema'
 
@@ -54,5 +54,6 @@ export const resolvers = [
   scalarResolvers,
   ...businessResolvers,
   ...planResolver,
-  ...messageResolver
+  ...messageResolver,
+  ...customerResolver
 ]

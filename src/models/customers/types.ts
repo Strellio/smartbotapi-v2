@@ -9,4 +9,5 @@ export type Customer = {
     profile_url?: string
     subscribed?: boolean
     locale?: string
+    is_chat_with_live_agent: boolean
 }

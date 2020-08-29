@@ -3,6 +3,7 @@ import formWhereCriteria from './form-where-criteria'
 import formSortCriteria from './form-sort-criteria'
 import errors from './errors'
 import { Model as MongooseModel } from 'mongoose'
+import config from '../../../../config'
 
 const DEFAULT_MAXIMUM_LIMIT = 200
 
@@ -74,14 +75,17 @@ const paginate = (Model: MongooseModel<any>, count: Function) => async ({
     tempModel.where(whereCriteria)
   }
 
+  const data = await tempModel
+    .limit(parsedLimit)
+    .lean(lean)
+    .populate(populate)
+    .sort(Array.from(sortCriteria))
+    .exec()
+
   return {
-    data: await tempModel
-      .limit(parsedLimit)
-      .lean(lean)
-      .populate(populate)
-      .sort(Array.from(sortCriteria))
-      .exec(),
-    count: (await count(query)) as number
+    data,
+    count: (await count(query)) as number,
+    next_item_cursor: data.pop()?._id
   }
 }
 

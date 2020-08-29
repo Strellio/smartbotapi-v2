@@ -4,7 +4,8 @@ import mongoose from 'mongoose'
 
 export enum MESSAGE_TYPE {
   TEXT = 'text',
-  MEDIA = 'media'
+  MEDIA = 'media',
+  GENERIC_TEMPLATE = "generic_template"
 }
 
 export enum MESSAGE_MEDIA_TYPE {
@@ -27,6 +28,20 @@ const MediaSchema = new mongoose.Schema({
   _id: false
 })
 
+const GenericTemplate = new mongoose.Schema({
+  image_url: {
+    type: String,
+    required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  subtitle: String
+}, {
+  _id: false
+})
+
 export default new mongoose.Schema(
   {
     customer: {
@@ -38,10 +53,7 @@ export default new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'agents'
     },
-    external_id: {
-      type: String,
-      required: true
-    },
+    external_id: String,
     business: {
       type: mongoose.Types.ObjectId,
       ref: 'businesses',
@@ -64,6 +76,13 @@ export default new mongoose.Schema(
         return that === MESSAGE_TYPE.MEDIA
       }
     },
+    generic_templates: {
+      type: [GenericTemplate],
+      required: function () {
+        const that = this as any
+        return that === MESSAGE_TYPE.GENERIC_TEMPLATE
+      }
+    },
     text: {
       type: String,
       required: function () {
@@ -71,7 +90,8 @@ export default new mongoose.Schema(
         return that === MESSAGE_TYPE.TEXT
       }
     },
-    is_message_from_admin: { type: Boolean, default: false },
+    is_chat_with_live_agent: { type: Boolean, required: true },
+    is_message_from_customer: { type: Boolean, required: true },
     is_message_sent: { type: Boolean, default: false },
     is_message_read: { type: Boolean, default: false }
   },

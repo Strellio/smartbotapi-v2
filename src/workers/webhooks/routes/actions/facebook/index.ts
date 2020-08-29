@@ -7,17 +7,17 @@ import { ChatPlatform } from "../../../../../models/businesses/types";
 import getBotResponse from "../../../../../lib/bot-api";
 import { sendTextMessage, sendGenericTemplate, getChatUserProfile } from "../../../../../lib/facebook";
 import * as customerService from "../../../../../services/customers";
-import conversationsService from '../../../../../services/conversations'
-import { MESSAGE_TYPE } from "../../../../../models/messages/schema";
+import { formatAndSaveMessage } from "../common";
 
 const ATTACHMENT_MESSAGE = "Sorry i cannot process attachments"
 
 
-const handleAsBot = async ({ facebookPayload, chatPlatform }: {
+const handleAsBot = async ({ facebookPayload, chatPlatform, customer }: {
     facebookPayload: FaceBookWebhookPayload
     chatPlatform: ChatPlatform
+    customer: any
 }) => {
-    const agent = chatPlatform.agents.find(agent => !agent.is_person)
+    const agent = chatPlatform.agents.find(chatAgent => !chatAgent.is_person)
     if (facebookPayload.message?.attachments) {
         return sendTextMessage({
             recipientId: facebookPayload.sender.id,
@@ -52,8 +52,22 @@ const handleAsBot = async ({ facebookPayload, chatPlatform }: {
                     }))
                 }
             }
+            await formatAndSaveMessage({
+                customer,
+                chatPlatform,
+                isChatWithLiveAgent: false,
+                isCustomerMessage: false,
+                text: singleEntity.text
+            })
             await sendTextMessage(payload)
         } else if (singleEntity.custom?.type == 'list') {
+            await formatAndSaveMessage({
+                customer,
+                chatPlatform,
+                isChatWithLiveAgent: false,
+                isCustomerMessage: false,
+                customGenericTemplate: singleEntity.custom.data
+            })
             await sendGenericTemplate({
                 accessToken: chatPlatform.external_access_token,
                 recipientId: singleEntity.recipient_id,
@@ -64,29 +78,6 @@ const handleAsBot = async ({ facebookPayload, chatPlatform }: {
     }
 }
 
-const createNewMessage = ({ customer, chatPlatform, facebookPayload }: {
-    facebookPayload: FaceBookWebhookPayload
-    chatPlatform: ChatPlatform
-    customer: any
-}) => {
-    const media = (facebookPayload.message?.attachments || []).map(attachment => ({
-        type: attachment.type,
-        url: attachment.payload.url
-    }))
-
-    const payload = {
-        business_id: chatPlatform.business.id,
-        source: chatPlatform.id,
-        customer_id: customer.id,
-        external_id: facebookPayload.message?.mid,
-        is_message_from_admin: false,
-        media,
-        type: media.length ? MESSAGE_TYPE.MEDIA : MESSAGE_TYPE.TEXT,
-        text: facebookPayload.message?.text
-    }
-
-    return conversationsService().create(payload)
-}
 
 export default async function facebookWebhookController(facebookPayload: FaceBookWebhookPayload) {
     const chatPlatform = await chatPlatformService().getByExternalIdAndPlatform(CHAT_PLATFORMS.FACEBOOK, undefined, facebookPayload.recipient.id)
@@ -101,7 +92,18 @@ export default async function facebookWebhookController(facebookPayload: FaceBoo
         profile_url: userProfile.profile_pic
     })
 
-    await createNewMessage({ customer, chatPlatform, facebookPayload })
+    await formatAndSaveMessage({
+        customer,
+        chatPlatform,
+        isChatWithLiveAgent: customer.is_chat_with_live_agent,
+        isCustomerMessage: true,
+        text: facebookPayload.message?.text,
+        externalId: facebookPayload.message?.mid,
+        media: (facebookPayload.message?.attachments || []).map(attachment => ({
+            type: attachment.type,
+            url: attachment.payload.url
+        }))
+    })
 
-    return handleAsBot({ facebookPayload, chatPlatform })
+    return handleAsBot({ facebookPayload, chatPlatform, customer })
 }

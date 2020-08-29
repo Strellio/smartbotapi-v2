@@ -20,6 +20,10 @@ export default new mongoose.Schema(
     },
     email: String,
     name: String,
+    is_chat_with_live_agent: {
+      type: Boolean,
+      default: false
+    },
     profile_url: {
       type: String
     },

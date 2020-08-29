@@ -23,9 +23,15 @@ export default joi.object({
     type: joi.string().valid(...messageMediaTypes).required()
   }))
     .when('type', { is: MESSAGE_TYPE.MEDIA, then: joi.required() }),
-  is_message_from_admin: joi
+  is_message_from_customer: joi
     .boolean()
-    .default(false),
+    .required(),
+  generic_templates: joi.array().items(joi.object({
+    image_url: joi.string().uri().required(),
+    title: joi.string().required(),
+    subtitle: joi.string().required()
+  })),
+  is_chat_with_live_agent: joi.boolean().required(),
   is_message_read: joi.boolean(),
   is_message_sent: joi.boolean()
 })

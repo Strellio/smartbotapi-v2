@@ -10,5 +10,6 @@ export default joi.object({
     name: joi.string(),
     profile_url: joi.string().uri(),
     subscribed: joi.boolean(),
-    locale: joi.string()
+    locale: joi.string(),
+    is_chat_with_live_agent: joi.boolean()
 })

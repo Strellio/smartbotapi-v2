@@ -9,7 +9,7 @@ export default {
         onNewMessage: {
             subscribe: withFilter(
                 (_, args) => redisPubSub().asyncIterator(config.get("NEW_MESSAGE_TOPIC")),
-                (payload, variables) => payload.onNewMessage.business === variables.business.id
+                (payload, variables, { business }) => payload.onNewMessage.business === business.id
             )
         }
     }

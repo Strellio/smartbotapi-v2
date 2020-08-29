@@ -8,16 +8,29 @@ const Model = mongoose.model('customers', schema)
 const CustomerModel = BaseModel(Model)
 
 
-const FIELDS_TO_POPULATE = ["source", "business"]
+const FIELDS_TO_POPULATE = ["source"]
 
 const createOrUpdate = ({ update = required("data"), query = required("query") }: {
     update: any
     query: any
 }): Promise<Customer> => CustomerModel.upsert({ query, update, populate: FIELDS_TO_POPULATE })
 
+const fetchByBusinessId = ({ businessId = required("businessId"), cursor, limit }: {
+    businessId: string
+    cursor: string,
+    limit: string
+}) => CustomerModel.paginate({
+    query: {
+        business: businessId
+    },
+    after: cursor,
+    limit,
+    populate: FIELDS_TO_POPULATE
+})
 
 export default function customerModel() {
     return {
-        createOrUpdate
+        createOrUpdate,
+        fetchByBusinessId
     }
 } 

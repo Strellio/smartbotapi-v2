@@ -1,39 +1,53 @@
 'use strict'
 
 import { gql } from 'apollo-server-express'
-import { MESSAGE_TYPE } from '../../../../models/messages/schema'
+import { MESSAGE_TYPE, MESSAGE_MEDIA_TYPE } from '../../../../models/messages/schema'
 
-const message_type = Object.values(MESSAGE_TYPE)
+const messageType = Object.values(MESSAGE_TYPE)
+const messageMedia = Object.values(MESSAGE_MEDIA_TYPE)
 
 export default gql`
 enum MessageTypeEnum{
-  ${message_type}
+  ${messageType}
 }
 
   type Message {
     id:ID!
     customer: Customer!
     agent: Agent
-    external_id: String!
-    business: Business!
-    source: ChatPlatform!
+    external_id: String
+    business: ObjectID!
     type: MessageTypeEnum!
-    media_url:URL
+    media: [MessageMedia!]
     text:String
-    is_message_from_admin:Boolean!
+    is_chat_with_live_agent:Boolean!
+    is_message_from_customer:Boolean!
     is_message_sent:Boolean!
+    source: MessageSource!
+  }
+
+  type MessageSource{
+    platform: String
+  }
+
+  type MessageMedia {
+    url:URL!
+    type: MessageMediaEnum!
   }
 
   type ListMessages{
+    next_item_cursor: ObjectID!
     data: [Message!]
     count: Int!
-    page: Int
+    
   }
 
   #Input
  input ListConversationsInput{
-  business_id:ObjectID!
-   customer_id:String
+   customer_id:ObjectID!
+   is_chat_with_live_agent:Boolean=true
+   cursor: String
+   limit: PositiveInt
  }
 
  input AddMessageInput{
@@ -45,6 +59,9 @@ enum MessageTypeEnum{
   media_url:String
   text:String
   is_message_from_admin:Boolean
+ }
 
+ enum MessageMediaEnum{
+   ${messageMedia}
  }
 `
