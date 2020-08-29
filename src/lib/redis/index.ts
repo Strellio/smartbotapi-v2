@@ -8,10 +8,9 @@ const REDIS_URL = config.get("REDIS_URL")
 
 const redisClient = () => new Redis(REDIS_URL)
 
-export const redisSubscription = () => {
-    const pubsub = new RedisPubSub({
+export const redisPubSub = () => {
+    return new RedisPubSub({
         publisher: redisClient(),
         subscriber: redisClient()
     });
-    return pubsub
 }

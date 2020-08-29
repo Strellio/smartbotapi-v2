@@ -91,6 +91,11 @@ const config = convict({
     env: "REDIS_URL",
     default: process.env.REDIS_URL
   },
+  NEW_MESSAGE_TOPIC: {
+    doc: "NEW_MESSAGE_TOPIC",
+    default: "NEW_MESSAGE_TOPIC"
+  },
+
 })
 
 config.validate({ allowed: 'strict' })

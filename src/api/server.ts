@@ -4,6 +4,7 @@ import express from 'express'
 import { formatError } from 'apollo-errors'
 import { ApolloServer } from 'apollo-server-express'
 import bodyParser from 'body-parser'
+import http from 'http'
 import { schemas, resolvers } from './graphql'
 import routes from './routes'
 import config from '../config'
@@ -22,13 +23,22 @@ const graphqlServer = new ApolloServer({
   typeDefs: schemas,
   resolvers,
   formatError: formatError as any,
-  context: ({ req }) => {
+  context: ({ req, connection }) => {
+    if (connection) return connection.context
     const token = req.headers.authorization?.split(" ")[1]
-    console.log(token)
     return isAuthenticated(token)
+  },
+  subscriptions: {
+    onConnect: (connectionParams: any, websocket) => {
+      const token = connectionParams?.headers?.Authorization.split(" ")[1]
+      return isAuthenticated(token)
+    }
   }
 })
 
+const httpServer = http.createServer(app);
+
+graphqlServer.installSubscriptionHandlers(httpServer)
 
 app
   .use('/static', express.static(path.join(__dirname, "../public")))
@@ -37,6 +47,9 @@ app
   .use(reqLogger)
   .use(routes())
   .use(graphqlServer.getMiddleware())
-  .listen(PORT, () => {
-    loggerMaker().info(`Server started on http://localhost:${PORT}`)
-  })
+
+
+httpServer.listen(PORT, () => {
+  loggerMaker().info(`Server started on http://localhost:${PORT}`)
+  loggerMaker().info(`🚀 Subscriptions ready at ws://localhost:${PORT}${graphqlServer.subscriptionsPath}`)
+})

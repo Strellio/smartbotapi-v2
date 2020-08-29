@@ -11,6 +11,7 @@ enum MessageTypeEnum{
 }
 
   type Message {
+    id:ID!
     customer: Customer!
     agent: Agent
     external_id: String!
@@ -26,6 +27,7 @@ enum MessageTypeEnum{
   type ListMessages{
     data: [Message!]
     count: Int!
+    page: Int
   }
 
   #Input
