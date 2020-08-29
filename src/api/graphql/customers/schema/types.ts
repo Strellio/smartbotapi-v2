@@ -13,6 +13,7 @@ export default gql`
     subscribed: Boolean
     last_subscribe_asked: DateTime
     locale: String
+    created_at: DateTime
   }
 
   type CustomerList {

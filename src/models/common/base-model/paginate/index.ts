@@ -77,7 +77,6 @@ const paginate = (Model: MongooseModel<any>, count: Function) => async ({
 
   const data = await tempModel
     .limit(parsedLimit)
-    .lean(lean)
     .populate(populate)
     .sort(Array.from(sortCriteria))
     .exec()
@@ -85,7 +84,7 @@ const paginate = (Model: MongooseModel<any>, count: Function) => async ({
   return {
     data,
     count: (await count(query)) as number,
-    next_item_cursor: data.pop()?._id
+    next_item_cursor: data[data.length - 1]?._id
   }
 }
 
