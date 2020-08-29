@@ -17,7 +17,7 @@ export default gql`
   }
 
   type CustomerList {
-    next_item_cursor: ObjectID!
+    next_item_cursor: ObjectID
     count: Int
     data: [Customer!] 
   }

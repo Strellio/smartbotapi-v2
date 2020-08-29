@@ -24,7 +24,8 @@ function listByBusiness({
   return MessageBaseModel.paginate({
     query: omitBy({ customer: customer_id, business: business_id }, isNil),
     after: cursor,
-    limit
+    limit,
+    populate: FIELDS_TO_POPULATE
   })
 }
 

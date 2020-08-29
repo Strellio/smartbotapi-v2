@@ -24,6 +24,14 @@ enum MessageTypeEnum{
     is_message_from_customer:Boolean!
     is_message_sent:Boolean!
     source: MessageSource!
+    created_at: DateTime!
+    generic_templates: [MessageGenericTemplate!]
+  }
+
+  type MessageGenericTemplate{
+    title: String!
+      subtitle: String
+      image_url: URL!
   }
 
   type MessageSource{
@@ -36,7 +44,7 @@ enum MessageTypeEnum{
   }
 
   type ListMessages{
-    next_item_cursor: ObjectID!
+    next_item_cursor: ObjectID
     data: [Message!]
     count: Int!
     
@@ -47,7 +55,7 @@ enum MessageTypeEnum{
    customer_id:ObjectID!
    is_chat_with_live_agent:Boolean=true
    cursor: String
-   limit: PositiveInt
+   limit: PositiveInt = 10
  }
 
  input AddMessageInput{
