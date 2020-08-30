@@ -41,14 +41,14 @@ export default async function create(params: CreateMessageParams) {
     ...rest
   })
 
-  if (rest.is_chat_with_live_agent && !rest.is_message_from_customer) {
-    await chatPlatformService().sendMessageToCustomer(params)
-  } else {
-    if (!rest.is_message_from_customer) return;
-    // notify admin here 
+  if (!rest.is_chat_with_live_agent) {
     redisPubSub().publish(config.get("NEW_MESSAGE_TOPIC"), {
       onNewMessage: message
     })
+  }
+
+  if (rest.is_chat_with_live_agent && !rest.is_message_from_customer) {
+    await chatPlatformService().sendMessageToCustomer(params)
   }
 
   return message
