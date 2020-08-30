@@ -70,6 +70,7 @@ const paginate = (Model: MongooseModel<any>, count: Function) => async ({
     after,
     sortCriteria
   })
+
   const tempModel = Model.find(query)
   if (whereCriteria) {
     tempModel.where(whereCriteria)

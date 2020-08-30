@@ -14,15 +14,17 @@ function listByBusiness({
   business_id = required('business_id'),
   customer_id,
   cursor,
-  limit
+  limit,
+  is_chat_with_live_agent
 }: {
   customer_id?: string
   business_id: string
   cursor: string
+  is_chat_with_live_agent?: string
   limit: string
 }) {
   return MessageBaseModel.paginate({
-    query: omitBy({ customer: customer_id, business: business_id }, isNil),
+    query: omitBy({ customer: customer_id, business: business_id, is_chat_with_live_agent }, isNil),
     after: cursor,
     limit,
     populate: FIELDS_TO_POPULATE
