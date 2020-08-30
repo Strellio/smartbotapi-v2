@@ -7,7 +7,7 @@ import { omitBy, isNil } from 'lodash'
 const Model = mongoose.model('messages', schema)
 const MessageBaseModel = BaseModel(Model)
 
-const FIELDS_TO_POPULATE = ['agent', "source", "customer"]
+const FIELDS_TO_POPULATE = ['agent', "source", "customer", { path: "customer", populate: "source" }]
 
 
 function listByBusiness({

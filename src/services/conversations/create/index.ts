@@ -51,5 +51,6 @@ export default async function create(params: CreateMessageParams) {
     await chatPlatformService().sendMessageToCustomer(params)
   }
 
+
   return message
 }
