@@ -31,11 +31,12 @@ const getById = (id: string = required('id')): Promise<Business> =>
 
 const updateById = (
   id: string = required('id'),
-  update: object = required('update')
+  update: any = required('update')
 ): Promise<Business> =>
   BusinessBaseModel.updateOne({
     query: {
-      _id: id
+      _id: id,
+      // ...(update?.shop?.id ? { "shop._id": update.shop.id } : {})
     },
     update
   })

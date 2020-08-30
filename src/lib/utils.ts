@@ -79,3 +79,13 @@ export const createHmac = ({
     .createHmac(algorithm, secret)
     .update(Buffer.from(data) as any, 'utf8')
     .digest('hex')
+
+
+
+export const convertObjectToDotNotation = (queryKey: string, queryObject: any, operator = ".$") => Object.keys(queryObject).reduce((acc: {
+  [x: string]: any
+}, key) => {
+  const value = queryObject[key]
+  acc[`${queryKey}${operator}.${key}`] = value
+  return acc
+}, {})

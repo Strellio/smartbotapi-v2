@@ -27,7 +27,7 @@ export async function callback(params: CallbackParams): Promise<string> {
   const shopDetails = await shopifyClient.shop.get()
 
 
-  const createBusinessPayload = {
+  const createBusinessPayload: any = {
     status: STATUS_MAP.ACTIVE,
     domain: `https://${shopDetails.domain}`,
     email: shopDetails.email,
@@ -53,6 +53,11 @@ export async function callback(params: CallbackParams): Promise<string> {
 
   if (!business) {
     business = await businessService().create(createBusinessPayload)
+  } else {
+    business = await businessService().updateById({
+      id: business.id,
+      ...createBusinessPayload
+    })
   }
 
   await shopifyClient.scriptTag.create({

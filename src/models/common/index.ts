@@ -1,4 +1,4 @@
-import { required } from "../../lib/utils";
+import { required, convertObjectToDotNotation } from "../../lib/utils";
 export enum STATUS_MAP {
   ACTIVE = 'A',
   DEACTIVATED = 'D'
@@ -11,13 +11,6 @@ export enum ACTION_TYPE_TO_MONGODB_FIELD {
   EDIT = "EDIT"
 }
 
-const convertObjectToDotNotation = (queryKey: string, queryObject: any) => Object.keys(queryObject).reduce((acc: {
-  [x: string]: any
-}, key) => {
-  const value = queryObject[key]
-  acc[`${queryKey}.$.${key}`] = value
-  return acc
-}, {})
 
 
 export const convertObjectBasedOnActionType = ({ payloadFieldName = required("payloadFieldName"), updatePayload = required("updatePayload"), dbFieldName = payloadFieldName }: {

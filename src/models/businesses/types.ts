@@ -47,6 +47,7 @@ export type Location = {
 }
 
 export type Shop = {
+  id: string
   external_created_at: Date
   external_updated_at: Date
   external_platform_domain: string
