@@ -105,8 +105,8 @@ export default async function intercomWebhookController(intercomPayload: Interco
         isCustomerMessage: true,
         text: stripTags(conversation?.body),
         externalId: conversation?.id,
-        media: extractImageFromConversationBody(conversation?.body) || (conversation?.attachments || []).map(attachment => ({
-            type: MESSAGE_MEDIA_TYPE.RAW,
+        media: extractImageFromConversationBody(conversation?.body).length ? extractImageFromConversationBody(conversation?.body) : (conversation?.attachments || []).map(attachment => ({
+            type: /video/ig.test(attachment.content_type) ? MESSAGE_MEDIA_TYPE.VIDEO : MESSAGE_MEDIA_TYPE.RAW,
             url: attachment.url
         }))
     })
