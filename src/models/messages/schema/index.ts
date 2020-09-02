@@ -11,7 +11,8 @@ export enum MESSAGE_TYPE {
 export enum MESSAGE_MEDIA_TYPE {
   VIDEO = 'video',
   TEXT = 'text',
-  IMAGE = 'image'
+  IMAGE = 'image',
+  RAW = "raw" // for pdf, text, etc
 }
 
 const MediaSchema = new mongoose.Schema({

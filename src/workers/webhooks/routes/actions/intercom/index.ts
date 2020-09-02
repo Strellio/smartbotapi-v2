@@ -5,6 +5,10 @@ import chatPlatformService from "../../../../../services/chat-platforms";
 import { ChatPlatform } from "../../../../../models/businesses/types";
 import getBotResponse, { BotResponseCustomData } from "../../../../../lib/bot-api";
 import intercomLib from "../../../../../lib/intercom";
+import { formatAndSaveMessage } from "../common";
+import * as customerService from "../../../../../services/customers";
+import { MESSAGE_MEDIA_TYPE } from "../../../../../models/messages/schema";
+
 const stripTags = require('striptags');
 
 
@@ -20,12 +24,13 @@ const replyWithTemplate = (intercomPayload: any = {}) => (templates: Array<any>,
     })
 )
 
-const handleAsBot = async ({ intercomPayload, chatPlatform }: {
+const handleAsBot = async ({ intercomPayload, chatPlatform, customer, conversation }: {
     chatPlatform: ChatPlatform
     intercomPayload: IntercomWebhookPayload
+    customer: any,
+    conversation: any
 }) => {
     const agent = chatPlatform.agents.find(agent => !agent.is_person)
-    const conversation = intercomPayload.data.item.conversation_parts.conversation_parts.pop()
     const response = await getBotResponse({
         senderId: intercomPayload.data.item.user.id,
         message: stripTags(conversation?.body),
@@ -41,24 +46,70 @@ const handleAsBot = async ({ intercomPayload, chatPlatform }: {
     })
 
     for (let i = 0; i < response.length; i++) {
-        const singleElement = response[i];
-        if (singleElement.text) {
+        const singleEntity = response[i];
+        if (singleEntity.text) {
             await intercomLib().conversations.create({
                 conversationId: intercomPayload.data.item.id,
-                recipientId: singleElement.recipient_id,
+                recipientId: singleEntity.recipient_id,
                 accessToken: chatPlatform.external_access_token,
                 personaId: agent?.external_id as string,
-                text: singleElement.text,
+                text: singleEntity.text,
             })
-        } else if (singleElement.custom?.data) {
-            await doReplyWithTemplate(singleElement.custom?.data, singleElement.recipient_id)
+            await formatAndSaveMessage({
+                customer,
+                chatPlatform,
+                isChatWithLiveAgent: false,
+                isCustomerMessage: false,
+                text: singleEntity.text
+            })
+        } else if (singleEntity.custom?.data) {
+            await formatAndSaveMessage({
+                customer,
+                chatPlatform,
+                isChatWithLiveAgent: false,
+                isCustomerMessage: false,
+                customGenericTemplate: singleEntity.custom.data
+            })
+            await doReplyWithTemplate(singleEntity.custom?.data, singleEntity.recipient_id)
         }
     }
 }
 
+const extractImageFromConversationBody = (body?: string) => {
+    const imageTag: string = stripTags(body, "<img>")
+    const image = imageTag.match(/\bhttps?:\/\/\S+/gi)
+    if (!image) return []
+    const imageUrl = image[0]?.replace('">', "")
+    return [
+        {
+            url: imageUrl,
+            type: MESSAGE_MEDIA_TYPE.IMAGE
+        }
+    ]
+}
 
 export default async function intercomWebhookController(intercomPayload: IntercomWebhookPayload) {
     const chatPlatform = await chatPlatformService().getByWorkSpaceId(intercomPayload.app_id)
+    const customer = await customerService.createOrUpdate({
+        external_id: intercomPayload.data.item.user.id,
+        source: chatPlatform.id,
+        business_id: chatPlatform.business.id,
+        name: intercomPayload.data.item.user.name,
+    })
+    const conversation = intercomPayload.data.item.conversation_parts.conversation_parts.pop()
 
-    return handleAsBot({ intercomPayload, chatPlatform })
-}
+    await formatAndSaveMessage({
+        customer,
+        chatPlatform,
+        isChatWithLiveAgent: customer.is_chat_with_live_agent,
+        isCustomerMessage: true,
+        text: stripTags(conversation?.body),
+        externalId: conversation?.id,
+        media: extractImageFromConversationBody(conversation?.body) || (conversation?.attachments || []).map(attachment => ({
+            type: MESSAGE_MEDIA_TYPE.RAW,
+            url: attachment.url
+        }))
+    })
+
+    return handleAsBot({ intercomPayload, chatPlatform, customer, conversation })
+} 

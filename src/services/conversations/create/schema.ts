@@ -17,6 +17,7 @@ export default joi.object({
     .required(),
   text: joi
     .string()
+    .allow("", " ")
     .when('type', { is: MESSAGE_TYPE.TEXT, then: joi.required() }),
   media: joi.array().items(joi.object({
     url: joi.string().uri().required(),

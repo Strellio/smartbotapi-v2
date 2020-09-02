@@ -35,6 +35,12 @@ export type IntercomWebhookPayload = {
                         id: string
                         part_type: "comment" | "note"
                         body: string
+                        attachments: {
+                            type: "upload"
+                            name: string
+                            url: string
+                            content_type: string
+                        }[]
                     }
                 ]
             }
