@@ -1,0 +1,16 @@
+'use strict'
+import agentService from '../../../../services/agents'
+
+export default {
+    Mutation: {
+        createAgent: async (parent: any, { input: { profile_url, ...rest } }: any, { business }: any) => {
+            console.log();
+
+            return agentService.create({
+                ...rest,
+                profile_url: profile_url.href,
+                business_id: business.id
+            })
+        },
+    }
+}

@@ -4,18 +4,22 @@ import mongoose from 'mongoose'
 
 export default new mongoose.Schema(
   {
+    business: {
+      type: mongoose.Types.ObjectId,
+      ref: "businesses",
+      required: true
+    },
     name: {
       type: String,
       required: true
     },
-    profile_url: String,
+    profile_url: {
+      type: String,
+      required: true
+    },
     is_online: {
       type: Boolean,
       default: false
-    },
-    is_person: {
-      type: Boolean,
-      required: true
     },
     linked_chat_agents: [
       {

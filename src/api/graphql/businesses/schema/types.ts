@@ -31,17 +31,6 @@ export default gql`
     chat_platforms: [ChatPlatform!]
   }
 
-  type Agent {
-    id: ID!
-    name: String!
-    profile_url: URL
-    is_online: Boolean
-    is_person: Boolean
-    linked_chat_agents: [ChatAgent!] # to be changed to platforms
-    created_at: DateTime!
-    updated_at: DateTime!
-  }
-
   type ChatAgent {
     id: ID!
     external_id: String!
