@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose'
 
-export default new mongoose.Schema(
+const schema = new mongoose.Schema(
   {
     business: {
       type: mongoose.Types.ObjectId,
@@ -24,7 +24,6 @@ export default new mongoose.Schema(
     linked_chat_agents: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'chat_platforms.agents'
       }
     ]
   },
@@ -37,3 +36,12 @@ export default new mongoose.Schema(
     toObject: { virtuals: true }
   }
 )
+
+schema.virtual("linked_chat_agents_obj", {
+  ref: "chat_platforms",
+  localField: "linked_chat_agents",
+  foreignField: "chat_platforms.agents"
+})
+export default schema
+
+

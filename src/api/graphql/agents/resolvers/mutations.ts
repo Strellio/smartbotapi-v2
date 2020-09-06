@@ -12,5 +12,15 @@ export default {
                 business_id: business.id
             })
         },
+
+        updateAgent: async (parent: any, { input: { profile_url, ...rest } }: any, { business }: any) => {
+            console.log();
+
+            return agentService.update({
+                ...rest,
+                profile_url: profile_url.href,
+                business_id: business.id
+            })
+        },
     }
 }

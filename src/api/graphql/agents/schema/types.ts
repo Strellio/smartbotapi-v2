@@ -8,7 +8,7 @@ export default gql`
     name: String!
     profile_url: URL!
     is_online: Boolean 
-    linked_chat_agents: [ChatAgent!] 
+    linked_chat_agents: [ChatAgent] 
     created_at: DateTime!
     updated_at: DateTime!
   }
@@ -16,6 +16,13 @@ export default gql`
   input CreateAgentInput{
     name: String!
     profile_url: URL!
+  }
+
+  input UpdateAgentInput{
+    id: ID!
+    name: String!
+    profile_url: URL!
+    linked_chat_agents: [ID]!
   }
 
 `
