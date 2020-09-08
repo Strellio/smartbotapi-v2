@@ -3,8 +3,6 @@ import mongoose from 'mongoose'
 import schema from './schema'
 import BaseModel from '../common/base-model'
 import { required } from '../../lib/utils'
-import chatASchema from "../chat-platforms/schema/agents"
-const chatAModel = mongoose.model("chat_platforms.agents", chatASchema)
 const Model = mongoose.model('agents', schema)
 const AgentModel = BaseModel(Model)
 
@@ -16,7 +14,7 @@ const listByBusinessId = (businessId = required("businessId")) => AgentModel.fet
     query: {
         business: businessId
     },
-    populate: ["linked_chat_agents_obj"]
+    populate: [{ path: 'linked_chat_agents_platforms', select: "agents platform" }]
 })
 
 export default {

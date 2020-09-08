@@ -39,6 +39,7 @@ export default gql`
     is_person: Boolean
     created_at: DateTime!
     updated_at: DateTime!
+    platform: String
   }
 
   type ChatPlatform {

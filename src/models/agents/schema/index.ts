@@ -21,11 +21,13 @@ const schema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    linked_chat_agents: [
-      {
-        type: mongoose.Types.ObjectId,
-      }
-    ]
+    linked_chat_agents: {
+      type: [
+        {
+          type: mongoose.Types.ObjectId,
+        }
+      ]
+    }
   },
   {
     timestamps: {
@@ -37,11 +39,12 @@ const schema = new mongoose.Schema(
   }
 )
 
-schema.virtual("linked_chat_agents_obj", {
+schema.virtual("linked_chat_agents_platforms", {
   ref: "chat_platforms",
   localField: "linked_chat_agents",
-  foreignField: "chat_platforms.agents"
+  foreignField: "agents._id"
 })
+
 export default schema
 
 

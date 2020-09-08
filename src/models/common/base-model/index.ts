@@ -52,9 +52,7 @@ const updateOne = (Model: MongooseModel<Document>) => async ({
   let doc = await Model.findOneAndUpdate(query, update, opts)
     .populate(populate)
     .exec()
-  const ag = doc?.toObject()
-  console.log("agent is", ag)
-  return ag
+  return doc?.toObject()
 }
 
 const upsert = (Model: MongooseModel<Document>) => async ({
