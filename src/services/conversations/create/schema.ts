@@ -9,6 +9,7 @@ export default joi.object({
   customer_id: objectId().required(),
   business_id: objectId().required(),
   external_id: joi.string(),
+  agent_external_id: joi.string(),
   agent_id: objectId(),
   source: objectId().required(),
   type: joi

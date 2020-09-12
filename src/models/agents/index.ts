@@ -17,8 +17,11 @@ const listByBusinessId = (businessId = required("businessId")) => AgentModel.fet
     populate: [{ path: 'linked_chat_agents_platforms', select: "agents platform" }]
 })
 
+const getById = (_id: string = required("id")) => AgentModel.get({ query: { _id }, populate: [{ path: 'linked_chat_agents_platforms', select: "agents platform" }] })
+
 export default {
     create,
     listByBusinessId,
-    update
+    update,
+    getById
 }

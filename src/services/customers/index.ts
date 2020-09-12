@@ -5,8 +5,10 @@ import customerModel from "../../models/customers";
 
 
 const listByBusinessId = customerModel().fetchByBusinessId
+const getCustomer = customerModel().ensureExists
 
 export {
     createOrUpdate,
-    listByBusinessId
+    listByBusinessId,
+    getCustomer
 }

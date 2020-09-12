@@ -31,6 +31,7 @@ const fetchByBusinessId = ({ businessId = required("businessId"), cursor, limit 
 export default function customerModel() {
     return {
         createOrUpdate,
-        fetchByBusinessId
+        fetchByBusinessId,
+        ensureExists: CustomerModel.ensureExists
     }
 } 

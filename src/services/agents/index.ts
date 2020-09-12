@@ -9,5 +9,6 @@ import agentsModel from "../../models/agents";
 export default {
     update,
     create,
-    listByBusinessId: agentsModel.listByBusinessId
+    listByBusinessId: agentsModel.listByBusinessId,
+    getAgentById: agentsModel.getById
 }

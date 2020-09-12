@@ -35,6 +35,7 @@ enum MessageTypeEnum{
   }
 
   type MessageSource{
+    id:String!
     platform: String
   }
 
@@ -62,11 +63,14 @@ enum MessageTypeEnum{
   customer_id:ObjectID!
   agent_id:ObjectID
   external_id:String
-  chat_platform_id:ObjectID
+  source:ObjectID
   type:MessageTypeEnum!
   media_url:String
   text:String
-  is_message_from_admin:Boolean
+  agent_external_id:String
+  is_message_from_customer:Boolean=false
+  is_chat_with_live_agent:Boolean=true
+
  }
 
  enum MessageMediaEnum{

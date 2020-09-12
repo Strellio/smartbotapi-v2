@@ -18,7 +18,7 @@ export const transformByPlatform = ({
   return transformer.transformData({ payload, dbPayload });
 };
 
-export function sendMessageToCustomer(payload: any = required("payload")) {
+export async function sendMessageToCustomer(payload: any = required("payload")) {
   const platforms: any = chatPlatforms;
   const sendMessageHandler = platforms[payload.platform];
   return sendMessageHandler.sendMessage(payload);
