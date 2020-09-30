@@ -54,6 +54,7 @@ export default async function create(params: CreateMessageParams) {
     const chatPlatform = await chatPlatformService().getById({ _id: rest.source })
     const customerData = await getCustomer({ _id: customer })
     const agentData = await agentService.getAgentById(agent)
+    // Add conversation_id to params for intercom
     await chatPlatformService().sendMessageToCustomer({ ...params, receipient_id: customerData.external_id, platform: chatPlatform.platform, access_token: chatPlatform.external_access_token, agent_external_id: rest.agent_external_id })
   }
 

@@ -14,8 +14,6 @@ export default {
         },
 
         updateAgent: async (parent: any, { input: { profile_url, ...rest } }: any, { business }: any) => {
-            console.log();
-
             return agentService.update({
                 ...rest,
                 profile_url: profile_url.href,

@@ -31,6 +31,10 @@ import productAndAnalytics from './products-and-analytics/schema'
 import agentsResolver from "./agents/resolvers";
 import agentsSchema from './agents/schema'
 
+// agents (persons)
+import ticketsResolver from "./tickets/resolvers";
+import ticketsSchema from './tickets/schema'
+
 const baseSchema = gql`
   type Query {
     welcome: String
@@ -53,7 +57,8 @@ export const schemas = [
   ...messageSchema,
   ...customerSchema,
   ...productAndAnalytics,
-  ...agentsSchema
+  ...agentsSchema,
+  ...ticketsSchema
 ] as any
 export const resolvers = [
   scalarResolvers,
@@ -61,5 +66,6 @@ export const resolvers = [
   ...planResolver,
   ...messageResolver,
   ...customerResolver,
-  ...agentsResolver
+  ...agentsResolver,
+  ...ticketsResolver
 ]
