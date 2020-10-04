@@ -5,43 +5,49 @@ import mongoose from 'mongoose'
 export enum MESSAGE_TYPE {
   TEXT = 'text',
   MEDIA = 'media',
-  GENERIC_TEMPLATE = "generic_template"
+  GENERIC_TEMPLATE = 'generic_template'
 }
 
 export enum MESSAGE_MEDIA_TYPE {
   VIDEO = 'video',
   TEXT = 'text',
   IMAGE = 'image',
-  RAW = "raw" // for pdf, text, etc
+  RAW = 'raw' // for pdf, text, etc
 }
 
-const MediaSchema = new mongoose.Schema({
-  url: {
-    type: String,
-    required: true
+const MediaSchema = new mongoose.Schema(
+  {
+    url: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: Object.values(MESSAGE_MEDIA_TYPE)
+    }
   },
-  type: {
-    type: String,
-    required: true,
-    enum: Object.values(MESSAGE_MEDIA_TYPE)
+  {
+    _id: false
   }
-}, {
-  _id: false
-})
+)
 
-const GenericTemplate = new mongoose.Schema({
-  image_url: {
-    type: String,
-    required: true
+const GenericTemplate = new mongoose.Schema(
+  {
+    image_url: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    subtitle: String
   },
-  title: {
-    type: String,
-    required: true
-  },
-  subtitle: String
-}, {
-  _id: false
-})
+  {
+    _id: false
+  }
+)
 
 export default new mongoose.Schema(
   {

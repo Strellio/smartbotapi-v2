@@ -1,7 +1,10 @@
 'use strict'
 
 import { gql } from 'apollo-server-express'
-import { MESSAGE_TYPE, MESSAGE_MEDIA_TYPE } from '../../../../models/messages/schema'
+import {
+  MESSAGE_TYPE,
+  MESSAGE_MEDIA_TYPE
+} from '../../../../models/messages/schema'
 
 const messageType = Object.values(MESSAGE_TYPE)
 const messageMedia = Object.values(MESSAGE_MEDIA_TYPE)
@@ -65,13 +68,17 @@ enum MessageTypeEnum{
   external_id:String
   source:ObjectID
   type:MessageTypeEnum!
-  media_url:String
+  media:[MessageMediaInput!] 
   text:String
   agent_external_id:String
   is_message_from_customer:Boolean=false
   is_chat_with_live_agent:Boolean=true
-
  }
+
+ input MessageMediaInput {
+    url:String!
+    type: MessageMediaEnum!
+  }
 
  enum MessageMediaEnum{
    ${messageMedia}
