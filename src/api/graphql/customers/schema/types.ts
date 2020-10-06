@@ -14,11 +14,12 @@ export default gql`
     last_subscribe_asked: DateTime
     locale: String
     created_at: DateTime
+    updated_at: DateTime
   }
 
   type CustomerList {
     next_item_cursor: ObjectID
     count: Int
-    data: [Customer!] 
+    data: [Customer!]
   }
 `
