@@ -47,7 +47,7 @@ export default async function create (params: CreateMessageParams) {
     ...rest
   })
 
-  if (!rest.is_chat_with_live_agent) {
+  if (rest.is_message_from_customer) {
     redisPubSub().publish(config.get('NEW_MESSAGE_TOPIC'), {
       onNewMessage: message
     })
@@ -58,7 +58,7 @@ export default async function create (params: CreateMessageParams) {
       _id: rest.source
     })
     const customerData = await getCustomer({ _id: customer })
-    const agentData = await agentService.getAgentById(agent)
+    // const agentData = await agentService.getAgentById(agent)
     // Add conversation_id to params for intercom
     await chatPlatformService().sendMessageToCustomer({
       ...params,
