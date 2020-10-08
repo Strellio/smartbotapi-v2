@@ -22,4 +22,7 @@ export default gql`
     count: Int
     data: [Customer!]
   }
+  input ListCustomersInput {
+    name: String
+  }
 `
