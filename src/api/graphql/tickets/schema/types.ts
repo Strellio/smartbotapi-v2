@@ -14,6 +14,7 @@ export default gql`
     description: String!
     priority: String!
     created_at: DateTime
+    column_id: Int!
   }
 
   type TickekBoard {
@@ -34,6 +35,11 @@ export default gql`
   input UpdateTicketInput {
     id: ID!
     column_id: Int!
+    source: ObjectID
+    title: String
+    description: String
+    priority: TicketPriorityEnum
+    customer_id: ObjectID
   }
 
   enum TicketPriorityEnum {

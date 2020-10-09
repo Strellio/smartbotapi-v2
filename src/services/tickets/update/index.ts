@@ -8,12 +8,17 @@ type UpdateTicketParams = {
   id: string
   column_id: number
   business_id: string
+  customer_id?: string
+  source?: string
+  priority?: string
+  title?: string
+  description?: string
 }
 
 export default function update (data: UpdateTicketParams) {
-  const { id, business_id: business, ...rest }: UpdateTicketParams = validate(
+  const { business_id: business, ...rest }: UpdateTicketParams = validate(
     schema,
     data
   )
-  return ticketModel().update({ id, business, ...rest })
+  return ticketModel().update({ business, ...rest })
 }
