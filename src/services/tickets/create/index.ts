@@ -2,11 +2,13 @@
 import ticketModel from '../../../models/tickets'
 import { validate } from '../../../lib/utils'
 import schema from './schema'
+import { TICKET_PRIORITY_ENUM } from '../../../models/tickets/schema'
+
 type CreateTicketParams = {
   customer_id: string
   business_id: string
   source: string
-  priority: string
+  priority: TICKET_PRIORITY_ENUM
   title: string
   description: string
 }
