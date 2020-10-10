@@ -9,9 +9,15 @@ const FIELDS_TO_POPULATE = ['business', 'source', 'customer']
 const Model = mongoose.model('tickets', schema)
 const TicketBaseModel = BaseModel(Model)
 
-function listByBusiness (businessId: string) {
+function listByBusiness ({
+  business,
+  ...rest
+}: {
+  business: string
+  [x: string]: string
+}) {
   return TicketBaseModel.fetch({
-    query: { business: businessId },
+    query: { business, ...rest },
     populate: FIELDS_TO_POPULATE
   })
 }

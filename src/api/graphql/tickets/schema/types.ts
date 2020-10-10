@@ -42,6 +42,10 @@ export default gql`
     customer_id: ObjectID
   }
 
+input GetTicketsInput{
+  customer: ObjectID
+}
+
   enum TicketPriorityEnum {
     ${priorityEnum}
   }
