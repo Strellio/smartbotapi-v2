@@ -35,7 +35,7 @@ export default gql`
     id: ID!
     external_id: String!
     name: String!
-    profile_url: URL 
+    profile_url: URL
     is_person: Boolean
     created_at: DateTime!
     updated_at: DateTime!
@@ -88,7 +88,7 @@ export default gql`
     external_user_name: String
     external_id: String
     agent: ChatAgentInput
-    workspace_id:String
+    workspace_id: String
     logged_in_greetings: String
     logged_out_greetings: String
     theme_color: String
