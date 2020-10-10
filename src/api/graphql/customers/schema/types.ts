@@ -25,4 +25,12 @@ export default gql`
   input ListCustomersInput {
     name: String
   }
+
+  input CreateCustomerInput {
+    name: String!
+    email: EmailAddress
+    external_id: String
+    source: ObjectID!
+    profile_url: String
+  }
 `
