@@ -57,8 +57,8 @@ const config = convict({
     default: process.env.FB_CLIENT_ID
   },
   FB_VALIDATION_TOKEN: {
-    doc: "FB_VALIDATION_TOKEN",
-    env: "FB_VALIDATION_TOKEN",
+    doc: 'FB_VALIDATION_TOKEN',
+    env: 'FB_VALIDATION_TOKEN',
     default: process.env.FB_VALIDATION_TOKEN
   },
   INTERCOM_CLIENT_ID: {
@@ -77,25 +77,28 @@ const config = convict({
     default: process.env.APP_KEY
   },
   WIDGET_URL: {
-    doc: "WIDGET_URL ",
-    env: "WIDGET_URL",
+    doc: 'WIDGET_URL ',
+    env: 'WIDGET_URL',
     default: process.env.WIDGET_URL
   },
   BOT_API: {
-    doc: "BOT_API",
-    env: "BOT_API",
+    doc: 'BOT_API',
+    env: 'BOT_API',
     default: process.env.BOT_API
   },
   REDIS_URL: {
-    doc: "REDIS_URL",
-    env: "REDIS_URL",
+    doc: 'REDIS_URL',
+    env: 'REDIS_URL',
     default: process.env.REDIS_URL
   },
-  NEW_MESSAGE_TOPIC: {
-    doc: "NEW_MESSAGE_TOPIC",
-    default: "NEW_MESSAGE_TOPIC"
+  NEW_ADMIN_MESSAGE_TOPIC: {
+    doc: 'NEW_ADMIN_MESSAGE_TOPIC',
+    default: 'NEW_ADMIN_MESSAGE_TOPIC'
   },
-
+  NEW_CUSTOMER_MESSAGE_TOPIC: {
+    doc: 'NEW_CUSTOMER_MESSAGE_TOPIC',
+    default: 'NEW_CUSTOMER_MESSAGE_TOPIC'
+  }
 })
 
 config.validate({ allowed: 'strict' })

@@ -5,13 +5,13 @@ import { validate } from '../../../lib/utils'
 import schema from './schema'
 import chatPlatformService from '../../chat-platforms'
 import { getCustomer } from '../../customers'
-import agentService from '../../agents'
 import {
   MESSAGE_TYPE,
   MESSAGE_MEDIA_TYPE
 } from '../../../models/messages/schema'
 import { redisPubSub } from '../../../lib/redis'
 import config from '../../../config'
+import { CHAT_PLATFORMS } from '../../../models/chat-platforms/schema'
 
 type Media = { url: string; type: MESSAGE_MEDIA_TYPE }
 
@@ -32,6 +32,11 @@ type CreateMessageParams = {
   agent_external_id?: string
 }
 
+const sendMessageForCustomWidget = (message: any) =>
+  redisPubSub().publish(config.get('NEW_CUSTOMER_MESSAGE_TOPIC'), {
+    onNewCustomerMessage: message
+  })
+
 export default async function create (params: CreateMessageParams) {
   const validated: CreateMessageParams = validate(schema, params)
   const {
@@ -48,8 +53,8 @@ export default async function create (params: CreateMessageParams) {
   })
 
   if (rest.is_message_from_customer) {
-    redisPubSub().publish(config.get('NEW_MESSAGE_TOPIC'), {
-      onNewMessage: message
+    redisPubSub().publish(config.get('NEW_ADMIN_MESSAGE_TOPIC'), {
+      onNewAdminMessage: message
     })
   }
 
@@ -58,15 +63,17 @@ export default async function create (params: CreateMessageParams) {
       _id: rest.source
     })
     const customerData = await getCustomer({ _id: customer })
-    // const agentData = await agentService.getAgentById(agent)
-    // Add conversation_id to params for intercom
-    await chatPlatformService().sendMessageToCustomer({
-      ...params,
-      receipient_id: customerData.external_id,
-      platform: chatPlatform.platform,
-      access_token: chatPlatform.external_access_token,
-      agent_external_id: rest.agent_external_id
-    })
+    if (message.source.platform === CHAT_PLATFORMS.CUSTOM) {
+      await sendMessageForCustomWidget(message)
+    } else {
+      await chatPlatformService().sendMessageToCustomer({
+        ...params,
+        receipient_id: customerData.external_id,
+        platform: chatPlatform.platform,
+        access_token: chatPlatform.external_access_token,
+        agent_external_id: rest.agent_external_id
+      })
+    }
   }
 
   return message

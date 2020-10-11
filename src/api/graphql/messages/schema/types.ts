@@ -83,4 +83,8 @@ enum MessageTypeEnum{
  enum MessageMediaEnum{
    ${messageMedia}
  }
+
+ input NewCustomerMessageInput{
+   customer_id: ObjectID!
+ }
 `
