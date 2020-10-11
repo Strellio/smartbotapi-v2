@@ -18,11 +18,12 @@ export default {
     onNewCustomerMessage: {
       subscribe: withFilter(
         (_, args) =>
-          redisPubSub().asyncIterator(config.get('NEW_ADMIN_MESSAGE_TOPIC')),
+          redisPubSub().asyncIterator(config.get('NEW_CUSTOMER_MESSAGE_TOPIC')),
         (payload, variables, { business }) => {
           return (
             payload.onNewCustomerMessage.business === business.id &&
-            variables.customer_id === payload.onNewCustomerMessage.customer.id
+            variables?.input.customer_id ===
+              payload.onNewCustomerMessage.customer.id
           )
         }
       )
