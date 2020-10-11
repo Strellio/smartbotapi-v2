@@ -18,7 +18,7 @@ enum MessageTypeEnum{
     id:ID!
     customer: Customer!
     agent: Agent
-    external_id: String
+    external_id: String 
     business: ObjectID!
     type: MessageTypeEnum!
     media: [MessageMedia!]
