@@ -13,7 +13,7 @@ import { redisPubSub } from '../../../lib/redis'
 import config from '../../../config'
 import { CHAT_PLATFORMS } from '../../../models/chat-platforms/schema'
 
-type Media = { url: string; type: MESSAGE_MEDIA_TYPE }
+export type Media = { url: string; type: MESSAGE_MEDIA_TYPE }
 
 type GenericTemplate = { image_url: string; title: string; subtitle?: string }
 
@@ -30,6 +30,10 @@ type CreateMessageParams = {
   is_chat_with_live_agent: boolean
   generic_templates?: GenericTemplate[]
   agent_external_id?: string
+  buttons?: {
+    payload: string
+    title: string
+  }[]
 }
 
 const sendMessageForCustomWidget = (message: any) =>
@@ -58,7 +62,11 @@ export default async function create (params: CreateMessageParams) {
     })
   }
 
-  if (rest.is_chat_with_live_agent && !rest.is_message_from_customer) {
+  if (
+    (rest.is_chat_with_live_agent ||
+      message.source.platform === CHAT_PLATFORMS.CUSTOM) &&
+    !rest.is_message_from_customer
+  ) {
     const chatPlatform = await chatPlatformService().getById({
       _id: rest.source
     })

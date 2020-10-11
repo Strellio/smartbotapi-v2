@@ -17,6 +17,10 @@ export type Message = {
   source: ChatPlatform
   created_at?: string
   generic_templates: MessageGenericTemplate[]
+  buttons?: {
+    payload: string
+    title: string
+  }[]
 }
 
 export type MessageMedia = {

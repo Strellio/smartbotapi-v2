@@ -5,6 +5,7 @@ import facebookWebhookController from './facebook'
 import { FaceBookWebhookPayload } from './types'
 import intercomWebhookController from './intercom'
 import hubSpotController from './hubspot'
+import customController from './custom'
 import logger from '../../../../lib/logger'
 
 export const intercomWebhook = async (
@@ -53,3 +54,12 @@ export const hubspotWebhook = async (
 ) => {
   return hubSpotController(req.body).then(data => res.json(data))
 }
+
+export const customActionWebhook = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) =>
+  customController(req.body)
+    .then(message => res.json(message))
+    .catch(error => res.status(400).json(error))

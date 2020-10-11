@@ -1,6 +1,6 @@
 'use strict'
 
-import mongoose from 'mongoose'
+import mongoose, { Mongoose } from 'mongoose'
 
 export enum MESSAGE_TYPE {
   TEXT = 'text',
@@ -48,6 +48,10 @@ const GenericTemplate = new mongoose.Schema(
     _id: false
   }
 )
+const Buttons = new mongoose.Schema({
+  payload: String,
+  title: String
+})
 
 export default new mongoose.Schema(
   {
@@ -70,6 +74,10 @@ export default new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'chat_platforms',
       required: true
+    },
+    buttons: {
+      type: [Buttons],
+      default: []
     },
     type: {
       type: String,

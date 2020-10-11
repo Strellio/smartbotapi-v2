@@ -39,10 +39,14 @@ const fetchByBusinessId = ({
     populate: FIELDS_TO_POPULATE
   })
 
+const getById = (id: string = required('id')): Promise<Customer> =>
+  CustomerModel.ensureExists({ _id: id }, FIELDS_TO_POPULATE)
+
 export default function customerModel () {
   return {
     createOrUpdate,
     fetchByBusinessId,
-    ensureExists: CustomerModel.ensureExists
+    ensureExists: CustomerModel.ensureExists,
+    getById
   }
 }

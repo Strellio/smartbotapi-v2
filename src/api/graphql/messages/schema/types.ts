@@ -29,6 +29,12 @@ enum MessageTypeEnum{
     source: MessageSource!
     created_at: DateTime!
     generic_templates: [MessageGenericTemplate!]
+    buttons: [Buttons!]
+  }
+
+  type Buttons {
+    payload: String
+    title: String
   }
 
   type MessageGenericTemplate{
@@ -57,7 +63,7 @@ enum MessageTypeEnum{
   #Input
  input ListConversationsInput{
    customer_id:ObjectID!
-   is_chat_with_live_agent:Boolean=true
+   is_chat_with_live_agent:Boolean
    cursor: String
    limit: PositiveInt = 10
  }
