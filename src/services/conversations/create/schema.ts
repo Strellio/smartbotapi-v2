@@ -46,7 +46,8 @@ export default joi.object({
         .uri()
         .required(),
       title: joi.string().required(),
-      subtitle: joi.string().required()
+      subtitle: joi.string().required(),
+      link: joi.string().uri()
     })
   ),
   is_chat_with_live_agent: joi.boolean().required(),

@@ -54,7 +54,8 @@ export default function formatAndSaveMessage ({
     generic_templates: customGenericTemplate?.map(customData => ({
       image_url: customData.image_url,
       title: customData.title,
-      subtitle: customData.subtitle
+      subtitle: customData.subtitle,
+      link: customData.default_action.url
     })),
     buttons
   })

@@ -15,7 +15,12 @@ import { CHAT_PLATFORMS } from '../../../models/chat-platforms/schema'
 
 export type Media = { url: string; type: MESSAGE_MEDIA_TYPE }
 
-type GenericTemplate = { image_url: string; title: string; subtitle?: string }
+type GenericTemplate = {
+  image_url: string
+  title: string
+  subtitle?: string
+  link?: string
+}
 
 type CreateMessageParams = {
   customer_id: string

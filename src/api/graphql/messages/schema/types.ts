@@ -39,8 +39,9 @@ enum MessageTypeEnum{
 
   type MessageGenericTemplate{
     title: String!
-      subtitle: String
-      image_url: URL!
+    subtitle: String
+    image_url: URL!
+    link: URL
   }
 
   type MessageSource{

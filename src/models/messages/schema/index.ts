@@ -42,7 +42,8 @@ const GenericTemplate = new mongoose.Schema(
       type: String,
       required: true
     },
-    subtitle: String
+    subtitle: String,
+    link: String
   },
   {
     _id: false
