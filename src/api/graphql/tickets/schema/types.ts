@@ -17,10 +17,10 @@ export default gql`
     column_id: Int!
   }
 
-  type TickekBoard {
+  type TicketBoard {
     id: Int!
     title: String!
-    cards: [Ticket]!
+    cards: [Ticket!]
   }
 
   input CreateTicketInput {

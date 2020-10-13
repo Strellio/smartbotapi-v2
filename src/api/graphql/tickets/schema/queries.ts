@@ -4,6 +4,6 @@ import { gql } from 'apollo-server-express'
 
 export default gql`
   extend type Query {
-    getTicketsBoard(input: GetTicketsInput): [TickekBoard]!
+    getTicketsBoard(input: GetTicketsInput): [TicketBoard!]
   }
 `
