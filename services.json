@@ -1,0 +1,12 @@
+{
+    "apps": [
+        {
+            "name": "smartbotapiv2",
+            "web": "node node dist/api"
+        },
+        {
+            "name": "smartbotv2-webhooks",
+            "web": "node dist/workers/webhooks"
+        }
+    ]
+}
