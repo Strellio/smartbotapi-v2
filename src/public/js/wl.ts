@@ -1,5 +1,5 @@
 
-const WIDGET_URL = 'https://widgetv2.onrender.com' || 'https://smartbotwidget.com'
+const WIDGET_URL = 'https://smartbotwidget.strellio.com' || 'https://smartbotwidget.com'
 
 
 function getParams(scriptName: string) {
@@ -52,5 +52,5 @@ thisWindow.smartbotBotScript = Object.assign({}, {
 
 const jsSrc = `${WIDGET_URL}/smartbot-widget.min.js`
 const cssSrc = `${WIDGET_URL}/smartbot-widget.min.css`
-addJsScriptToHeader(jsSrc)
 addCssScriptToHeader(cssSrc)
+addJsScriptToHeader(jsSrc)
