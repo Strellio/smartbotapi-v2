@@ -39,6 +39,7 @@ function addCssScriptToHeader(src: string) {
     const link = document.createElement("link")
     const head = document.getElementsByTagName('head')[0]
     link.setAttribute('type', 'text/css')
+    link.setAttribute('rel', 'stylesheet')
     link.setAttribute('href', src)
     head.appendChild(link)
 }
