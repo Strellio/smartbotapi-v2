@@ -42,6 +42,9 @@ const schema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'chat_platforms'
     },
+    order_id: String,
+    order_number: String,
+    order_email: String,
     title: {
       type: String,
       required: true
