@@ -1,5 +1,5 @@
 
-const WIDGET_URL = 'https://smartbotwidget.com'
+const WIDGET_URL = 'https://smartbotwidget.strellio.com' || 'https://smartbotwidget.com'
 
 
 function getParams(scriptName: string) {
