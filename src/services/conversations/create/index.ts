@@ -61,11 +61,11 @@ export default async function create (params: CreateMessageParams) {
     ...rest
   })
 
-  if (rest.is_message_from_customer) {
-    redisPubSub().publish(config.get('NEW_ADMIN_MESSAGE_TOPIC'), {
-      onNewAdminMessage: message
-    })
-  }
+  // if (rest.is_message_from_customer) {
+  redisPubSub().publish(config.get('NEW_ADMIN_MESSAGE_TOPIC'), {
+    onNewAdminMessage: message
+  })
+  // }
 
   if (
     (rest.is_chat_with_live_agent ||
