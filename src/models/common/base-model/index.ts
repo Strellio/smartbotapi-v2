@@ -125,6 +125,10 @@ const deleteMany = (Model: MongooseModel<any>) => async ({
 const BaseModel = (Model: MongooseModel<any>) => {
   return {
     /**
+     * Get total items from a collection by query
+     */
+    count: (query: object = required('query')) => Model.count(query).exec(),
+    /**
      * Create new item
      */
     create: create(Model),

@@ -30,8 +30,14 @@ const getById = (email: string = required('email')): Promise<User> =>
     email
   })
 
+const countByBusinessId = (
+  businessId: string = required('businessId'),
+  extraQuery = {}
+) => UserModel.count({ business_id: businessId, ...extraQuery })
+
 export default () => ({
   ...UserModel,
+  countByBusinessId,
   createOrUpdateByEmail,
   getByEmail,
   getById

@@ -1,6 +1,6 @@
 'use strict'
 
-import mongoose, { Mongoose } from 'mongoose'
+import mongoose from 'mongoose'
 
 export enum MESSAGE_TYPE {
   TEXT = 'text',

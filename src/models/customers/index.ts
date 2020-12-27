@@ -42,8 +42,14 @@ const fetchByBusinessId = ({
 const getById = (id: string = required('id')): Promise<Customer> =>
   CustomerModel.ensureExists({ _id: id }, FIELDS_TO_POPULATE)
 
+const countByBusinessId = (
+  businessId: string = required('businessId'),
+  extraQuery = {}
+) => CustomerModel.count({ business: businessId, ...extraQuery })
+
 export default function customerModel () {
   return {
+    countByBusinessId,
     createOrUpdate,
     fetchByBusinessId,
     ensureExists: CustomerModel.ensureExists,

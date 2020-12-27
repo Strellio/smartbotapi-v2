@@ -40,9 +40,15 @@ const update = ({
     populate: FIELDS_TO_POPULATE
   })
 
+const countByBusinessId = (
+  businessId: string = required('businessId'),
+  extraQuery = {}
+) => TicketBaseModel.count({ business: businessId, ...extraQuery })
+
 export default function () {
   return {
     ...TicketBaseModel,
+    countByBusinessId,
     listByBusiness,
     create,
     update
