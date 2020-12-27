@@ -30,17 +30,24 @@ export default {
       }
     },
     groups: async (parent: any, { input = {} }: any, { business }: any) => {
-      const [usersByPlatform, engagements] = await Promise.all([
+      const [usersByPlatform, engagements, messagesByDate] = await Promise.all([
         analyticsService.groups.customersByChatPlatform({
+          // fromDate: input.from_date,
+          // toDate: input.end_date,
+          businessId: business.id
+        }),
+        analyticsService.groups.engagementPerMonth(business.id),
+        analyticsService.groups.messagesByCreatedAt({
           fromDate: input.from_date,
           toDate: input.end_date,
           businessId: business.id
-        }),
-        analyticsService.groups.engagementPerMonth(business.id)
+        })
       ])
+
       return {
         users_per_platform: usersByPlatform,
-        engagements
+        engagements,
+        messages_by_date: messagesByDate
       }
     }
   }

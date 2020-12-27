@@ -73,4 +73,14 @@ const engagementPerMonth = async (businessId: string) => {
   }
 }
 
-export { customersByChatPlatform, engagementPerMonth }
+const messagesByCreatedAt = ({
+  fromDate,
+  toDate,
+  businessId
+}: {
+  fromDate?: Date
+  toDate?: Date
+  businessId: string
+}) => messagesModel().aggregateGroupByCreatedAt(businessId, fromDate, toDate)
+
+export { customersByChatPlatform, engagementPerMonth, messagesByCreatedAt }

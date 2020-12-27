@@ -12,6 +12,18 @@ export default gql`
   type Groups {
     users_per_platform: [UsersPerPlatform!]
     engagements: Engagement!
+    messages_by_date: [GroupsMessagesByDate!]
+  }
+
+  type GroupsMessagesByDate {
+    count: Int
+    period: GroupsMessagesByDatePeriod
+  }
+
+  type GroupsMessagesByDatePeriod {
+    month: Int
+    year: Int
+    platform: String
   }
 
   type Engagement {

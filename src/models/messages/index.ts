@@ -51,10 +51,77 @@ const countByBusinessId = (
   extraQuery = {}
 ) => MessageBaseModel.count({ business: businessId, ...extraQuery })
 
+const aggregateGroupByCreatedAt = (
+  businessId: string = required('businessId'),
+  fromDate?: Date,
+  toDate?: Date
+) =>
+  Model.aggregate([
+    {
+      $match: {
+        business: new mongoose.Types.ObjectId(businessId),
+        ...(fromDate || toDate
+          ? {
+              created_at: {
+                ...(fromDate ? { $gte: new Date(fromDate) } : {}),
+                ...(toDate ? { $lte: new Date(toDate) } : {})
+              }
+            }
+          : {})
+      }
+    },
+    {
+      $lookup: {
+        from: 'chat_platforms',
+        localField: 'source',
+        foreignField: '_id',
+        as: 'source'
+      }
+    },
+    {
+      $project: {
+        source: {
+          $arrayElemAt: ['$source', 0]
+        },
+        created_at: '$created_at'
+      }
+    },
+    {
+      $group: {
+        _id: {
+          month: {
+            $month: '$created_at'
+          },
+          year: {
+            $year: '$created_at'
+          },
+          platform: '$source.platform'
+        },
+        count: {
+          $sum: 1
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        period: '$_id',
+        count: 1,
+        sum: 1
+      }
+    },
+    {
+      $sort: {
+        period: 1
+      }
+    }
+  ])
+
 export default () => {
   return {
     countByBusinessId,
     create,
-    listByBusiness
+    listByBusiness,
+    aggregateGroupByCreatedAt
   }
 }
