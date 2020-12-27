@@ -96,6 +96,11 @@ const aggregateGroupByPlatform = (
         count: 1,
         sum: 1
       }
+    },
+    {
+      $sort: {
+        platform: 1
+      }
     }
   ]).exec()
 
