@@ -23,7 +23,7 @@ export default {
       ])
 
       return {
-        total_users: usersCount,
+        total_customers: usersCount,
         total_messages: messagesCount,
         total_tickets: ticketsCount
       }
