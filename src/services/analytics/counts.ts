@@ -3,7 +3,7 @@ import customersModel from '../../models/customers'
 import conversationModel from '../../models/messages'
 import ticketsModel from '../../models/tickets'
 
-const usersCount = ({
+const customersCount = ({
   fromDate,
   toDate,
   businessId
@@ -66,4 +66,4 @@ const ticketsCount = ({
       : {}
   )
 
-export { ticketsCount, usersCount, messagesCount }
+export { ticketsCount, customersCount, messagesCount }

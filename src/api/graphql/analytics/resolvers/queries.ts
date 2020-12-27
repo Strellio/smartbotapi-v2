@@ -1,11 +1,12 @@
 'use strict'
 
 import * as analyticsService from '../../../../services/analytics'
+const delay = require('util').promisify(setTimeout)
 export default {
   Query: {
     counts: async (parent: any, { input = {} }: any, { business }: any) => {
       const [usersCount, messagesCount, ticketsCount] = await Promise.all([
-        analyticsService.counts.usersCount({
+        analyticsService.counts.customersCount({
           businessId: business.id,
           fromDate: input.from_date,
           toDate: input.end_date
@@ -26,6 +27,20 @@ export default {
         total_customers: usersCount,
         total_messages: messagesCount,
         total_tickets: ticketsCount
+      }
+    },
+    groups: async (parent: any, { input = {} }: any, { business }: any) => {
+      const [usersByPlatform, engagements] = await Promise.all([
+        analyticsService.groups.customersByChatPlatform({
+          fromDate: input.from_date,
+          toDate: input.end_date,
+          businessId: business.id
+        }),
+        analyticsService.groups.engagementPerMonth(business.id)
+      ])
+      return {
+        users_per_platform: usersByPlatform,
+        engagements
       }
     }
   }
