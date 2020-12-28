@@ -22,6 +22,19 @@ function listByBusiness ({
   })
 }
 
+function paginateByBusiness ({
+  business,
+  ...rest
+}: {
+  business: string
+  [x: string]: string
+}) {
+  return TicketBaseModel.paginate({
+    query: { business, ...rest },
+    populate: FIELDS_TO_POPULATE
+  })
+}
+
 const create = (data: any = required('data')) =>
   TicketBaseModel.create({ data, populate: FIELDS_TO_POPULATE })
 
@@ -51,6 +64,7 @@ export default function () {
     countByBusinessId,
     listByBusiness,
     create,
-    update
+    update,
+    paginateByBusiness
   }
 }

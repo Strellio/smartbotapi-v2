@@ -15,6 +15,12 @@ export default gql`
     priority: String!
     created_at: DateTime
     column_id: Int!
+    column: TicketColumn
+  }
+
+  type TicketColumn {
+    title: String
+    id: Int
   }
 
   type TicketBoard {

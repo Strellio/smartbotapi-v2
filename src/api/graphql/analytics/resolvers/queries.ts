@@ -49,6 +49,18 @@ export default {
         engagements,
         messages_by_date: messagesByDate
       }
+    },
+    lists: async (parent: any, { input = {} }: any, { business }: any) => {
+      const [tickets] = await Promise.all([
+        analyticsService.lists.latestTickets({
+          businessId: business.id,
+          columnId: input.column_id
+        })
+      ])
+
+      return {
+        tickets
+      }
     }
   }
 }

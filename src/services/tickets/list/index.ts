@@ -17,7 +17,7 @@ export default async function getTicketBoard ({
     })
   )
     .collect()
-    .toPromise(Promise)
+    .toPromise(Promise as any)
   const board = columns.map(column => {
     const columnTickets = tickets.filter(
       (ticket: any) => ticket.column_id === column.id

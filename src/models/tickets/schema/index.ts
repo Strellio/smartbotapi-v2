@@ -77,4 +77,8 @@ const schema = new mongoose.Schema(
   }
 )
 
+schema.virtual('column').get(function () {
+  return columns.find(column => column.id === this.column_id)
+})
+
 export default schema
