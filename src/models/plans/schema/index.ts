@@ -1,6 +1,5 @@
 'use strict'
 import mongoose from 'mongoose'
-import { string } from 'joi'
 
 const schema = new mongoose.Schema(
   {
