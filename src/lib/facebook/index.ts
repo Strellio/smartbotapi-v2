@@ -4,6 +4,7 @@ import { required, createHmac } from '../utils'
 import config from '../../config'
 import { omitBy } from 'lodash/fp'
 import { isNil } from 'highland'
+
 const { MessengerClient } = require('messaging-api-messenger')
 const FB_LONG_ACCESS_TOKEN_URL = `https://graph.facebook.com/oauth/access_token`
 const MESSENGER_PROFILE_BASE_URL =

@@ -1,50 +1,62 @@
 'use strict'
+import { CHAT_PLATFORMS } from '../chat-platforms/schema'
+import { PlanDuration } from './schema'
 
 const PLANS = [
   {
     name: 'free',
     display_name: 'Free',
     price: 0,
-    icon_class:"bx bx-car",
-    duration:"per month",
+    icon_class: 'bx bx-car',
+    duration: PlanDuration.MONTHLY,
     free_trial_days: 30,
-    features: []
+    features: {
+      allowed_live_support: true,
+      allowed_external_platforms: [CHAT_PLATFORMS.FACEBOOK]
+    }
   },
   {
     name: 'starter',
     display_name: 'Starter',
     price: 10.99,
-    icon_class:"bx bx-car",
-    duration:"per month",
+    icon_class: 'bx bx-car',
+    duration: PlanDuration.MONTHLY,
     free_trial_days: 30,
-    features: [ { title: "Free Live Support" },
-    { title: "Access to intercom or hubSpot" },
-    { title: "No Time Tracking" },
-    { title: "Free Setup" }]
+    features: {
+      allowed_external_platforms: [
+        CHAT_PLATFORMS.INTERCOM,
+        CHAT_PLATFORMS.HUBSPOT
+      ],
+      allowed_live_support: true
+    }
   },
   {
     name: 'pro',
     display_name: 'Pro',
     price: 14.99,
-    duration:"per month",
+    duration: PlanDuration.MONTHLY,
     free_trial_days: 30,
-    icon_class:"bx bx-car",
-    features: [{ title: "Free Live Support" },
-    { title: "Access to facebook, intercom or hubSpot" },
-    { title: "No Time Tracking" },
-    { title: "Free Setup" }]
+    icon_class: 'bx bx-car',
+    features: {
+      allowed_external_platforms: [
+        CHAT_PLATFORMS.FACEBOOK,
+        CHAT_PLATFORMS.INTERCOM,
+        CHAT_PLATFORMS.HUBSPOT
+      ],
+      allowed_live_support: true
+    }
   },
   {
     name: 'premium',
     display_name: 'Premium',
     price: 19.99,
-    duration:"per month",
+    duration: PlanDuration.MONTHLY,
     free_trial_days: 30,
-    icon_class:"bx bx-car",
-    features: [{ title: "Free Live Support" },
-    { title: "Access to our custom chat, intercom or hubSpot" },
-    { title: "No Time Tracking" },
-    { title: "Free Setup" }]
+    icon_class: 'bx bx-car',
+    features: {
+      allowed_external_platforms: Object.values(CHAT_PLATFORMS),
+      allowed_live_support: true
+    }
   }
 ]
 

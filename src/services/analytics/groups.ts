@@ -64,12 +64,13 @@ const engagementPerMonth = async (businessId: string) => {
   return {
     current_engagement: currentEngagement,
     previous_engagement: previousEngagement,
-    performance:
+    performance: (
       ((currentEngagement.engagement_score -
         previousEngagement.engagement_score) /
         (currentEngagement.engagement_score +
           previousEngagement.engagement_score)) *
       100
+    ).toFixed(2)
   }
 }
 

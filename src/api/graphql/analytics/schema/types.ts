@@ -33,7 +33,7 @@ export default gql`
   type Engagement {
     current_engagement: SingleEngagement!
     previous_engagement: SingleEngagement!
-    performance: Int!
+    performance: Float!
   }
 
   type SingleEngagement {
