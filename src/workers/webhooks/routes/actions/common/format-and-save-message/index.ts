@@ -13,7 +13,7 @@ type MessageMedia = {
   type: MESSAGE_MEDIA_TYPE
 }
 
-export default function formatAndSaveMessage ({
+export default function formatAndSaveMessage({
   customer,
   isCustomerMessage,
   isChatWithLiveAgent,
@@ -37,6 +37,7 @@ export default function formatAndSaveMessage ({
     title: string
   }[]
 }) {
+  console.log("running format and save")
   return conversationsService().create({
     business_id: chatPlatform.business.id,
     source: chatPlatform.id,
@@ -48,15 +49,18 @@ export default function formatAndSaveMessage ({
     type: media?.length
       ? MESSAGE_TYPE.MEDIA
       : customGenericTemplate.length
-      ? MESSAGE_TYPE.GENERIC_TEMPLATE
-      : MESSAGE_TYPE.TEXT,
+        ? MESSAGE_TYPE.GENERIC_TEMPLATE
+        : MESSAGE_TYPE.TEXT,
     text,
-    generic_templates: customGenericTemplate?.map(customData => ({
-      image_url: customData.image_url,
-      title: customData.title,
-      subtitle: customData.subtitle,
-      link: customData.default_action.url
-    })),
+    generic_templates: customGenericTemplate?.map(customData => {
+      return ({
+        image_url: customData.image_url,
+        title: customData.title,
+        subtitle: customData.subtitle,
+        link: customData.default_action.url,
+        buttons: customData.buttons
+      })
+    }),
     buttons
   })
 }

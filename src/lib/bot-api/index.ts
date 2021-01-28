@@ -15,7 +15,8 @@ export type BotResponseCustomData = {
   }
   buttons: {
     type: 'web_url'
-    url: string
+    url: string,
+    title: string
   }[]
 }
 

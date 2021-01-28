@@ -37,11 +37,19 @@ enum MessageTypeEnum{
     title: String
   }
 
+  type GenericTempButton {
+    type: String!
+    url: URL
+    title: String
+  }
+
   type MessageGenericTemplate{
     title: String!
     subtitle: String
     image_url: URL!
     link: URL
+    buttons:[GenericTempButton]
+
   }
 
   type MessageSource{

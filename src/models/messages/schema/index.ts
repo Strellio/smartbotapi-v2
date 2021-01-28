@@ -31,6 +31,16 @@ const MediaSchema = new mongoose.Schema(
     _id: false
   }
 )
+const Buttons = new mongoose.Schema({
+  payload: String,
+  title: String,
+})
+
+const GenericTempButtons = new mongoose.Schema({
+  type: String,
+  url: String,
+  title: String
+})
 
 const GenericTemplate = new mongoose.Schema(
   {
@@ -43,16 +53,14 @@ const GenericTemplate = new mongoose.Schema(
       required: true
     },
     subtitle: String,
+    buttons: [GenericTempButtons],
     link: String
   },
   {
     _id: false
   }
 )
-const Buttons = new mongoose.Schema({
-  payload: String,
-  title: String
-})
+
 
 export default new mongoose.Schema(
   {

@@ -43,8 +43,11 @@ function listByBusiness ({
   })
 }
 
-const create = (data: any = required('data')): Promise<Message> =>
-  MessageBaseModel.create({ data, populate: FIELDS_TO_POPULATE })
+const create = (data: any = required('data')): Promise<Message> => {
+
+  return MessageBaseModel.create({ data, populate: FIELDS_TO_POPULATE })
+
+}
 
 const countByBusinessId = (
   businessId: string = required('businessId'),

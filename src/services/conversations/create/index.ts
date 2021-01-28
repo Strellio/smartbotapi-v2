@@ -20,6 +20,11 @@ type GenericTemplate = {
   title: string
   subtitle?: string
   link?: string
+  buttons?: {
+    type: string
+    title: string
+    url: string
+  }[]
 }
 
 type CreateMessageParams = {
