@@ -61,8 +61,9 @@ const paginate = (Model: MongooseModel<any>, count: Function) => async ({
   let parsedLimit: number = parseInt(limit)
 
   parsedLimit = parsedLimit > maximumLimit ? maximumLimit : parsedLimit
+  console.log(parsedLimit)
 
-  // if (isNaN(parsedLimit)) throw errors.limitNaNError()
+  if (isNaN(parsedLimit)) throw errors.limitNaNError()
 
   const sortCriteria = formSortCriteria(sort)
 
@@ -77,7 +78,7 @@ const paginate = (Model: MongooseModel<any>, count: Function) => async ({
   }
 
   const data = await tempModel
-    // .limit(parsedLimit)
+    .limit(parsedLimit)
     .populate(populate)
     .sort(Array.from(sortCriteria))
     .exec()
