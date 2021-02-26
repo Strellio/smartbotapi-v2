@@ -10,7 +10,7 @@ const shopifyToken = new ShopifyToken({
   sharedSecret: config.get('SHOPIFY_APP_SECRET') as any,
   redirectUri: `${config.get('APP_URL')}/shopify/callback`,
   apiKey: config.get('SHOPIFY_APP_KEY') as any,
-  scopes: ['read_content', 'read_product_listings', 'read_products', 'read_customers', 'read_orders', 'read_script_tags', 'write_script_tags']
+  scopes: ['read_content', 'read_product_listings', 'read_products', 'read_customers', 'read_orders', 'read_all_orders', 'read_script_tags', 'write_script_tags']
 })
 
 const shopifyClient = ({
