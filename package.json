@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@axelspringer/graphql-google-pubsub": "^2.1.0",
     "apollo-errors": "1.9.0",
     "apollo-server-express": "2.15.1",
     "axios": "0.19.2",

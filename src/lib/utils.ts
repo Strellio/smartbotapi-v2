@@ -32,6 +32,14 @@ export const required = (data: any) => {
   })
 }
 
+export const convertBufferToObject = (buffer: any) => {
+  try {
+    return JSON.parse(buffer.toString())
+  } catch (error) {
+    return null
+  }
+}
+
 export const validate = curry((schema: Schema, data: any) => {
   const { error, value } = schema.validate(data, { stripUnknown: true })
   if (error) {

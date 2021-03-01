@@ -9,7 +9,7 @@ import {
   MESSAGE_TYPE,
   MESSAGE_MEDIA_TYPE
 } from '../../../models/messages/schema'
-import { redisPubSub } from '../../../lib/redis'
+import pubsub from '../../../lib/pubsub'
 import config from '../../../config'
 import { CHAT_PLATFORMS } from '../../../models/chat-platforms/schema'
 
@@ -47,7 +47,7 @@ type CreateMessageParams = {
 }
 
 const sendMessageForCustomWidget = (message: any) =>
-  redisPubSub().publish(config.get('NEW_CUSTOMER_MESSAGE_TOPIC'), {
+  pubsub.publish(config.get('NEW_CUSTOMER_MESSAGE_TOPIC'), {
     onNewCustomerMessage: message
   })
 
@@ -67,7 +67,7 @@ export default async function create (params: CreateMessageParams) {
   })
 
   // if (rest.is_message_from_customer) {
-  redisPubSub().publish(config.get('NEW_ADMIN_MESSAGE_TOPIC'), {
+  pubsub.publish(config.get('NEW_ADMIN_MESSAGE_TOPIC'), {
     onNewAdminMessage: message
   })
   // }

@@ -1,7 +1,7 @@
 'use strict'
 
 import { withFilter } from 'graphql-subscriptions'
-import { redisPubSub } from '../../../../lib/redis'
+import pubsub from '../../../../lib/pubsub'
 import config from '../../../../config'
 
 export default {
@@ -9,7 +9,7 @@ export default {
     onNewAdminMessage: {
       subscribe: withFilter(
         (_, args) =>
-          redisPubSub().asyncIterator(config.get('NEW_ADMIN_MESSAGE_TOPIC')),
+          pubsub.asyncIterator(config.get('NEW_ADMIN_MESSAGE_TOPIC')),
         (payload, variables, { business }) => {
           return payload.onNewAdminMessage.business === business.id
         }
@@ -18,7 +18,7 @@ export default {
     onNewCustomerMessage: {
       subscribe: withFilter(
         (_, args) =>
-          redisPubSub().asyncIterator(config.get('NEW_CUSTOMER_MESSAGE_TOPIC')),
+          pubsub.asyncIterator(config.get('NEW_CUSTOMER_MESSAGE_TOPIC')),
         (payload, variables, { business }) => {
           return (
             payload.onNewCustomerMessage.business === business.id &&

@@ -98,7 +98,18 @@ const config = convict({
   NEW_CUSTOMER_MESSAGE_TOPIC: {
     doc: 'NEW_CUSTOMER_MESSAGE_TOPIC',
     default: 'NEW_CUSTOMER_MESSAGE_TOPIC'
+  },
+  PUBSUB_PROJECT_ID: {
+    doc: 'PUBSUB_PROJECT_ID',
+    env: 'PUBSUB_PROJECT_ID',
+    default: process.env.PUBSUB_PROJECT_ID
+  },
+  PUBSUB_CREDENTIALS: {
+    doc: 'PUBSUB_CREDENTIALS',
+    env: 'PUBSUB_CREDENTIALS',
+    default: process.env.PUBSUB_CREDENTIALS
   }
+
 })
 
 config.validate({ allowed: 'strict' })
