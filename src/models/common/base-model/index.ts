@@ -12,13 +12,11 @@ const create = (Model: MongooseModel<Document>) => async ({
   data: any
   populate?: any
 }) => {
-  data.generic_templates.map((value: any) => console.log(value.buttons))
   const item = new Model(data)
   let doc = await item.save()
   if (populate) {
     doc = await doc.populate(populate).execPopulate()
   }
-  console.log(doc.toObject())
   return doc.toObject()
 }
 

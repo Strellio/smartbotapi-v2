@@ -109,7 +109,6 @@ const config = convict({
     env: 'PUBSUB_CREDENTIALS',
     default: process.env.PUBSUB_CREDENTIALS
   }
-
 })
 
 config.validate({ allowed: 'strict' })
