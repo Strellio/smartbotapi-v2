@@ -6,7 +6,7 @@ const schema = new mongoose.Schema(
   {
     business: {
       type: mongoose.Types.ObjectId,
-      ref: "businesses",
+      ref: 'businesses',
       required: true
     },
     name: {
@@ -24,7 +24,7 @@ const schema = new mongoose.Schema(
     linked_chat_agents: {
       type: [
         {
-          type: mongoose.Types.ObjectId,
+          type: mongoose.Types.ObjectId
         }
       ]
     }
@@ -39,12 +39,10 @@ const schema = new mongoose.Schema(
   }
 )
 
-schema.virtual("linked_chat_agents_platforms", {
-  ref: "chat_platforms",
-  localField: "linked_chat_agents",
-  foreignField: "agents._id"
+schema.virtual('linked_chat_agents_platforms', {
+  ref: 'chat_platforms',
+  localField: 'linked_chat_agents',
+  foreignField: 'agents._id'
 })
 
 export default schema
-
-
