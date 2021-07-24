@@ -5,4 +5,6 @@ export type User = {
   id: string
   country: string
   full_name: string
+  password?: string
+  businesses: any[]
 }

@@ -24,11 +24,14 @@ const schema = new mongoose.Schema(
     status: {
       type: String,
       enum: Object.values(STATUS_MAP),
-      required: true
+      default: STATUS_MAP.ACTIVE
+    },
+    is_external_platform: {
+      type: Boolean,
+      default: true
     },
     external_id: {
       type: String,
-      required: true,
       unique: true,
       sparse: true,
       index: true
@@ -65,10 +68,9 @@ const schema = new mongoose.Schema(
   }
 )
 
-
-schema.virtual("chat_platforms",{
-  ref: "chat_platforms",
-  localField: '_id', 
+schema.virtual('chat_platforms', {
+  ref: 'chat_platforms',
+  localField: '_id',
   foreignField: 'business',
   options: { sort: { created_at: -1 } }
 })

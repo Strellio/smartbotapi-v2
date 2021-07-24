@@ -20,10 +20,10 @@ export default gql`
     domain: URL!
     email: EmailAddress!
     status: StatusEnum!
-    external_id: String!
+    external_id: String
     platform: PlatformEnum!
     plan: Plan
-    business_name: String!
+    business_name: String
     location: Location!
     trial_expiry_date: DateTime
     date_upgraded: DateTime

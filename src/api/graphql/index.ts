@@ -39,6 +39,10 @@ import ticketsSchema from './tickets/schema'
 import analyticsResolver from './analytics/resolvers'
 import analyticsSchema from './analytics/schema'
 
+// auth
+import authResolver from './auth/resolvers'
+import authSchema from './auth/schema'
+
 const baseSchema = gql`
   type Query {
     welcome: String
@@ -53,6 +57,7 @@ const baseSchema = gql`
 
 export const schemas = [
   baseSchema,
+  ...authSchema,
   ...customSchema,
   ...scalarTypeDefs,
   ...usersSchema,
@@ -67,6 +72,7 @@ export const schemas = [
 ] as any
 export const resolvers = [
   scalarResolvers,
+  ...authResolver,
   ...businessResolvers,
   ...planResolver,
   ...messageResolver,

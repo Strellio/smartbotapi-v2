@@ -10,12 +10,14 @@ const throwAuthError = () =>
   })
 
 export default async function isAuthenticated (
-  token: string = required('token')
+  token: string = required('token'),
+  req: object = {}
 ) {
   try {
     const decoded: any = await decodeJwt(token)
     return {
-      business: await businessService().getById(decoded.business_id)
+      business: await businessService().getById(decoded.business_id),
+      ...req
     }
   } catch (error) {
     throw throwAuthError()

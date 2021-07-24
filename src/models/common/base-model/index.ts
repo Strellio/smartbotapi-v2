@@ -17,7 +17,7 @@ const create = (Model: MongooseModel<Document>) => async ({
   if (populate) {
     doc = await doc.populate(populate).execPopulate()
   }
-  return doc.toObject()
+  return doc.toObject() as any
 }
 
 const findOne = (Model: MongooseModel<Document>) => async ({
@@ -165,7 +165,7 @@ const BaseModel = (Model: MongooseModel<any>) => {
           message: `resource does not exist ${Object.keys(query).join(',')}`
         })
       }
-      return doc
+      return doc as any
     }
   }
 }

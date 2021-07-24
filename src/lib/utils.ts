@@ -6,22 +6,39 @@ import crypto from 'crypto'
 import jsonWebToken, { Algorithm } from 'jsonwebtoken'
 import errors from './errors'
 import config from '../config'
+import bcrypt from 'bcrypt'
 
+const saltRounds = 10
 
-export const generateJwt = (payload: any, expiresIn = "10days", algorithm: Algorithm = "HS512") => {
-  return jsonWebToken.sign(payload, config.get("APP_KEY") as any, {
+export const hashPassword = (password: string = required('password')) =>
+  bcrypt.hashSync(password, saltRounds)
+
+export const comparePassword = (
+  hashedPassword: string = required('hashedPassword'),
+  password: string = required('password')
+) => bcrypt.compare(password, hashedPassword)
+
+export const generateJwt = (
+  payload: any,
+  expiresIn = '10days',
+  algorithm: Algorithm = 'HS512'
+) => {
+  return jsonWebToken.sign(payload, config.get('APP_KEY') as any, {
     expiresIn,
     algorithm
   })
 }
 
-
-export const decodeJwt = (token: string = require("token")) => {
+export const decodeJwt = (token: string = require('token')) => {
   return new Promise((resolve, reject) => {
-    jsonWebToken.verify(token, config.get("APP_KEY") as any, (err: any, decoded: any) => {
-      if (err) return reject(err)
-      resolve(decoded)
-    })
+    jsonWebToken.verify(
+      token,
+      config.get('APP_KEY') as any,
+      (err: any, decoded: any) => {
+        if (err) return reject(err)
+        resolve(decoded)
+      }
+    )
   })
 }
 
@@ -77,7 +94,7 @@ export const parseString = (str: string) => {
 export const createHmac = ({
   secret,
   data,
-  algorithm = "sha256"
+  algorithm = 'sha256'
 }: {
   secret: string
   data: string
@@ -88,12 +105,13 @@ export const createHmac = ({
     .update(Buffer.from(data) as any, 'utf8')
     .digest('hex')
 
-
-
-export const convertObjectToDotNotation = (queryKey: string, queryObject: any, operator = ".$") => Object.keys(queryObject).reduce((acc: {
-  [x: string]: any
-}, key) => {
-  const value = queryObject[key]
-  acc[`${queryKey}${operator}.${key}`] = value
-  return acc
-}, {})
+export const convertObjectToDotNotation = (
+  queryKey: string,
+  queryObject: any,
+  operator = '.$'
+) =>
+  Object.keys(queryObject).reduce((acc: { [x: string]: any }, key) => {
+    const value = queryObject[key]
+    acc[`${queryKey}${operator}.${key}`] = value
+    return acc
+  }, {})
