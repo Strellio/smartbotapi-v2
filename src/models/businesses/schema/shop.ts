@@ -1,7 +1,7 @@
 'use strict'
 
 import mongoose from 'mongoose'
-import { PLATFORM_MAP } from './enums'
+import { PLATFORM_MAP, SUBSCRIPTION_PLATFORM_MAP } from './enums'
 
 export default {
   external_created_at: Date,
@@ -36,5 +36,9 @@ export default {
       return that?.platform === PLATFORM_MAP.WORDPRESS
     }
   },
-  charge_id: String
+  charge_id: String,
+  subscription_platform: {
+    type: String,
+    enum: Object.values(SUBSCRIPTION_PLATFORM_MAP)
+  }
 }

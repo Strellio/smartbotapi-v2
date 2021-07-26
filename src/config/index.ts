@@ -108,6 +108,11 @@ const config = convict({
     doc: 'PUBSUB_CREDENTIALS',
     env: 'PUBSUB_CREDENTIALS',
     default: process.env.PUBSUB_CREDENTIALS
+  },
+  FLUTTERWAVE_SEC_KEY: {
+    doc: 'FLUTTERWAVE_SEC_KEY',
+    env: 'FLUTTERWAVE_SEC_KEY',
+    default: process.env.FLUTTERWAVE_SEC_KEY
   }
 })
 

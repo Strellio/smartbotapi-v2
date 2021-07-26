@@ -28,6 +28,7 @@ export default async function register (payload: any) {
       user: user.id,
       is_external_platform: false,
       platform: PLATFORM_MAP.WEBSITE,
+      business_name: payload.business_name,
       email: user.email,
       location: {
         country: payload.country,

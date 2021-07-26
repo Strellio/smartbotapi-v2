@@ -29,6 +29,7 @@ export default gql`
     date_upgraded: DateTime
     shop: Shop
     chat_platforms: [ChatPlatform!]
+    is_external_platform: Boolean
   }
 
   type ChatAgent {
