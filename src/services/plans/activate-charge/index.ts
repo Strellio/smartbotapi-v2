@@ -39,12 +39,12 @@ export default async function activateCharge ({
     })
     console.log(response)
 
-    // await changePlan({
-    //   business_id,
-    //   plan_id,
-    //   charge_id: chargeId as any
-    // })
-    // return `${config.get('DASHBOARD_URL')}/plans?success=true`
+    await changePlan({
+      business_id,
+      plan_id,
+      charge_id: charge_id as any
+    })
+    return `${config.get('DASHBOARD_URL')}/plans?success=true`
   } catch (error) {
     return `${config.get('DASHBOARD_URL')}/plans?success=false&errorMessage=${
       error.message
