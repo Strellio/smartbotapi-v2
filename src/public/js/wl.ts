@@ -1,5 +1,5 @@
 
-const WIDGET_URL = 'https://widgetv2.onrender.com' || 'https://smartbotwidget.com'
+const WIDGET_URL ="https://melior.serveo.net" || 'https://widgetv2.onrender.com' || 'https://smartbotwidget.com'
 
 
 function getParams(scriptName: string) {
