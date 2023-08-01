@@ -1,4 +1,4 @@
-var WIDGET_URL = "https://melior.serveo.net" || 'https://widgetv2.onrender.com' || 'https://smartbotwidget.com';
+var WIDGET_URL = "https://smartbot-widget.serveo.net" || 'https://widgetv2.onrender.com' || 'https://smartbotwidget.com';
 function getParams(scriptName) {
     var _a, _b, _c, _d;
     var script = document.getElementsByTagName("script");

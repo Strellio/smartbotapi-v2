@@ -43,7 +43,7 @@ export default function getBotResponse ({
   metadata: any
 }): Promise<BotResponse[]> {
   return request
-    .post(`${config.get('BOT_API')}/webhooks/rest/webhook`, {
+    .post(`${config.get('BOT_API')}/conversation`, {
       sender: senderId,
       message,
       metadata
