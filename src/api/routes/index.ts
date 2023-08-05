@@ -18,7 +18,11 @@ export default function router() {
     .get("/seeds", insertSeeds)
     .post("/ticket", (req, res) => {
       console.log("req.body", req.body);
-      return res.status(200).send("Your ticket has been created successfully")
+      return res.status(200).json({
+        ticketID: "7588993",
+        status: "pending",
+        message: "Ticket created successfully",
+      })
         
     })
 
