@@ -24,6 +24,11 @@ const config = convict({
     env: 'DB_URL',
     default: process.env.DB_URL
   },
+  ATLAS_DB_URL: {
+    doc: 'Mongodb url',
+    env: 'ATLAS_DB_URL',
+    default: process.env.ATLAS_DB_URL
+  },
   SHOPIFY_APP_SECRET: {
     doc: 'Shopify secret',
     env: 'SHOPIFY_APP_SECRET',
