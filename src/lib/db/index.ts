@@ -5,8 +5,6 @@ import config from '../../config'
 import logger from '../logger'
 import { MongoClient } from "mongodb";
 
-import { HNLoader } from "langchain/document_loaders/web/hn";
-
 
 export const connect = () => {
   return mongoose

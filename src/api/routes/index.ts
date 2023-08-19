@@ -8,7 +8,7 @@ import {
   activePlatformCharge,
   insertSeeds,
 } from "./actions";
-import { createSearchIndex } from "../../lib/db";
+import { createSearchIndex } from "../../lib/db/atlas";
 import Shopify from "shopify-api-node";
 import { ShopifyLoader } from "../../lib/loaders/shopify";
 import { createVectoreStore } from "../../lib/vectorstore/create-vectorstore";
@@ -35,10 +35,16 @@ export default function router() {
 
       const resultOne = await vectorStore.similaritySearch("sofa", 1);
         console.log(resultOne);
+        
+    })
 
 
+    .post("/create-index", async (req, res) => {
 
-  // createSearchIndex({ dbName: "smart-store-wis", indexName: "products-retriever", collectionName: "products-store" }).then(console.log).catch(console.log)
+
+       createSearchIndex({ dbName: "smart-store-wis", indexName: "test-index", collectionName: "products-store" }).then(console.log).catch(console.log)
+      
+      return res.sendStatus(200)
         
     })
 
