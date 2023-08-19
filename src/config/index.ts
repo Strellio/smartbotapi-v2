@@ -118,7 +118,33 @@ const config = convict({
     doc: 'FLUTTERWAVE_SEC_KEY',
     env: 'FLUTTERWAVE_SEC_KEY',
     default: process.env.FLUTTERWAVE_SEC_KEY
-  }
+  },
+
+  OPENAI_API_KEY:{
+    doc: 'OPENAI_API_KEY',
+    env: 'OPENAI_API_KEY',
+    default: process.env.OPENAI_API_KEY
+  },
+MONGODB_PUBLIC_KEY:{
+  doc: 'MONGODB_PUBLIC_KEY',
+  env: 'MONGODB_PUBLIC_KEY',
+  default: process.env.MONGODB_PUBLIC_KEY
+},
+MONGODB_PRIVATE_KEY:{
+  doc: 'MONGODB_PRIVATE_KEY',
+  env: 'MONGODB_PRIVATE_KEY',
+  default: process.env.MONGODB_PRIVATE_KEY
+},
+MONGODB_PROJECT_ID:{
+  doc: 'MONGODB_PROJECT_ID',
+  env: 'MONGODB_PROJECT_ID',
+  default: process.env.MONGODB_PROJECT_ID
+},
+MONGODB_CLUSTER_NAME:{
+  doc: 'MONGODB_CLUSTER_NAME',
+  env: 'MONGODB_CLUSTER_NAME',
+  default: process.env.MONGODB_CLUSTER_NAME
+}
 })
 
 config.validate({ allowed: 'strict' })
