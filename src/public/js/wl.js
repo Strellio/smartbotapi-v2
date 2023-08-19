@@ -43,5 +43,30 @@ thisWindow.smartbotBotScript = Object.assign({}, {
 }, getParams("js/wl"));
 var jsSrc = WIDGET_URL + "/smartbot-widget.min.js";
 var cssSrc = WIDGET_URL + "/smartbot-widget.min.css";
+
+
+
+function addWidgetRoot() {
+    
+var body = document.getElementsByTagName('body')[0];
+
+
+
+const el = document.createElement('div');
+
+
+// ✅ Set ID attribute on the element
+el.setAttribute('id', 'app');
+
+body.appendChild(el)
+}
+
+
+addWidgetRoot()
+
+
+
 addCssScriptToHeader(cssSrc);
 addJsScriptToHeader(jsSrc);
+
+
