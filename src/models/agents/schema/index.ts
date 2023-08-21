@@ -1,48 +1,48 @@
-'use strict'
+"use strict";
 
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const schema = new mongoose.Schema(
   {
     business: {
       type: mongoose.Types.ObjectId,
-      ref: 'businesses',
-      required: true
+      ref: "businesses",
+      required: true,
     },
     name: {
       type: String,
-      required: true
+      required: true,
     },
     profile_url: {
       type: String,
-      required: true
+      required: true,
     },
     is_online: {
       type: Boolean,
-      default: false
+      default: false,
     },
     linked_chat_agents: {
       type: [
         {
-          type: mongoose.Types.ObjectId
-        }
-      ]
-    }
+          type: mongoose.Types.ObjectId,
+        },
+      ],
+    },
   },
   {
     timestamps: {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at'
+      createdAt: "created_at",
+      updatedAt: "updated_at",
     },
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
   }
-)
+);
 
-schema.virtual('linked_chat_agents_platforms', {
-  ref: 'chat_platforms',
-  localField: 'linked_chat_agents',
-  foreignField: 'agents._id'
-})
+schema.virtual("linked_chat_agents_platforms", {
+  ref: "chat_platforms",
+  localField: "linked_chat_agents",
+  foreignField: "agents._id",
+});
 
-export default schema
+export default schema;

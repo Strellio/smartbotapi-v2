@@ -1,8 +1,6 @@
 import { BaseDocumentLoader } from "langchain/document_loaders/base";
 import { Document } from "langchain/document";
 
-
-
 interface ProductVariant {
   price: string;
   requires_shipping: boolean;
@@ -30,9 +28,9 @@ function generateSentences(product: Product, domain: string): string {
   sentence += ` Tags: ${product.tags}.`;
 
   if (product.variants[0].requires_shipping) {
-    sentence += ' Shipping is available.';
+    sentence += " Shipping is available.";
   } else {
-    sentence += ' No shipping available.';
+    sentence += " No shipping available.";
   }
 
   sentence += ` Weight: ${product.variants[0].weight} kg.`;
@@ -43,7 +41,7 @@ function generateSentences(product: Product, domain: string): string {
 }
 
 const SHOPIFY_ENDPOINTS: Record<string, string> = {
-  products: '/admin/products.json',
+  products: "/admin/products.json",
 };
 
 export class ShopifyLoader extends BaseDocumentLoader {
@@ -51,7 +49,11 @@ export class ShopifyLoader extends BaseDocumentLoader {
   private domain: string;
   private params: string;
 
-  constructor(domain: string, resource: string, access_token: string | null = null) {
+  constructor(
+    domain: string,
+    resource: string,
+    access_token: string | null = null
+  ) {
     super();
     this.resource = resource;
     this.domain = domain;
@@ -63,7 +65,7 @@ export class ShopifyLoader extends BaseDocumentLoader {
     const response = await fetch(`${url}${this.params}`);
     const json_data = await response.json();
     const products: Product[] = json_data.products;
-    return products.map(product => ({
+    return products.map((product) => ({
       pageContent: generateSentences(product, this.domain),
       metadata: product,
     }));
