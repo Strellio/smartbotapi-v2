@@ -4,7 +4,7 @@ import { objectId } from '../../../lib/joi'
 
 export default joi.object({
   business_id: objectId().required(),
-  external_id: joi.string().required(),
+  external_id: joi.string(),
   source: objectId().required(),
   email: joi.string().email(),
   name: joi.string(),

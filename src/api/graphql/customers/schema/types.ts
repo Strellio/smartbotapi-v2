@@ -5,7 +5,7 @@ import { gql } from 'apollo-server-express'
 export default gql`
   type Customer {
     id: ID!
-    external_id: String!
+    external_id: String
     source: MessageSource!
     email: EmailAddress
     name: String
