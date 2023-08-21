@@ -18,6 +18,7 @@ export default gql`
     business_id: ObjectID!
     plan_id: ObjectID!
     charge_id: String
+    platform: String!
   }
 
   input ChargeInput {

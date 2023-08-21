@@ -45,7 +45,7 @@ export default joi.object({
   }),
   full_name: joi.string(),
   location: {
-    country: joi.string(),
-    city: joi.string()
+    country: joi.string().allow('', null),
+    city: joi.string().allow('', null)
   }
 })

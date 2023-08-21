@@ -26,7 +26,7 @@ export default async function charge (
     )?.days,
     return_url: `${config.get('APP_URL')}/plans/charge?business_id=${
       business.id
-    }&plan_id=${plan.id}`,
+    }&plan_id=${plan.id}&platform=${business.platform}`,
     test: config.get('NODE_ENV') !== 'production'
   })
 

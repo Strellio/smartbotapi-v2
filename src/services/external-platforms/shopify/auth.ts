@@ -26,7 +26,7 @@ export async function callback(params: CallbackParams): Promise<string> {
   const shopifyClient = shopifyLib().shopifyClient({ shop: payload.shop, accessToken: access_token })
   const shopDetails = await shopifyClient.shop.get()
 
-
+  
   const createBusinessPayload: any = {
     status: STATUS_MAP.ACTIVE,
     domain: `https://${shopDetails.domain}`,
@@ -40,7 +40,7 @@ export async function callback(params: CallbackParams): Promise<string> {
     },
     external_id: String(shopDetails.id),
     business_name: shopDetails.name,
-    location: {
+    location:  {
       country: shopDetails.country_name,
       city: shopDetails.city
     },
@@ -63,7 +63,9 @@ export async function callback(params: CallbackParams): Promise<string> {
   await shopifyClient.scriptTag.create({
     src: getWidgetCode(business.id),
     event: "onload"
-  }).catch(err => { })
+  }).catch(err => { 
+    console.log(err.response.body.errors)
+  })
 
   return `${config.get('DASHBOARD_URL')}/api/auth?token=${generateJwt({
     business_id: business.id
