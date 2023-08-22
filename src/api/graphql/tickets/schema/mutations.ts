@@ -1,10 +1,10 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   extend type Mutation {
     createTicket(input: CreateTicketInput!): Ticket!
     updateTicket(input: UpdateTicketInput!): Ticket!
   }
-`
+`;

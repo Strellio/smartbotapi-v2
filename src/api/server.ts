@@ -28,13 +28,8 @@ const graphqlServer = new ApolloServer({
   resolvers,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   formatError: formatError as any,
-  // context: ({ req, connection }) => {
-  //   if (connection) return connection.context;
-  //   const token = req.headers.authorization?.split(" ")[1];
-  //   const operationsToIgnore = ["createAccount", "login"];
-  //   if (operationsToIgnore.includes(req.body.operationName)) return req;
-  //   return isAuthenticated(token, req);
-  // },
+  introspection: config.isDev,
+  csrfPrevention: true,
   // subscriptions: {
   //   onConnect: (connectionParams: any, websocket, context) => {
   //     logger().info("connection established", connectionParams);

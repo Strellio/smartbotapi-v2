@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   type User {
@@ -12,4 +12,4 @@ export default gql`
     updated_at: DateTime!
     businesses: [Business!]
   }
-`
+`;

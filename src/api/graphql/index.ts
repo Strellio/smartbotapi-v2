@@ -1,5 +1,5 @@
 "use strict";
-import { gql } from "apollo-server-express";
+import gql from "graphql-tag";
 import {
   typeDefs as scalarTypeDefs,
   resolvers as scalarResolvers,

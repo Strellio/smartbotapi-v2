@@ -1,9 +1,9 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   extend type Mutation {
     addMessage(input: AddMessageInput!): Message!
   }
-`
+`;

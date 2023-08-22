@@ -1,9 +1,9 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
-import { TICKET_PRIORITY_ENUM } from '../../../../models/tickets/schema'
+import gql from "graphql-tag";
+import { TICKET_PRIORITY_ENUM } from "../../../../models/tickets/schema";
 
-const priorityEnum = Object.values(TICKET_PRIORITY_ENUM)
+const priorityEnum = Object.values(TICKET_PRIORITY_ENUM);
 
 export default gql`
   type Ticket {
@@ -55,4 +55,4 @@ input GetTicketsInput{
   enum TicketPriorityEnum {
     ${priorityEnum}
   }
-`
+`;

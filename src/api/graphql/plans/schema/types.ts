@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   type Plan {
@@ -25,4 +25,4 @@ export default gql`
     business_id: ObjectID!
     plan_id: ObjectID!
   }
-`
+`;

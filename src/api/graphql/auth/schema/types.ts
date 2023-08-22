@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   type AuthUser {
@@ -19,4 +19,4 @@ export default gql`
     email: EmailAddress!
     password: String!
   }
-`
+`;
