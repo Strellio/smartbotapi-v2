@@ -1,52 +1,52 @@
-'use strict'
+"use strict";
 
-import request from '../request'
-import { required } from '../utils'
-import config from '../../config'
+import request from "../request";
+import { required } from "../utils";
+import config from "../../config";
 
 export type BotResponseCustomData = {
-  title: string
-  image_url: string
-  subtitle?: string
+  title: string;
+  image_url: string;
+  subtitle?: string;
   default_action: {
-    type: 'web_url'
-    url: string
-    webview_height_ratio: string
-  }
+    type: "web_url";
+    url: string;
+    webview_height_ratio: string;
+  };
   buttons: {
-    type: 'web_url'
-    url: string,
-    title: string
-  }[]
-}
+    type: "web_url";
+    url: string;
+    title: string;
+  }[];
+};
 
 type BotResponse = {
-  text?: string
-  recipient_id: string
+  text?: string;
+  recipient_id: string;
   custom?: {
-    data: BotResponseCustomData[]
-    type: string
-  }
+    data: BotResponseCustomData[];
+    type: string;
+  };
   buttons?: {
-    title: string
-    payload: string
-  }[]
-}
+    title: string;
+    payload: string;
+  }[];
+};
 
-export default function getBotResponse ({
-  senderId = required('senderId'),
-  message = required('message'),
-  metadata = {}
+export default function getBotResponse({
+  senderId = required("senderId"),
+  message = required("message"),
+  metadata = {},
 }: {
-  senderId?: string
-  message: string
-  metadata: any
+  senderId?: string;
+  message: string;
+  metadata: any;
 }): Promise<BotResponse[]> {
   return request
-    .post(`${config.get('BOT_API')}/conversation`, {
+    .post(`${config.BOT_API}/conversation`, {
       sender: senderId,
       message,
-      metadata
+      metadata,
     })
-    .then(response => response?.data)
+    .then((response) => response?.data);
 }

@@ -11,7 +11,7 @@ export enum BULL_QUEUES_NAMES {
 const repeatProductSyncQueue = () => {
   const queue = new Queue(BULL_QUEUES_NAMES.SYNC_STORE_PRODUCTS);
 
-  if (config.get("NODE_ENV") !== "test") {
+  if (config.isTest) {
     new Worker(
       BULL_QUEUES_NAMES.SYNC_STORE_PRODUCTS,
       path.join(__dirname, "../../workers/sync-products/index.ts")

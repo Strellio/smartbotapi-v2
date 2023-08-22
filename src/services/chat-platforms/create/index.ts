@@ -51,8 +51,12 @@ export default async function create(params: createParams) {
   const transformedPayload = await chatPlatforms.transformByPlatform({
     payload: {
       ...payload,
-      whitelistedDomains: compact([business.domain, business.shop.external_platform_domain, config.get("WIDGET_URL")])
-    }
+      whitelistedDomains: compact([
+        business.domain,
+        business.shop.external_platform_domain,
+        config.WIDGET_URL,
+      ]),
+    },
   });
 
   return chatPlatformModel().create({

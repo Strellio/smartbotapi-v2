@@ -1,47 +1,47 @@
-'use strict'
-import { gql } from 'apollo-server-express'
+"use strict";
+import { gql } from "apollo-server-express";
 import {
   typeDefs as scalarTypeDefs,
-  resolvers as scalarResolvers
-} from 'graphql-scalars'
+  resolvers as scalarResolvers,
+} from "graphql-scalars";
 // common
-import customSchema from './common/schema'
+import customSchema from "./common/schema";
 // users
-import usersSchema from './users/schema'
+import usersSchema from "./users/schema";
 
 // Business
-import businessesSchema from './businesses/schema'
-import businessResolvers from './businesses/resolvers'
+import businessesSchema from "./businesses/schema";
+import businessResolvers from "./businesses/resolvers";
 //Plan
 
-import planSchema from './plans/schema'
-import planResolver from './plans/resolvers'
+import planSchema from "./plans/schema";
+import planResolver from "./plans/resolvers";
 
 //message
-import messageSchema from './messages/schema'
-import messageResolver from './messages/resolvers'
+import messageSchema from "./messages/schema";
+import messageResolver from "./messages/resolvers";
 
 //customers
-import customerSchema from './customers/schema'
-import customerResolver from './customers/resolvers'
+import customerSchema from "./customers/schema";
+import customerResolver from "./customers/resolvers";
 // product and analytics
-import productAndAnalytics from './products-and-analytics/schema'
+import productAndAnalytics from "./products-and-analytics/schema";
 
 // agents (persons)
-import agentsResolver from './agents/resolvers'
-import agentsSchema from './agents/schema'
+import agentsResolver from "./agents/resolvers";
+import agentsSchema from "./agents/schema";
 
 // agents (persons)
-import ticketsResolver from './tickets/resolvers'
-import ticketsSchema from './tickets/schema'
+import ticketsResolver from "./tickets/resolvers";
+import ticketsSchema from "./tickets/schema";
 
 // analytics (persons)
-import analyticsResolver from './analytics/resolvers'
-import analyticsSchema from './analytics/schema'
+import analyticsResolver from "./analytics/resolvers";
+import analyticsSchema from "./analytics/schema";
 
 // auth
-import authResolver from './auth/resolvers'
-import authSchema from './auth/schema'
+import authResolver from "./auth/resolvers";
+import authSchema from "./auth/schema";
 
 const baseSchema = gql`
   type Query {
@@ -53,7 +53,7 @@ const baseSchema = gql`
   type Subscription {
     _: Boolean
   }
-`
+`;
 
 export const schemas = [
   baseSchema,
@@ -68,8 +68,9 @@ export const schemas = [
   ...productAndAnalytics,
   ...agentsSchema,
   ...ticketsSchema,
-  ...analyticsSchema
-] as any
+  ...analyticsSchema,
+] as any;
+
 export const resolvers = [
   scalarResolvers,
   ...authResolver,
@@ -79,5 +80,5 @@ export const resolvers = [
   ...customerResolver,
   ...agentsResolver,
   ...ticketsResolver,
-  ...analyticsResolver
-]
+  ...analyticsResolver,
+];
