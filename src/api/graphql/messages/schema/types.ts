@@ -1,13 +1,13 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 import {
   MESSAGE_TYPE,
-  MESSAGE_MEDIA_TYPE
-} from '../../../../models/messages/schema'
+  MESSAGE_MEDIA_TYPE,
+} from "../../../../models/messages/schema";
 
-const messageType = Object.values(MESSAGE_TYPE)
-const messageMedia = Object.values(MESSAGE_MEDIA_TYPE)
+const messageType = Object.values(MESSAGE_TYPE);
+const messageMedia = Object.values(MESSAGE_MEDIA_TYPE);
 
 export default gql`
 enum MessageTypeEnum{
@@ -102,4 +102,4 @@ enum MessageTypeEnum{
  input NewCustomerMessageInput{
    customer_id: ObjectID!
  }
-`
+`;

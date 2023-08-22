@@ -1,9 +1,8 @@
-
-'use strict'
-import { gql } from 'apollo-server-express'
+"use strict";
+import gql from "graphql-tag";
 
 export default gql`
   extend type Query {
     listAgents: [Agent!]
   }
-`
+`;

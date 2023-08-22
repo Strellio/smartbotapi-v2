@@ -1,37 +1,37 @@
-'use strict'
-import { Router } from 'express'
+"use strict";
+import { Router } from "express";
 import {
   intercomWebhook,
   facebookHubVerify,
   facebookWebhook,
   hubspotWebhook,
-  customActionWebhook
-} from './actions'
-import { isAuthenticatedMiddleware, verifyWebhook } from './middlewares'
-import config from '../../../config'
-import '../../../services/plans'
+  customActionWebhook,
+} from "./actions";
+import { isAuthenticatedMiddleware, verifyWebhook } from "./middlewares";
+import config from "../../../config";
+import "../../../services/plans";
 
-export default function routes () {
+export default function routes() {
   return Router()
     .post(
-      '/intercom/message',
+      "/intercom/message",
       verifyWebhook({
-        path: 'headers.x-hub-signature',
-        secret: config.get('INTERCOM_CLIENT_SECRET') as any,
-        hasSplit: true
+        path: "headers.x-hub-signature",
+        secret: config.INTERCOM_CLIENT_SECRET,
+        hasSplit: true,
       }),
       intercomWebhook
     )
-    .get('/facebook/message', facebookHubVerify)
+    .get("/facebook/message", facebookHubVerify)
     .post(
-      '/facebook/message',
+      "/facebook/message",
       verifyWebhook({
-        path: 'headers.x-hub-signature',
-        secret: config.get('FB_CLIENT_SECRET') as any,
-        hasSplit: true
+        path: "headers.x-hub-signature",
+        secret: config.FB_CLIENT_SECRET,
+        hasSplit: true,
       }),
       facebookWebhook
     )
-    .post('/hubspot/message', hubspotWebhook)
-    .post('/custom/message', isAuthenticatedMiddleware, customActionWebhook)
+    .post("/hubspot/message", hubspotWebhook)
+    .post("/custom/message", isAuthenticatedMiddleware, customActionWebhook);
 }

@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   extend type Query {
@@ -8,4 +8,4 @@ export default gql`
     groups(input: AnalyticsCountsInput): AnalyticsGroups!
     lists(input: AnalyticsListsInput): AnalyticsLists!
   }
-`
+`;

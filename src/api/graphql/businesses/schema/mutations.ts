@@ -1,5 +1,5 @@
-'use strict'
-import { gql } from 'apollo-server-express'
+"use strict";
+import gql from "graphql-tag";
 
 export default gql`
   extend type Mutation {
@@ -7,4 +7,4 @@ export default gql`
     updateChatPlatform(input: UpdateChatPlatformInput!): ChatPlatform!
     createChatPlatform(input: CreateChatPlatformInput!): ChatPlatform!
   }
-`
+`;

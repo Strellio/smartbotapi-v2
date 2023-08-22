@@ -1,29 +1,27 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   type Agent {
     id: ID!
     name: String!
     profile_url: URL!
-    is_online: Boolean 
-    linked_chat_agents: [ChatAgent!] 
+    is_online: Boolean
+    linked_chat_agents: [ChatAgent!]
     created_at: DateTime!
     updated_at: DateTime!
   }
 
-  input CreateAgentInput{
+  input CreateAgentInput {
     name: String!
     profile_url: URL!
   }
 
-  input UpdateAgentInput{
+  input UpdateAgentInput {
     id: ID!
     name: String!
     profile_url: URL!
     linked_chat_agents: [ID]!
   }
-
-`
-
+`;
