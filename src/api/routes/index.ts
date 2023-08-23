@@ -24,14 +24,14 @@ export default function router() {
     .get("/seeds", insertSeeds)
     .post("/test-vectorstore", async (req, res) => {
 
-      const shopifyLoader = new ShopifyLoader("https://smart-store-wis.myshopify.com", "products", "shpua_0b2ba5fa999251310ae908280c4ea62e")
+      const shopifyLoader = new ShopifyLoader("https://design-studios-hub.myshopify.com", "products", "shpua_348cd5da4feb05fa566c82762018bc4a", {moneyFormat:'GH₵{{amount}}'})
       
       const documents = await shopifyLoader.load()
 
-      await createVectoreStore({ dbName: "smart-store-wis", indexName: "products-retriever", collectionName: "products-store", documents })
+      await createVectoreStore({ dbName: "design-studios-hub", indexName: "products-retriever", collectionName: "products-store", documents })
       
 
-      const vectorStore = await getVectorStore({ dbName: "smart-store-wis", indexName: "products-retriever", collectionName: "products-store" })
+      const vectorStore = await getVectorStore({ dbName: "design-studios-hub", indexName: "products-retriever", collectionName: "products-store" })
 
 
       const resultOne = await vectorStore.similaritySearch("sofa", 1);
