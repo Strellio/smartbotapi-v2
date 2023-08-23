@@ -5,8 +5,7 @@ import mongoose from 'mongoose'
 export default new mongoose.Schema(
   {
     external_id: {
-      type: String,
-      required: true
+      type: String
     },
     business: {
       type: mongoose.Types.ObjectId,
