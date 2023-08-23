@@ -1,5 +1,6 @@
 "use strict";
 import path from "path";
+import cors from "cors"
 import express from "express";
 import { formatError } from "apollo-errors";
 import { ApolloServer } from "@apollo/server";
@@ -45,7 +46,7 @@ const graphqlServer = new ApolloServer({
 
 export default async function startServer() {
   await graphqlServer.start();
-  app
+  app.use(cors())
     .use("/static", express.static(path.join(__dirname, "../public")))
     .use(express.json())
     .use(express.urlencoded({ extended: false }))
