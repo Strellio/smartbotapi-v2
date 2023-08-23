@@ -1,6 +1,10 @@
 import { BaseDocumentLoader } from "langchain/document_loaders/base";
 import { Document } from "langchain/document";
 import handlebars from 'handlebars'
+import Shopify from "shopify-api-node";
+import shopifyLib from "../shopify";
+
+
 
 
 interface ProductVariant {
@@ -39,7 +43,7 @@ type Options = {
 function generateSentences(product: Product, domain: string, options: Options): string {
   const moneyTemplate = handlebars.compile(options.moneyFormat)
   let sentence = `Product with title '${product.title}' is a ${product.status} ${product.product_type} available at ${moneyTemplate({amount:product.variants[0].price})}.`;
-  sentence += ` It has the product URL ${domain}/products/${product.handle} `;
+  sentence += ` It has the product or purchase or checkout URL as ${domain}/products/${product.handle} `;
 
   if (product.variants.length > 1) {
     sentence +=` With the following variants base on ${product.options.reduce((acc, option, index)=>acc+ option.name + `${index !== product.options.length -1 ? 'and':''}` , "")} as  ${product.variants.reduce((acc, variant)=>acc + `${variant.title} for ${moneyTemplate({amount:variant.price})},` , "")}`
@@ -47,9 +51,9 @@ function generateSentences(product: Product, domain: string, options: Options): 
   sentence += `With tags: ${product.tags}.`;
 
   if (product.variants[0].requires_shipping) {
-    sentence += " Shipping is available.";
+    sentence += ' Shipping is available.';
   } else {
-    sentence += " No shipping available.";
+    sentence += ' No shipping available.';
   }
 
   sentence += ` Weight: ${product.variants[0].weight} ${product.variants[0].weight_unit}.`;
@@ -59,28 +63,42 @@ function generateSentences(product: Product, domain: string, options: Options): 
 }
 
 const SHOPIFY_ENDPOINTS: Record<string, string> = {
-  products: "/admin/products.json",
+  products: '/admin/products.json',
 };
 
 export class ShopifyLoader extends BaseDocumentLoader {
   private resource: string;
   private domain: string;
-  private params: string;
   private options: Options
+
+  private client: Shopify
 
   constructor(domain: string, resource: string, access_token: string, options:Options) {
     super();
     this.resource = resource;
     this.domain = domain;
     access_token = access_token;
-    this.params = `?access_token=${access_token}&published_status=published`;
     this.options = options
+    this.client = shopifyLib().shopifyClient({
+      shop: domain,
+      accessToken: access_token
+    })
   }
 
-  private async makeRequest(url: string): Promise<Document[]> {
-    const response = await fetch(`${url}${this.params}`);
-    const json_data = await response.json();
-    const products: Product[] = json_data.products;
+  
+
+  private async makeRequest(): Promise<Document[]> {
+    let products: Product[] = [];
+
+    let params = { limit: 250, published_status: "published" };
+
+    do {
+      const result = await this.client.product.list(params);
+
+      products = [...products, ...result] as  Product[] 
+
+      params = result.nextPageParameters;
+    } while (params !== undefined);
 
     
     return products.map(product => ({
@@ -99,6 +117,6 @@ export class ShopifyLoader extends BaseDocumentLoader {
     if (!resourceUrl) {
       return [];
     }
-    return await this.makeRequest(resourceUrl);
+    return await this.makeRequest();
   }
 }

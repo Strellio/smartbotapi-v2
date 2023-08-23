@@ -42,12 +42,12 @@ export default function router() {
 
     .post("/create-index", async (req, res) => {
 
-      const queue = queues.repeatProductSyncQueue()
+      // const queue = queues.repeatProductSyncQueue()
       
-      queue.add({data: {foo:"bar"}, jobId:"rrurururu", repeat: 3600})
+      // queue.add({data: {foo:"bar"}, jobId:"rrurururu", repeat: 3600})
 
 
-      //  createSearchIndex({ dbName: "smart-store-wis", indexName: "test-index", collectionName: "products-store" }).then(console.log).catch(console.log)
+     await  createSearchIndex({ dbName: "design-studios-hub", indexName: "products-retriever", collectionName: "products-store" }).then(console.log).catch(console.log)
       
       return res.sendStatus(200)
         
