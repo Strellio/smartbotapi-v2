@@ -3,8 +3,6 @@ import { Document } from "langchain/document";
 import handlebars from 'handlebars'
 
 
-
-
 interface ProductVariant {
   price: string;
   requires_shipping: boolean;
@@ -49,9 +47,9 @@ function generateSentences(product: Product, domain: string, options: Options): 
   sentence += `With tags: ${product.tags}.`;
 
   if (product.variants[0].requires_shipping) {
-    sentence += ' Shipping is available.';
+    sentence += " Shipping is available.";
   } else {
-    sentence += ' No shipping available.';
+    sentence += " No shipping available.";
   }
 
   sentence += ` Weight: ${product.variants[0].weight} ${product.variants[0].weight_unit}.`;
@@ -61,7 +59,7 @@ function generateSentences(product: Product, domain: string, options: Options): 
 }
 
 const SHOPIFY_ENDPOINTS: Record<string, string> = {
-  products: '/admin/products.json',
+  products: "/admin/products.json",
 };
 
 export class ShopifyLoader extends BaseDocumentLoader {

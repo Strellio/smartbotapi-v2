@@ -1,6 +1,7 @@
-'use strict'
-import * as db from '../lib/db'
+"use strict";
+import * as db from "../lib/db";
+import startServer from "./server";
 
 db.connect().then(() => {
-  require('./server')
-})
+  return startServer();
+});

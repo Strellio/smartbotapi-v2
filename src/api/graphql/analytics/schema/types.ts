@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   type AnalyticsCounts {
@@ -57,4 +57,4 @@ export default gql`
     from_date: DateTime
     end_date: DateTime
   }
-`
+`;

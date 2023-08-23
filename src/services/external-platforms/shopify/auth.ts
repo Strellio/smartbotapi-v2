@@ -1,33 +1,38 @@
-'use strict'
+"use strict";
 
-import shopifyLib from '../../../lib/shopify'
-import { required, validate, generateJwt } from '../../../lib/utils'
-import businessService from '../../businesses'
-import schema from './schema'
-import { STATUS_MAP } from '../../../models/common'
-import config from '../../../config'
-import { PLATFORM_MAP } from '../../../models/businesses/schema/enums'
+import shopifyLib from "../../../lib/shopify";
+import { required, validate, generateJwt } from "../../../lib/utils";
+import businessService from "../../businesses";
+import schema from "./schema";
+import { STATUS_MAP } from "../../../models/common";
+import config from "../../../config";
+import { PLATFORM_MAP } from "../../../models/businesses/schema/enums";
 
-
-export function install({ shop = required('shop') }) {
-  return shopifyLib().shopifyToken.generateAuthUrl(shop)
+export function install({ shop = required("shop") }) {
+  return shopifyLib().shopifyToken.generateAuthUrl(shop);
 }
 
 const getWidgetCode = (businessId: string) => {
-  return `${config.get("APP_URL")}/static/js/wl.js?token=${generateJwt({ business_id: businessId }, "1year", "HS256")}`
-}
+  return `${config.APP_URL}/static/js/wl.js?token=${generateJwt(
+    { business_id: businessId },
+    "1year",
+    "HS256"
+  )}`;
+};
 
 export async function callback(params: CallbackParams): Promise<string> {
-  const payload = validate(schema, params)
+  const payload = validate(schema, params);
   const { access_token }: any = await shopifyLib().shopifyToken.getAccessToken(
     payload.shop,
     payload.code
-  )
-  const shopifyClient = shopifyLib().shopifyClient({ shop: payload.shop, accessToken: access_token })
-  const shopDetails = await shopifyClient.shop.get()
+  );
+  const shopifyClient = shopifyLib().shopifyClient({
+    shop: payload.shop,
+    accessToken: access_token,
+  });
+  const shopDetails = await shopifyClient.shop.get();
 
-  
-  const createBusinessPayload: any = {
+  const createBusinessPayload = {
     status: STATUS_MAP.ACTIVE,
     domain: `https://${shopDetails.domain}`,
     email: shopDetails.email,
@@ -36,45 +41,47 @@ export async function callback(params: CallbackParams): Promise<string> {
       external_platform_domain: `https://${shopDetails.myshopify_domain}`,
       external_created_at: shopDetails.created_at,
       money_format: shopDetails.money_format,
-      external_access_token: access_token
+      external_access_token: access_token,
     },
     external_id: String(shopDetails.id),
     business_name: shopDetails.name,
-    location:  {
+    location: {
       country: shopDetails.country_name,
-      city: shopDetails.city
+      city: shopDetails.city,
     },
-    platform: PLATFORM_MAP.SHOPIFY
-  }
+    platform: PLATFORM_MAP.SHOPIFY,
+  };
 
   let business = await businessService().getByExternalPlatformDomain(
     createBusinessPayload.shop.external_platform_domain
-  )
+  );
 
   if (!business) {
-    business = await businessService().create(createBusinessPayload)
+    business = await businessService().create(createBusinessPayload);
   } else {
     business = await businessService().updateById({
       id: business.id,
-      ...createBusinessPayload
-    })
+      ...createBusinessPayload,
+    });
   }
 
-  await shopifyClient.scriptTag.create({
-    src: getWidgetCode(business.id),
-    event: "onload"
-  }).catch(err => { 
-    console.log(err.response.body.errors)
-  })
+  await shopifyClient.scriptTag
+    .create({
+      src: getWidgetCode(business.id),
+      event: "onload",
+    })
+    .catch((err) => {
+      console.log(err.response.body.errors);
+    });
 
-  return `${config.get('DASHBOARD_URL')}/api/auth?token=${generateJwt({
-    business_id: business.id
-  })}&business_id=${business.id}` as any
+  return `${config.DASHBOARD_URL}/api/auth?token=${generateJwt({
+    business_id: business.id,
+  })}&business_id=${business.id}` as any;
 }
 
 interface CallbackParams {
-  code: string
-  hmac: string
-  shop: string
-  time: string
+  code: string;
+  hmac: string;
+  shop: string;
+  time: string;
 }

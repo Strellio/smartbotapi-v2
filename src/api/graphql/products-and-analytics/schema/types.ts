@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   type Product {
@@ -39,4 +39,4 @@ export default gql`
     metro: Int
     area: Int
   }
-`
+`;

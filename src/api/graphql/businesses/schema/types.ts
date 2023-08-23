@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-import { gql } from 'apollo-server-express'
+import gql from "graphql-tag";
 
 export default gql`
   type Location {
@@ -111,4 +111,4 @@ export default gql`
     type: ChatTypeEnum
     platform: ChatPlatformEnum
   }
-`
+`;

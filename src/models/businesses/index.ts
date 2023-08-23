@@ -1,50 +1,53 @@
-'use strict'
-import mongoose from 'mongoose'
-import schema from './schema'
-import BaseModel from '../common/base-model'
-import { required } from '../../lib/utils'
-import { Business } from './types'
-const Model = mongoose.model('businesses', schema)
-const BusinessBaseModel = BaseModel(Model)
+"use strict";
+import mongoose from "mongoose";
+import schema from "./schema";
+import BaseModel from "../common/base-model";
+import { required } from "../../lib/utils";
+import { Business } from "./types";
+const Model = mongoose.model("businesses", schema);
+const BusinessBaseModel = BaseModel(Model);
 
-const POPULATE = ["plan", "chat_platforms"]
+const POPULATE = ["plan", "chat_platforms"];
 
-const getByEmail = (email: string = required('email')): Promise<Business> =>
+const getByEmail = (email: string = required("email")): Promise<Business> =>
   BusinessBaseModel.ensureExists({
-    email
-  })
+    email,
+  });
 
 const getByExternalPlatformDomain = (
-  externalPlatformDomain: string = required('domain')
+  externalPlatformDomain: string = required("domain")
 ): Promise<Business> =>
   BusinessBaseModel.get({
     query: {
-      'shop.external_platform_domain': externalPlatformDomain
+      "shop.external_platform_domain": externalPlatformDomain,
     },
-    populate: POPULATE
-  })
+    populate: POPULATE,
+  }) as Promise<Business | null>;
 
-const getById = (id: string = required('id')): Promise<Business> =>
-  BusinessBaseModel.ensureExists({
-    _id: id
-  }, POPULATE)
+const getById = (id: string = required("id")): Promise<Business> =>
+  BusinessBaseModel.ensureExists(
+    {
+      _id: id,
+    },
+    POPULATE
+  );
 
 const updateById = (
-  id: string = required('id'),
-  update: any = required('update')
+  id: string = required("id"),
+  update: any = required("update")
 ): Promise<Business> =>
   BusinessBaseModel.updateOne({
     query: {
       _id: id,
       // ...(update?.shop?.id ? { "shop._id": update.shop.id } : {})
     },
-    update
-  })
+    update,
+  });
 
 export default () => ({
   ...BusinessBaseModel,
   getByEmail,
   getById,
   getByExternalPlatformDomain,
-  updateById
-})
+  updateById,
+});
