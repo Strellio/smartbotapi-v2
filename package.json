@@ -17,6 +17,7 @@
   "dependencies": {
     "@apollo/server": "4.9.1",
     "@axelspringer/graphql-google-pubsub": "2.1.0",
+    "@graphql-tools/schema": "10.0.0",
     "@shopify/shopify-api": "7.5.2",
     "apollo-errors": "1.9.0",
     "axios": "0.21.1",
@@ -31,13 +32,15 @@
     "express-pino-logger": "5.0.0",
     "geoip-lite": "1.4.2",
     "graphql": "16.8.0",
-    "graphql-redis-subscriptions": "2.2.2",
+    "graphql-redis-subscriptions": "2.6.0",
     "graphql-scalars": "1.22.2",
+    "graphql-subscriptions": "2.0.0",
     "graphql-tag": "2.12.6",
+    "graphql-ws": "5.14.0",
     "handlebars": "^4.7.8",
     "highland": "2.13.5",
     "intercom-client": "2.11.0",
-    "ioredis": "4.17.3",
+    "ioredis": "5.3.2",
     "joi": "17.9.2",
     "jsonwebtoken": "8.5.1",
     "langchain": "0.0.125",
@@ -48,7 +51,8 @@
     "pino": "6.4.0",
     "shopify-api-node": "3.12.6",
     "shopify-token": "4.1.0",
-    "striptags": "3.1.1"
+    "striptags": "3.1.1",
+    "ws": "8.13.0"
   },
   "devDependencies": {
     "@babel/cli": "7.10.4",
