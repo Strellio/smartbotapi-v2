@@ -1,5 +1,6 @@
 "use strict";
 import path from "path";
+import cors from "cors";
 import express from "express";
 import { formatError } from "apollo-errors";
 import { ApolloServer } from "@apollo/server";
@@ -13,6 +14,9 @@ import loggerMaker from "../lib/logger";
 import isAuthenticated from "./middlewares/is-authenticated";
 import logger from "../lib/logger";
 import attachIpToReq from "./middlewares/attach-ip";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 
 const PORT = config.PORT;
 
@@ -23,29 +27,69 @@ const reqLogger = require("express-pino-logger")({
 const app = express();
 const httpServer = http.createServer(app);
 
+const wsServer = new WebSocketServer({
+  server: httpServer,
+  path: "/graphql",
+});
+
+const getContext = async (ctx, msg, args) => {
+  return { business: ctx.business };
+};
+
+const schema = makeExecutableSchema({ typeDefs: schemas, resolvers });
+
+const serverCleanup = useServer(
+  {
+    schema: schema,
+    onConnect: async (ctx: any) => {
+      logger().info("connection established", ctx.connectionParams);
+
+      let token: string;
+
+      const headers = ctx.connectionParams.headers;
+
+      if (headers) {
+        const authToken = headers["Authorization"] ?? headers["authorization"];
+
+        token = authToken.split(" ")[1];
+      }
+      const { business } = await isAuthenticated(token, ctx);
+
+      ctx.business = business;
+    },
+    onDisconnect: (ctx) => {
+      logger().error("Connection disconnected", ctx.connectionParams);
+    },
+    context: getContext,
+  },
+  wsServer
+);
+
 const graphqlServer = new ApolloServer({
-  typeDefs: schemas,
-  resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  schema,
+
+  plugins: [
+    ApolloServerPluginDrainHttpServer({ httpServer }), // Proper shutdown for the WebSocket server.
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await serverCleanup.dispose();
+          },
+        };
+      },
+    },
+  ],
   formatError: formatError as any,
   introspection: config.isDev,
   csrfPrevention: true,
-  // subscriptions: {
-  //   onConnect: (connectionParams: any, websocket, context) => {
-  //     logger().info("connection established", connectionParams);
-  //     const token = connectionParams?.headers?.Authorization.split(" ")[1];
-  //     return isAuthenticated(token);
-  //   },
-  //   onDisconnect: (websocket) => {
-  //     logger().error("Connection disconnected", websocket);
-  //   },
-  // },
   logger: logger(),
 });
 
 export default async function startServer() {
   await graphqlServer.start();
   app
+    .use(cors())
     .use("/static", express.static(path.join(__dirname, "../public")))
     .use(express.json())
     .use(express.urlencoded({ extended: false }))

@@ -17,7 +17,7 @@ const create =
     const item = new Model(data);
     let doc = await item.save();
     if (populate) {
-      doc = await doc.populate(populate).execPopulate();
+      doc = await doc.populate(populate)
     }
     return doc.toObject() as any;
   };
