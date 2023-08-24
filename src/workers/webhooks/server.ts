@@ -16,8 +16,8 @@ const reqLogger = require("express-pino-logger")({
 
 app
   .use(cors())
-  .use(bodyParser.json())
-  .use(bodyParser.urlencoded({ extended: false }))
+  .use(express.json())
+  .use(express.urlencoded({ extended: false }))
   .use(reqLogger)
   .use("/webhooks", routes())
   .listen(PORT, () => {
