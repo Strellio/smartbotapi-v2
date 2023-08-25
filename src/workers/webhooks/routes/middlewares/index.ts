@@ -13,7 +13,7 @@ export const verifyWebhook = ({
   path: string
   secret: string
   hasSplit: boolean
-}) => (req: Request, res: Response, next: NextFunction) => {
+  }) => (req: Request, res: Response, next: NextFunction) => {
   const hubSignature: string = get(path, req) || ''
   const [algorithm, signature] = hubSignature.split('=')
   const hmacFromHeader = hasSplit ? signature : hubSignature
