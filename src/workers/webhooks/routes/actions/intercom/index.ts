@@ -44,11 +44,11 @@ const handleAsBot = async ({
 }) => {
   const agent = chatPlatform.agents.find(agent => !agent.is_person)
   const response = await getBotResponse({
-    senderId: intercomPayload.data.item.user.id,
+    senderId: intercomPayload.data.item.source.author.id,
     message: stripTags(conversation?.body),
     metadata: {
       business_id: String(chatPlatform.business.id),
-      intercom_id: String(chatPlatform.id)
+      chat_platform_id: String(chatPlatform.id)
     }
   })
   const doReplyWithTemplate = replyWithTemplate({
@@ -106,16 +106,20 @@ const extractImageFromConversationBody = (body?: string) => {
 export default async function intercomWebhookController (
   intercomPayload: IntercomWebhookPayload
 ) {
+
   const chatPlatform = await chatPlatformService().getByWorkSpaceId(
     intercomPayload.app_id
   )
+
+  const conversation = intercomPayload.data.item.conversation_parts.conversation_parts.pop()
+
   const customer = await customerService.createOrUpdate({
-    external_id: intercomPayload.data.item.user.id,
+    external_id: conversation.author.id,
     source: chatPlatform.id,
     business_id: chatPlatform.business.id,
-    name: intercomPayload.data.item.user.name
+    name: conversation.author.name?? 'Guest'
   })
-  const conversation = intercomPayload.data.item.conversation_parts.conversation_parts.pop()
+
 
   await formatAndSaveMessage({
     customer,

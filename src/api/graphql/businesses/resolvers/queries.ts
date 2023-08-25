@@ -12,8 +12,8 @@ export default {
     },
     getBusiness: (parent:any, {input}: any, {business}: any)=>business,
     
-    getWidgetSettings:  (parent:any, {input}: any, {business}: any)=>{
-      return businessService().getSettings(business.id)
+    getWidgetSettings: (parent: any, { input }: any, { business }: any) => {
+            return businessService().getSettings(business.id)
     }
   }
 }
