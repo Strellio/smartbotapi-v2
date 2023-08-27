@@ -8,10 +8,9 @@
     "build": "tsc",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src -d dist --extensions \".ts\" --source-maps inline",
-    "dev": "nodemon --exec ts-node src/api/index.ts --extensions \".ts\"",
-    "dev:webhooks": "PORT=3333 nodemon --exec ts-node src/workers/webhooks/index.ts --extensions \".ts\"",
+    "dev": "nodemon --exec babel-node src/api/index.ts --extensions \".ts\"",
+    "dev:webhooks": "PORT=3333 nodemon --exec babel-node src/workers/webhooks/index.ts --extensions \".ts\"",
     "start": "node dist/src/api/index.js"
-
   },
   "keywords": [],
   "author": "",
@@ -19,6 +18,7 @@
   "dependencies": {
     "@apollo/server": "4.9.1",
     "@axelspringer/graphql-google-pubsub": "2.1.0",
+    "@bull-monitor/express": "^5.4.0",
     "@graphql-tools/schema": "10.0.0",
     "@shopify/shopify-api": "7.5.2",
     "apollo-errors": "1.9.0",
@@ -38,6 +38,7 @@
     "graphql-scalars": "1.22.2",
     "graphql-subscriptions": "2.0.0",
     "graphql-tag": "2.12.6",
+    "graphql-tools": "^9.0.0",
     "graphql-ws": "5.14.0",
     "handlebars": "4.7.8",
     "highland": "2.13.5",

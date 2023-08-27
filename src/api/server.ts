@@ -16,7 +16,7 @@ import loggerMaker from "../lib/logger";
 import isAuthenticated from "./middlewares/is-authenticated";
 import logger from "../lib/logger";
 import attachIpToReq from "./middlewares/attach-ip";
-
+import {makeExecutableSchema} from "graphql-tools"
 
 
 import { BullMonitorExpress } from '@bull-monitor/express'
