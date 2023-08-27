@@ -17,5 +17,5 @@ export default async function list (params: createParams) {
   const business = await businessModel().getById(business_id)
   return H(chatPlatformModel().listByBusinessId(business.id, rest))
     .collect()
-    .toPromise(Promise)
+    .toPromise(Promise as any)
 }

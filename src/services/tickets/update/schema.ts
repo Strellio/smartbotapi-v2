@@ -1,5 +1,4 @@
 'use strict'
-import { ObjectID } from 'graphql-scalars/mocks'
 import joi from 'joi'
 import { objectId } from '../../../lib/joi'
 import { TICKET_PRIORITY_ENUM } from '../../../models/tickets/schema'

@@ -95,6 +95,8 @@ export class ShopifyLoader extends BaseDocumentLoader {
     do {
       const result = await this.client.product.list(params);
 
+      console.log(result)
+
       products = [...products, ...result] as  Product[] 
 
       params = result.nextPageParameters;
@@ -113,6 +115,8 @@ export class ShopifyLoader extends BaseDocumentLoader {
   }
 
   async load(): Promise<Document[]> {
+
+    console.log("About to load")
     const resourceUrl = this.getResourceUrl();
     if (!resourceUrl) {
       return [];

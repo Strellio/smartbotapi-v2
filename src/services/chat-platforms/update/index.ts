@@ -43,7 +43,7 @@ const ensureNoPlatformIsOnsiteAndActive = async (
     })
   )
     .collect()
-    .toPromise(Promise);
+    .toPromise(Promise as any);
   const isTypeBothOrOnSite = type == CHAT_TYPE.BOTH || type === CHAT_TYPE.ON_SITE
   if (list.length && list[0].platform !== platform && isTypeBothOrOnSite) {
     throw errors.onlyOneChatPlatformCanBeOnSiteAndActiveError(list[0].platform);

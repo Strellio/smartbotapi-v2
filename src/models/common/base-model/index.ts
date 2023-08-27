@@ -91,13 +91,16 @@ const fetch =
     timeout?: boolean;
     mapper?: any;
   }): QueryCursor<any> => {
-    const doc = Model.find(query);
+    let doc = Model.find(query);
 
-    return doc
-      .batchSize(200)
-      .populate(populate)
-      .cursor()
-      .map(mapper || ((doc) => doc));
+    doc = doc.batchSize(200)
+    
+    if (populate) {
+      doc = doc.populate(populate) as any
+    }
+
+    return doc.cursor()
+      .map(mapper || ((doc) => doc)) as any
   };
 
 const count =

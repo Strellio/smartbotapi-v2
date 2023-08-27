@@ -44,7 +44,7 @@ const getByExternalIdAndPlatform = (
       isNil
     ),
     populate: FIELDS_TO_POPULATE,
-  });
+  }) as  Promise<any>
 
 const updateById = (
   id: string = required("id"),

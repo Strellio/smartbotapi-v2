@@ -46,7 +46,7 @@ interface Attachment {
     // Define properties for teammates if needed
   }
   
-  interface ConversationPart  {
+  export interface ConversationPart  {
         type: 'conversation_part';
         id: string;
         part_type: string;

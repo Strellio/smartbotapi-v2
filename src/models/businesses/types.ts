@@ -9,7 +9,8 @@ export type Business = {
   status: string;
   external_id: String;
   platform: PLATFORM_MAP;
-  business_name: String;
+  business_name: string;
+  account_name: string;
   location: Location;
   trial_expiry_date: Date;
   date_upgraded: Date;
@@ -51,7 +52,7 @@ export type Shop = {
   external_created_at: Date;
   external_updated_at: Date;
   external_platform_domain: string;
-  currency: String;
+  money_format: string;
   external_access_token: string;
   charge_id: string;
 };

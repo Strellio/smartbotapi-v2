@@ -5,6 +5,8 @@ import { Business } from '../../../models/businesses/types'
 import { validate } from '../../../lib/utils'
 import errors from '../../../lib/errors'
 import userService from '../../users'
+import queues from '../../../lib/queues'
+import { createSearchIndex } from '../../../lib/db/atlas'
 
 interface CreateBusinessParams {
   domain: string
@@ -52,10 +54,26 @@ export default async function create (
     country: params.location?.country
   })
 
-  return BusinessModel().create({
+  const business = await BusinessModel().create({
     data: {
       ...params,
+      account_name: params.business_name.replace(" ", "-").toLocaleLowerCase(),
       user: user.id
     }
   })
+
+
+  const queue = queues.productSyncQueue()
+      
+  await queue.add({ data: { business }, jobId: business.id })
+
+  console.log("queue added for ", business.business_name)
+  
+  const result = await createSearchIndex({ dbName: business.account_name, indexName: "products-retriever", collectionName: "products-store" })
+  
+  console.log(result)
+  
+
+
+  return business
 }

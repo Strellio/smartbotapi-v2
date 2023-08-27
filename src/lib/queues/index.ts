@@ -2,20 +2,36 @@ import { Queue, Worker } from "bullmq";
 import path from "path";
 import config from "../../config";
 
-import "../../workers/sync-products/index.ts";
+import IORedis from 'ioredis'
+
+
+export const ioredis = new IORedis(config.REDIS_URL)
+
+
 
 export enum BULL_QUEUES_NAMES {
   SYNC_STORE_PRODUCTS = "SYNC_STORE_PRODUCTS",
 }
 
-const repeatProductSyncQueue = () => {
-  const queue = new Queue(BULL_QUEUES_NAMES.SYNC_STORE_PRODUCTS);
+const productSyncQueue = () => {
+  const queue = new Queue(BULL_QUEUES_NAMES.SYNC_STORE_PRODUCTS, {
+    connection: ioredis
+    
+  });
 
-  if (config.isTest) {
-    new Worker(
+
+  const fileAffix = config.IS_TS_RUNTIME ? 'index.ts' : 'index.js'
+
+
+
+  if (!config.isTest) {
+ new Worker(
       BULL_QUEUES_NAMES.SYNC_STORE_PRODUCTS,
-      path.join(__dirname, "../../workers/sync-products/index.ts")
-    );
+         path.join(__dirname, `../../workers/sync-products/${fileAffix}`),
+         {
+           connection: ioredis
+         }
+       );
   }
 
   return {
@@ -26,13 +42,11 @@ const repeatProductSyncQueue = () => {
     }: {
       data: T;
       jobId?: string;
-      repeat: number;
+      repeat?: number;
     }) {
       return queue.add("NEW_PRODUCT_SYNC_QUEUE_JOB", data, {
-        jobId,
-        repeat: {
-          every: repeat,
-        },
+        jobId
+
       });
     },
     queue,
@@ -40,5 +54,5 @@ const repeatProductSyncQueue = () => {
 };
 
 export default {
-  repeatProductSyncQueue,
+  productSyncQueue,
 };

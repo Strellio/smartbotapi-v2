@@ -1,18 +1,23 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "esModuleInterop": true,
-    "target": "esnext",
-    "moduleResolution": "node",
-    "allowJs": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "isolatedModules": false,
-    "declaration": true,
-    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "target": "ES2020", // or newer if your node.js version supports this
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "outDir": "dist",
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    // "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    // "strict": true,
+    "experimentalDecorators": true,
+    "types": ["node"]
   }
 }

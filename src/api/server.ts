@@ -18,11 +18,38 @@ import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 
+
+
+import { BullMonitorExpress } from '@bull-monitor/express'
+import { BullMQAdapter } from '@bull-monitor/root/dist/bullmq-adapter'
+import { Queue } from 'bullmq'
+import { BULL_QUEUES_NAMES, ioredis } from "../lib/queues";
+
 const PORT = config.PORT;
 
 const reqLogger = require("express-pino-logger")({
   logger: loggerMaker(),
 });
+
+
+
+const serveBullDashboard = () => async (req, res, next) => {
+  const monitor = new BullMonitorExpress({
+    queues: Object.values(BULL_QUEUES_NAMES).map(
+      (name) =>
+        new BullMQAdapter(
+          new Queue(name, {
+            connection: ioredis
+          })
+        )
+    ),
+    gqlIntrospection: !config.isProd
+  })
+  await monitor.init()
+  return monitor.router(req, res, next)
+}
+
+
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -44,7 +71,7 @@ const serverCleanup = useServer(
     onConnect: async (ctx: any) => {
       logger().info("connection established", ctx.connectionParams);
 
-      let token: string;
+      let token;
 
       const headers = ctx.connectionParams.headers;
 
@@ -54,6 +81,7 @@ const serverCleanup = useServer(
         token = authToken.split(" ")[1];
       }
       const { business } = await isAuthenticated(token, ctx);
+
 
       ctx.business = business;
     },
@@ -96,14 +124,17 @@ export default async function startServer() {
     .use(attachIpToReq)
     .use(reqLogger)
     .use(routes())
+    .use("/queues", serveBullDashboard())
     .use(
       "/graphql",
+      // @ts-ignore
       expressMiddleware(graphqlServer, {
         context: async ({ req }) => {
           const token = req.headers.authorization?.split(" ")[1];
           const operationsToIgnore = ["createAccount", "login"];
           if (operationsToIgnore.includes(req.body.operationName)) return req;
-          return isAuthenticated(token, req);
+          const result = await isAuthenticated(token, req);
+          return result
         },
       })
     );

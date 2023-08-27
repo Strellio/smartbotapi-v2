@@ -1,5 +1,5 @@
 "use strict";
-import mongoose from "mongoose";
+import mongoose, { AnyKeys, AnyObject } from "mongoose";
 import schema from "./schema";
 import BaseModel from "../common/base-model";
 import { required } from "../../lib/utils";
@@ -22,7 +22,7 @@ const getByExternalPlatformDomain = (
       "shop.external_platform_domain": externalPlatformDomain,
     },
     populate: POPULATE,
-  }) as Promise<Business | null>;
+  }) as Promise<any>;
 
 const getById = (id: string = required("id")): Promise<Business> =>
   BusinessBaseModel.ensureExists(
