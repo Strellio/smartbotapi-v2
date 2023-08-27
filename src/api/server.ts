@@ -5,6 +5,9 @@ import { formatError } from "apollo-errors";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
 import http from "http";
 import { schemas, resolvers } from "./graphql";
 import routes from "./routes";
@@ -23,10 +26,28 @@ const reqLogger = require("express-pino-logger")({
 const app = express();
 const httpServer = http.createServer(app);
 
+const wsServer = new WebSocketServer({
+  server: httpServer,
+  path: "/graphql",
+});
+
+const serverCleanup = useServer({ schema: schemas }, wsServer);
+
 const graphqlServer = new ApolloServer({
   typeDefs: schemas,
   resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  plugins: [
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await serverCleanup.dispose();
+          },
+        };
+      },
+    },
+  ],
   formatError: formatError as any,
   introspection: config.isDev,
   csrfPrevention: true,

@@ -34,6 +34,7 @@
     "graphql-redis-subscriptions": "2.2.2",
     "graphql-scalars": "1.22.2",
     "graphql-tag": "2.12.6",
+    "graphql-ws": "5.14.0",
     "highland": "2.13.5",
     "intercom-client": "2.11.0",
     "ioredis": "4.17.3",
@@ -47,7 +48,8 @@
     "pino": "6.4.0",
     "shopify-api-node": "3.12.6",
     "shopify-token": "4.1.0",
-    "striptags": "3.1.1"
+    "striptags": "3.1.1",
+    "ws": "8.13.0"
   },
   "devDependencies": {
     "@babel/cli": "7.10.4",
@@ -69,6 +71,7 @@
     "@types/mongoose": "5.7.31",
     "@types/mongoose-unique-validator": "1.0.5",
     "@types/pino": "6.3.0",
+    "@types/ws": "8.5.5",
     "babel-preset-minify": "0.5.1",
     "typescript": "3.7.5"
   }
