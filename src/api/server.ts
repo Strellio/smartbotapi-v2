@@ -6,6 +6,8 @@ import { formatError } from "apollo-errors";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
 import http from "http";
 import { schemas, resolvers } from "./graphql";
 import routes from "./routes";
@@ -14,9 +16,6 @@ import loggerMaker from "../lib/logger";
 import isAuthenticated from "./middlewares/is-authenticated";
 import logger from "../lib/logger";
 import attachIpToReq from "./middlewares/attach-ip";
-import { WebSocketServer } from "ws";
-import { useServer } from "graphql-ws/lib/use/ws";
-import { makeExecutableSchema } from "@graphql-tools/schema";
 
 const PORT = config.PORT;
 
@@ -32,44 +31,13 @@ const wsServer = new WebSocketServer({
   path: "/graphql",
 });
 
-const getContext = async (ctx, msg, args) => {
-  return { business: ctx.business };
-};
-
-const schema = makeExecutableSchema({ typeDefs: schemas, resolvers });
-
-const serverCleanup = useServer(
-  {
-    schema: schema,
-    onConnect: async (ctx: any) => {
-      logger().info("connection established", ctx.connectionParams);
-
-      let token: string;
-
-      const headers = ctx.connectionParams.headers;
-
-      if (headers) {
-        const authToken = headers["Authorization"] ?? headers["authorization"];
-
-        token = authToken.split(" ")[1];
-      }
-      const { business } = await isAuthenticated(token, ctx);
-
-      ctx.business = business;
-    },
-    onDisconnect: (ctx) => {
-      logger().error("Connection disconnected", ctx.connectionParams);
-    },
-    context: getContext,
-  },
-  wsServer
-);
+const serverCleanup = useServer({ schema: schemas }, wsServer);
 
 const graphqlServer = new ApolloServer({
-  schema,
-
+  typeDefs: schemas,
+  resolvers,
   plugins: [
-    ApolloServerPluginDrainHttpServer({ httpServer }), // Proper shutdown for the WebSocket server.
+    ApolloServerPluginDrainHttpServer({ httpServer }),
     {
       async serverWillStart() {
         return {
