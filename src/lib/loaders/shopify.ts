@@ -101,22 +101,18 @@ export class ShopifyLoader extends BaseDocumentLoader {
     } while (params !== undefined);
 
     
+    return this.getDocuments(products)
+  }
+
+  private getDocuments(products: Product[]): Document[]{
     return products.map(product => ({
       pageContent: generateSentences(product, this.domain, this.options),
       metadata: product,
-    }));
-  }
-
-  private getResourceUrl(): string | null {
-    const endpoint = SHOPIFY_ENDPOINTS[this.resource];
-    return endpoint ? `${this.domain}${endpoint}` : null;
+    }))
   }
 
   async load(): Promise<Document[]> {
-    const resourceUrl = this.getResourceUrl();
-    if (!resourceUrl) {
-      return [];
-    }
+
     return await this.makeRequest();
   }
 }

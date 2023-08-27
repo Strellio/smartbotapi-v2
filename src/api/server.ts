@@ -17,11 +17,38 @@ import isAuthenticated from "./middlewares/is-authenticated";
 import logger from "../lib/logger";
 import attachIpToReq from "./middlewares/attach-ip";
 
+
+
+import { BullMonitorExpress } from '@bull-monitor/express'
+import { BullMQAdapter } from '@bull-monitor/root/dist/bullmq-adapter'
+import { Queue } from 'bullmq'
+import { BULL_QUEUES_NAMES, ioredis } from "../lib/queues";
+
 const PORT = config.PORT;
 
 const reqLogger = require("express-pino-logger")({
   logger: loggerMaker(),
 });
+
+
+
+const serveBullDashboard = () => async (req, res, next) => {
+  const monitor = new BullMonitorExpress({
+    queues: Object.values(BULL_QUEUES_NAMES).map(
+      (name) =>
+        new BullMQAdapter(
+          new Queue(name, {
+            connection: ioredis
+          })
+        )
+    ),
+    gqlIntrospection: !config.isProd
+  })
+  await monitor.init()
+  return monitor.router(req, res, next)
+}
+
+
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -31,7 +58,39 @@ const wsServer = new WebSocketServer({
   path: "/graphql",
 });
 
-const serverCleanup = useServer({ schema: schemas }, wsServer);
+const getContext = async (ctx, msg, args) => {
+  return { business: ctx.business };
+};
+
+const schema = makeExecutableSchema({ typeDefs: schemas, resolvers });
+
+const serverCleanup = useServer(
+  {
+    schema: schema,
+    onConnect: async (ctx: any) => {
+      logger().info("connection established", ctx.connectionParams);
+
+      let token;
+
+      const headers = ctx.connectionParams.headers;
+
+      if (headers) {
+        const authToken = headers["Authorization"] ?? headers["authorization"];
+
+        token = authToken.split(" ")[1];
+      }
+      const { business } = await isAuthenticated(token, ctx);
+
+
+      ctx.business = business;
+    },
+    onDisconnect: (ctx) => {
+      logger().error("Connection disconnected", ctx.connectionParams);
+    },
+    context: getContext,
+  },
+  wsServer
+);
 
 const graphqlServer = new ApolloServer({
   typeDefs: schemas,
@@ -64,14 +123,17 @@ export default async function startServer() {
     .use(attachIpToReq)
     .use(reqLogger)
     .use(routes())
+    .use("/queues", serveBullDashboard())
     .use(
       "/graphql",
+      // @ts-ignore
       expressMiddleware(graphqlServer, {
         context: async ({ req }) => {
           const token = req.headers.authorization?.split(" ")[1];
           const operationsToIgnore = ["createAccount", "login"];
           if (operationsToIgnore.includes(req.body.operationName)) return req;
-          return isAuthenticated(token, req);
+          const result = await isAuthenticated(token, req);
+          return result
         },
       })
     );

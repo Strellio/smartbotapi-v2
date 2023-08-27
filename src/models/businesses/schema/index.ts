@@ -46,6 +46,11 @@ const schema = new mongoose.Schema(
       ref: "plans",
     },
     business_name: String,
+    account_name: {
+      type: String,
+      required: true,
+      unique: true
+    },
     location: {
       country: String,
       city: String,

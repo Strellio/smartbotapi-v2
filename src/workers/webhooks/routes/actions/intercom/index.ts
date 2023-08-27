@@ -1,6 +1,6 @@
 'use strict'
 
-import { IntercomWebhookPayload } from '../types'
+import { ConversationPart, IntercomWebhookPayload } from '../types'
 import chatPlatformService from '../../../../../services/chat-platforms'
 import { ChatPlatform } from '../../../../../models/businesses/types'
 import getBotResponse, {
@@ -111,7 +111,7 @@ export default async function intercomWebhookController (
     intercomPayload.app_id
   )
 
-  const conversation = intercomPayload.data.item.conversation_parts.conversation_parts.pop()
+  const conversation = intercomPayload.data.item.conversation_parts.conversation_parts.pop() as ConversationPart
 
   const customer = await customerService.createOrUpdate({
     external_id: conversation.author.id,

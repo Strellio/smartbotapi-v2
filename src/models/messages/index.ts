@@ -40,7 +40,7 @@ function listByBusiness ({
     after: cursor,
     limit,
     populate: FIELDS_TO_POPULATE
-  })
+  }) as any
 }
 
 const create = (data: any = required('data')): Promise<Message> => {

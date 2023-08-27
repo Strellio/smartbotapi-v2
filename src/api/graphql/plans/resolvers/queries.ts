@@ -6,7 +6,7 @@ export default {
     getPlans: () => {
       return H(planService().getAll())
         .collect()
-        .toPromise(Promise)
+        .toPromise(Promise as any)
     }
   }
 }

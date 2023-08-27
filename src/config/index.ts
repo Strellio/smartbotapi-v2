@@ -39,6 +39,9 @@ const config = envalid.cleanEnv(
     MONGODB_PRIVATE_KEY: envalid.str(),
     MONGODB_PROJECT_ID: envalid.str(),
     MONGODB_CLUSTER_NAME: envalid.str(),
+    IS_TS_RUNTIME: envalid.bool({
+      default:false
+    })
   },
   {
     reporter: ({ errors }) => {

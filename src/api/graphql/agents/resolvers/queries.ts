@@ -28,7 +28,7 @@ const attachChatPlatform = (agent: any) => {
 export default {
     Query: {
         listAgents: (parent: any, { input }: any, { business }: any) => {
-            return H(agentService.listByBusinessId(business.id)).map(attachChatPlatform).collect().toPromise(Promise)
+            return H(agentService.listByBusinessId(business.id)).map(attachChatPlatform).collect().toPromise(Promise as any)
         }
     }
 }
