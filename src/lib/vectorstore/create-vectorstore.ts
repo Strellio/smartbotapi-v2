@@ -16,7 +16,6 @@ export async function createVectoreStore({
 
   const collection = client.db(dbName).collection(collectionName);
 
-  console.log("ggggggggggggggggggg")
 
 
   await MongoDBAtlasVectorSearch.fromDocuments(documents, embeddings, {
@@ -26,7 +25,6 @@ export async function createVectoreStore({
     embeddingKey, // The name of the collection field containing the embedded text. Defaults to "embedding"
   });
 
-  console.log("ggggggggggggggggggg")
 
   await client.close();
 }
