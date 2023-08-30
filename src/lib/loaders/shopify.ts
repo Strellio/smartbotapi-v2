@@ -12,6 +12,11 @@ interface ProductVariant {
   title: string;
 }
 
+export enum ShopifyResource{
+  PRODUCTS = 'products',
+  ORDERS = 'orders'
+}
+
 interface Product {
   id: string;
   title: string;
@@ -130,20 +135,20 @@ ${orderTracking}
 
 
 export class ShopifyLoader extends BaseDocumentLoader {
-  private resource: string;
+  private resource: ShopifyResource;
   private domain: string;
   private options: Options;
 
   private client: Shopify;
 
   mapResourceToHandler = {
-    products: this.loadProducts,
-    orders: this.loadOrders
+    [ShopifyResource.PRODUCTS]: this.loadProducts,
+    [ShopifyResource.ORDERS]: this.loadOrders
   }
 
   constructor(
     domain: string,
-    resource: string,
+    resource: ShopifyResource,
     access_token: string,
     options: Options
   ) {

@@ -6,7 +6,6 @@ const app = express()
 app
   .use(bodyParser.json())
   .post('/hubspot', (req, res, next) => {
-    console.log(req.body)
     res.json({
       botMessage: 'j hjbhbhbhjbhjbhjb',
       nextModuleNickname: 'PromptForCollectUserInput',
@@ -39,7 +38,6 @@ app
         Authorization: `Bearer dG9rOjgwNWVkMTU2XzJhZDdfNGQ2ZF85ZDZkXzEwNDg1OGQ2Mjc5YzoxOjA=`
       }
     })
-    console.log(admins)
 
     console.log(req.body.data.item.conversation_message)
     await axios
