@@ -17,9 +17,7 @@ export default async function syncProductsWorker(job: SandboxedJob<any>) {
   await Promise.all([db.connect()]);
   const business = job.data.business as Business
 
-
   const handler = mapPlatformToHandler[business.platform]
-
 
 
   if (handler) {
