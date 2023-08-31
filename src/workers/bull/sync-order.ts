@@ -1,5 +1,5 @@
 "use strict";
-import { Worker } from "bullmq";
+import { Worker, tryCatch } from "bullmq";
 // import * as redis from "../../lib/redis";
 import { Business } from "../../models/businesses/types";
 import shopifyService  from "../../services/external-platforms/shopify"
@@ -12,26 +12,36 @@ const mapPlatformToHandler = {
 }
 
 export default async function syncOrdersWorker() {
-    async function processorFn(job) {
-        const business = job.data.business as Business
+  async function processorFn(job) {
+    try {
 
-        const handler = mapPlatformToHandler[business.platform]
+      const business = job.data.business as Business
+
+      const handler = mapPlatformToHandler[business.platform]
+      
+      console.log(handler)
       
       
-        if (handler) {
+      if (handler) {
       
-          const documents = await handler({ business })
+        const documents = await handler({ business })
       
-            if(documents.length === 0)  return    logger().info(`No orders found for ${business.domain}`);
+        if (documents.length === 0) return logger().info(`No orders found for ${business.domain}`);
       
-            await createVectoreStore({ dbName: business.account_name, indexName: "orders-retriever", collectionName: "orders-store", documents })
+        await createVectoreStore({ dbName: business.account_name, indexName: "orders-retriever", collectionName: "orders-store", documents })
+
+        logger().info(`vetcorestore orders found for ${business.domain}`);
                 
-        }
+      }
+      
+    } catch (error) {
+      console.log(error)
+    }
     }
 
 
 
-  new Worker(BULL_QUEUES_NAMES.SYNC_STORE_PRODUCTS, processorFn, {
+  new Worker(BULL_QUEUES_NAMES.SYNC_STORE_ORDERS, processorFn, {
     connection : ioredis
     });
 

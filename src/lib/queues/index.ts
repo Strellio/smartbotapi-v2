@@ -1,5 +1,4 @@
-import { Queue, Worker } from "bullmq";
-import path from "path";
+import { Queue } from "bullmq";
 import config from "../../config";
 
 import IORedis from 'ioredis'
@@ -20,21 +19,6 @@ const productSyncQueue = () => {
     connection: ioredis
     
   });
-
-
-  const fileAffix = config.IS_TS_RUNTIME ? 'index.ts' : 'index.js'
-
-
-
-  if (!config.isTest) {
- new Worker(
-      BULL_QUEUES_NAMES.SYNC_STORE_PRODUCTS,
-         path.join(__dirname, `../../workers/sync-products/${fileAffix}`),
-         {
-           connection: ioredis
-         }
-       );
-  }
 
   return {
     add<T>({

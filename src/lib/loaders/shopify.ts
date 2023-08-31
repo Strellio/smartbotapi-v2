@@ -81,55 +81,62 @@ function generateProductContent(
   return sentence;
 }
 
-function generateOrderContent(orderData) {
-  const order = orderData.orders[0];
+function generateOrderContent(order) {
 
-  const orderDetails = `
-Order Details:
-- Order Number: #${order.order_number}
-- Order Status: ${order.confirmed ? "Confirmed" : "Pending"}
-- Order Date: ${order.created_at}
-- Total Price: ${order.current_total_price} ${order.currency}
-- Total Tax: ${order.current_total_tax} ${order.currency}
-- Currency: ${order.currency}
-- Payment Method: ${order.payment_gateway_names[0]}
-- Customer Email: ${order.contact_email}
-`;
+  let sentence = `Order for customer with email ${order.customer.email} has the order number ${order.order_number} with  status as  ${order.confirmed ? "Confirmed" : "Pending"}`
+  sentence += ` You can track your order's status and details by visiting the following link ${order.order_status_url}`
+  sentence += ` The total price of the order is ${order.currency}  ${order.current_total_price} `
+  sentence += ` And the order items are ${order.line_items.map((item: any) => item.quantity + "" + item.title + " for " + item.price).join(" and ")}`
+  
+  return sentence
 
-  const shippingAddress = `
-Shipping Address:
-- Name: ${order.customer.first_name} ${order.customer.last_name}
-- Address: ${order.customer.default_address.address1}, ${order.customer.default_address.country_name}, ${order.customer.default_address.zip}
-- Phone: ${order.customer.default_address.phone}
-`;
 
-  const orderedItems = order.line_items
-    .map(
-      (item) => `
-${item.title}:
-- Price: ${item.price} ${order.currency}
-- Quantity: ${item.quantity}
-- Total Tax: ${item.tax_lines[0].price} ${order.currency} (${item.tax_lines[0].title})
-`
-    )
-    .join("");
+//   const orderDetails = `
+// Order Details:
+// - Order Number: #${order.order_number}
+// - Order Status: ${order.confirmed ? "Confirmed" : "Pending"}
+// - Order Date: ${order.created_at}
+// - Total Price: ${order.current_total_price} ${order.currency}
+// - Total Tax: ${order.current_total_tax} ${order.currency}
+// - Currency: ${order.currency}
+// - Payment Method: ${order.payment_gateway_names[0]}
+// - Customer Email: ${order.contact_email}
+// `;
 
-  const orderTracking = `
-Order Tracking:
-You can track your order's status and details by visiting the following link:
-${order.order_status_url}
+//   const shippingAddress = `
+// Shipping Address:
+// - Name: ${order.customer.first_name} ${order.customer.last_name}
+// - Address: ${order.customer.default_address.address1}, ${order.customer.default_address.country_name}, ${order.customer.default_address.zip}
+// - Phone: ${order.customer.default_address.phone}
+// `;
 
-For any inquiries or assistance, please contact us at ${order.contact_email} or visit our website.
-`;
+//   const orderedItems = order.line_items
+//     .map(
+//       (item) => `
+// ${item.title}:
+// - Price: ${item.price} ${order.currency}
+// - Quantity: ${item.quantity}
+// - Total Tax: ${item.tax_lines[0].price} ${order.currency} (${item.tax_lines[0].title})
+// `
+//     )
+//     .join("");
 
-  const trackingInfo = `
-${orderDetails}
-${shippingAddress}
-${orderedItems}
-${orderTracking}
-`;
+//   const orderTracking = `
+// Order Tracking:
+// You can track your order's status and details by visiting the following link:
+// ${order.order_status_url}
 
-  return `A customer with email ${order.customer.email} is the owner of the order with these details ${trackingInfo}`;
+// For any inquiries or assistance, please contact us at ${order.contact_email} or visit our website.
+// `;
+
+//   const trackingInfo = `
+// ${orderDetails}
+// ${shippingAddress}
+// ${orderedItems}
+// ${orderTracking}
+// `;
+
+//   return `A customer with email ${order.customer.email} is the owner of the order with these details ${trackingInfo}`;
 }
 
 
@@ -153,6 +160,7 @@ export class ShopifyLoader extends BaseDocumentLoader {
     options: Options
   ) {
     super();
+    
     this.resource = resource;
     this.domain = domain;
     access_token = access_token;
@@ -183,8 +191,8 @@ export class ShopifyLoader extends BaseDocumentLoader {
   private async loadOrders(): Promise<Document[]> {
     let orders: any[] = [];
 
-    let params = { limit: 250};
-
+    let params = { limit: 250 };
+    
     do {
       const result = await this.client.order.list(params);
 
@@ -213,6 +221,6 @@ export class ShopifyLoader extends BaseDocumentLoader {
 
   async load(): Promise<Document[]> {
     const handler = this.mapResourceToHandler[this.resource]
-    return await handler();
+    return await handler.call(this);
   }
 }

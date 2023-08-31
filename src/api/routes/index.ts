@@ -8,12 +8,12 @@ import {
   activePlatformCharge,
   insertSeeds,
 } from "./actions";
-import { createSearchIndex } from "../../lib/db/atlas";
-import Shopify from "shopify-api-node";
 import { ShopifyLoader } from "../../lib/loaders/shopify";
 import { createVectoreStore } from "../../lib/vectorstore/create-vectorstore";
 import { getVectorStore } from "../../lib/vectorstore/get-vectorstore";
 import queues from "../../lib/queues"
+import { ShopifyResource } from "../../lib/loaders/shopify";
+import { createSearchIndex } from "../../lib/db/atlas";
 
 export default function router() {
   return Router()
@@ -24,7 +24,7 @@ export default function router() {
     .get("/seeds", insertSeeds)
     .post("/test-vectorstore", async (req, res) => {
 
-      const shopifyLoader = new ShopifyLoader("https://design-studios-hub.myshopify.com", "products", "shpua_348cd5da4feb05fa566c82762018bc4a", {moneyFormat:'GH₵{{amount}}'})
+      const shopifyLoader = new ShopifyLoader("https://design-studios-hub.myshopify.com", ShopifyResource.PRODUCTS, "shpua_348cd5da4feb05fa566c82762018bc4a", {moneyFormat:'GH₵{{amount}}'})
       
       const documents = await shopifyLoader.load()
 
@@ -42,35 +42,42 @@ export default function router() {
 
     .post("/create-index", async (req, res) => {
 
-      const queue = queues.productSyncQueue()
+
+   const result = await  createSearchIndex({
+        dbName: "design-studios-hub",
+        indexName: "orders-retriever",
+        collectionName: "orders-store",
+   })
       
-      queue.add({data: {business:{
-          "user": "64e38dafb5e568293dcc07b6",
-          "domain": "https://testfashionnana.myshopify.com",
-          "email": "strellioltd@gmail.com",
-          "status": "A",
-          "is_external_platform": true,
-          "external_id": "66395111719",
-          "platform": "shopify",
-          "business_name": "testfashionnana",
-          "account_name": "testfashionnana",
-          "location": {
-            "country": "United States",
-            "city": "New York"
-          },
-          "shop": {
-            "external_created_at": "2022-10-15T15:25:52.000Z",
-            "external_platform_domain": "https://testfashionnana.myshopify.com",
-            "external_access_token": "shpua_0ffb3018fba288d7bcb2459b02a46cd3",
-            "money_format": "${{amount}}"
-          },
-          "_id": "64ea740d2a826747bfb6a4cb",
-          "created_at": "2023-08-26T21:52:13.811Z",
-          "updated_at": "2023-08-26T21:52:13.811Z",
-          "__v": 0,
-          "id": "64ea740d2a826747bfb6a4cb"
-        
-      }}, jobId:"64e38dafb5e568293dcc07b1wur"})
+      console.log(result)
+
+      // const queue = queues.orderSyncQueue()
+      
+      // queue.add({data: {business:{
+      //   "location": { "country": "Ghana", "city": "Accra" },
+      //   "shop": {
+      //     "external_platform_domain": "https://design-studios-hub.myshopify.com",
+      //     "external_created_at": "2019-12-21T14:53:59.000Z",
+      //     "money_format": "GH₵{{amount}}",
+      //     "external_access_token": "shpua_348cd5da4feb05fa566c82762018bc4a",
+      //     "charge_id": "24267718796"
+      //   },
+      //   "_id": "64e38dafb5e568293dcc07b7",
+      //   "status": "A",
+      //   "is_external_platform": true,
+      //   "domain": "https://design-studios-hub.myshopify.com",
+      //   "email": "strellioltd@gmail.com",
+      //   "external_id": "28462776460",
+      //   "business_name": "design studios hub",
+      //   "platform": "shopify",
+      //   "user": "64e38dafb5e568293dcc07b6",
+      //   "created_at": "2023-08-21T16:15:43.535Z",
+      //   "updated_at": "2023-08-29T01:39:51.478Z",
+      //   "__v": 0,
+      //   "date_upgraded": "2023-08-21T16:22:29.663Z",
+      //   account_name:"design-studios-hub"
+      // }
+      // }, jobId:"64e38dafb5e568293dcc07b7"})
 
 
       
