@@ -16,12 +16,11 @@ import loggerMaker from "../lib/logger";
 import isAuthenticated from "./middlewares/is-authenticated";
 import logger from "../lib/logger";
 import attachIpToReq from "./middlewares/attach-ip";
-import {makeExecutableSchema} from "graphql-tools"
+import { makeExecutableSchema } from "graphql-tools";
 
-
-import { BullMonitorExpress } from '@bull-monitor/express'
-import { BullMQAdapter } from '@bull-monitor/root/dist/bullmq-adapter'
-import { Queue } from 'bullmq'
+import { BullMonitorExpress } from "@bull-monitor/express";
+import { BullMQAdapter } from "@bull-monitor/root/dist/bullmq-adapter";
+import { Queue } from "bullmq";
 import { BULL_QUEUES_NAMES, ioredis } from "../lib/queues";
 
 const PORT = config.PORT;
@@ -30,25 +29,21 @@ const reqLogger = require("express-pino-logger")({
   logger: loggerMaker(),
 });
 
-
-
 const serveBullDashboard = () => async (req, res, next) => {
   const monitor = new BullMonitorExpress({
     queues: Object.values(BULL_QUEUES_NAMES).map(
       (name) =>
         new BullMQAdapter(
           new Queue(name, {
-            connection: ioredis
+            connection: ioredis,
           })
         )
     ),
-    gqlIntrospection: !config.isProd
-  })
-  await monitor.init()
-  return monitor.router(req, res, next)
-}
-
-
+    gqlIntrospection: !config.isProd,
+  });
+  await monitor.init();
+  return monitor.router(req, res, next);
+};
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -81,7 +76,6 @@ const serverCleanup = useServer(
       }
       const { business } = await isAuthenticated(token, ctx);
 
-
       ctx.business = business;
     },
     onDisconnect: (ctx) => {
@@ -107,7 +101,11 @@ const graphqlServer = new ApolloServer({
       },
     },
   ],
-  formatError: formatError as any,
+  formatError: (error) => {
+    console.log(error);
+
+    return error; //formatError(error) as any;
+  },
   introspection: config.isDev,
   csrfPrevention: true,
   logger: logger(),
@@ -129,11 +127,13 @@ export default async function startServer() {
       // @ts-ignore
       expressMiddleware(graphqlServer, {
         context: async ({ req }) => {
-          const token = req.headers.authorization?.split(" ")[1];
+          console.log(req.headers.authorization);
+
+          const token = req.headers.authorization?.split("Bearer ")[1];
           const operationsToIgnore = ["createAccount", "login"];
           if (operationsToIgnore.includes(req.body.operationName)) return req;
           const result = await isAuthenticated(token, req);
-          return result
+          return result;
         },
       })
     );

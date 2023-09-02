@@ -6,8 +6,10 @@ import activateCharge from "../../services/plans/activate-charge";
 import planModel from "../../models/plans";
 import PLANS from "../../models/plans/seeds";
 
-export const shopifyAuthInstall = (req: Request, res: Response) =>
-  res.redirect(shopifyService().auth.install(req.query));
+export const shopifyAuthInstall = (req: Request, res: Response) => {
+  const url = shopifyService().auth.install(req.query);
+  return res.redirect(url);
+};
 
 export const shopifyAuthCallback = (
   req: Request,
