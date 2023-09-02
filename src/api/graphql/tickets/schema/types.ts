@@ -13,6 +13,7 @@ export default gql`
     title: String!
     description: String!
     priority: String!
+    ticket_number: String!
     created_at: DateTime
     column_id: Int!
     column: TicketColumn

@@ -1,5 +1,7 @@
 'use strict'
 import mongoose from 'mongoose'
+import nano from 'nanoid'
+const nanoid =nano.customAlphabet('1234567890', 10)
 
 export const columns = [
   {
@@ -48,6 +50,11 @@ const schema = new mongoose.Schema(
     title: {
       type: String,
       required: true
+    },
+    ticket_number: {
+      type: String,
+      default: ()=> nanoid(8)
+      
     },
     priority: {
       type: String,

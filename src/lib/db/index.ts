@@ -13,7 +13,7 @@ export const connect = () => {
 
 export const disconnect = () => mongoose.disconnect();
 
-export async function createSearchIndex({ dbName, indexName, collectionName }) {
+ async function createSearchIndex({ dbName, indexName, collectionName }) {
   console.log("createSearchIndex", config.ATLAS_DB_URL);
   const client = new MongoClient(config.ATLAS_DB_URL);
 
@@ -41,8 +41,7 @@ export async function createSearchIndex({ dbName, indexName, collectionName }) {
     };
 
     // run the helper method
-    const result = await collection.createSearchIndex(index);
-    console.log(result);
+     await collection.createSearchIndex(index);
   } finally {
     await client.close();
   }
