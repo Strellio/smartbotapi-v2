@@ -38,6 +38,7 @@ const schema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    display_features: { type: Array, requuired:true},
     features: featureSchema
   },
   {

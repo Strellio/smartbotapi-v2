@@ -47,7 +47,7 @@ export const insertSeeds = async (
   await Promise.all(
     PLANS.map(
       async (plan) =>
-        await planModel().upsert({ query: { name: plan.name }, update: plan })
+        await planModel().updateOrCreateByName(plan.name, plan)
     )
   );
   return res.sendStatus(200);

@@ -8,7 +8,7 @@ const Model = mongoose.model('plans', schema)
 const PlanBaseModel = BaseModel(Model)
 
 function getAll() {
-  return PlanBaseModel.fetch({ query: {}, populate: [] })
+  return PlanBaseModel.fetch({ query: {}, populate: [], sort:{price: 1}})
 }
 
 function getById(id: string = required('id')) {
