@@ -19,6 +19,7 @@ export type Business = {
 };
 
 export type ChatAgent = {
+  id:string
   external_id: string;
   name: string;
   profile_url: string;

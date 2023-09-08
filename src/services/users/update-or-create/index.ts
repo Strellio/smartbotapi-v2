@@ -8,6 +8,8 @@ export interface UserParams {
   email: string
   country?: string
   full_name?: string
+  profile_url?: string
+
 }
 
 export default function updateOrCreate (params: UserParams) {

@@ -7,9 +7,9 @@ import H from 'highland'
 
 interface createParams {
   business_id: string
-  platform: string
-  type: string
-  status: string
+  platform?: string
+  type?: string
+  status?: string
 }
 
 export default async function list (params: createParams) {

@@ -18,7 +18,7 @@ const update = (
   AgentModel.updateOne({
     query: { _id, business },
     update: data,
-    populate: ["linked_chat_agents"],
+    populate: ["linked_chat_agents", "user"],
   });
 
 const listByBusinessId = (businessId = required("businessId")) =>
@@ -28,6 +28,7 @@ const listByBusinessId = (businessId = required("businessId")) =>
     },
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
+      { path: "user"}
     ],
   });
 
@@ -36,6 +37,8 @@ const getById = (_id: string = required("id")) =>
     query: { _id },
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
+      { path: "user"}
+
     ],
   });
 

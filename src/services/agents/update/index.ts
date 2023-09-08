@@ -14,6 +14,5 @@ type UpdateAgentParams = {
 
 export default function update(data: UpdateAgentParams) {
     const { id, business_id: business, ...rest }: UpdateAgentParams = validate(schema, data)
-    console.log(data)
     return agentsModel.update(id, business, rest)
 }   

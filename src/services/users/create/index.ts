@@ -6,6 +6,7 @@ import userModel from '../../../models/users'
 
 export interface UserParams {
   email: string
+  profile_url: string
   country: string
   full_name: string
   password: string

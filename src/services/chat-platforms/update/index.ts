@@ -22,10 +22,10 @@ interface updateParams {
   external_id?: string;
   agent?: {
     id?: string
-    external_id: string;
+    external_id?: string;
     name: string;
     profile_url: string;
-    is_person: string;
+    is_person: boolean;
   };
 }
 

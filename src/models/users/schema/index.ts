@@ -18,6 +18,10 @@ const schema = new mongoose.Schema(
     country: {
       type: String
     },
+    profile_url: {
+      type: String
+    },
+
     password: {
       type: String,
       set: (value: string) => value && hashPassword(value)
