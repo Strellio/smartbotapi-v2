@@ -21,7 +21,7 @@ export default async function create(data: CreateAgentParams) {
     email,
     profile_url,
     name,
-    is_person,
+    is_person=true,
   }: CreateAgentParams = validate(schema, data);
 
   const user = await userService().updateOrCreate({
