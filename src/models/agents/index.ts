@@ -9,6 +9,7 @@ const AgentModel = BaseModel(Model);
 const create = (data: any = required("data")) =>
   AgentModel.create({
     data,
+    populate:["linked_chat_agents", "user"]
   });
 const update = (
   _id: string = required("id"),
@@ -21,7 +22,7 @@ const update = (
     populate: ["linked_chat_agents", "user"],
   });
 
-const listByBusinessId = (businessId = required("businessId")) =>
+const listByBusinessId = (businessId:string = required("businessId")) =>
   AgentModel.fetch({
     query: {
       business: businessId,

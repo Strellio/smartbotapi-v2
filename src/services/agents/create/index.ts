@@ -6,6 +6,8 @@ import agentsModel from "../../../models/agents";
 import userService from "../../users";
 import chatPlatformService from "../../chat-platforms";
 import { ChatPlatform } from "../../../models/businesses/types";
+import { ACTION_TYPE_TO_MONGODB_FIELD } from "../../../models/common";
+import { CHAT_PLATFORMS } from "../../../models/chat-platforms/schema";
 
 type CreateAgentParams = {
   name: string;
@@ -21,10 +23,12 @@ export default async function create(data: CreateAgentParams) {
     email,
     profile_url,
     name,
-    is_person=true,
+    is_person = true,
   }: CreateAgentParams = validate(schema, data);
+    
+    
 
-  const user = await userService().updateOrCreate({
+  const user = is_person && await userService().updateOrCreate({
     email,
     full_name: name,
     profile_url,
@@ -35,7 +39,7 @@ export default async function create(data: CreateAgentParams) {
   });
 
   const linkedChatAgents = await Promise.all(
-    chatPlatforms.map(async (chatPlatform: ChatPlatform) => {
+    chatPlatforms.filter((chatPlatform:ChatPlatform)=> chatPlatform.platform !== CHAT_PLATFORMS.CUSTOM).map(async (chatPlatform: ChatPlatform) => {
       const result = await chatPlatformService().update({
         id: chatPlatform.id,
         business_id: business,
@@ -45,6 +49,7 @@ export default async function create(data: CreateAgentParams) {
           is_person,
           name,
           profile_url,
+          action_type: ACTION_TYPE_TO_MONGODB_FIELD.CREATE,
         },
       });
       // find a better way to retrie
@@ -54,11 +59,20 @@ export default async function create(data: CreateAgentParams) {
       return sortedAgents[0];
     })
   );
+    
 
-  return agentsModel.create({
-     business,
-      user: user.id,
-      linked_chat_agents: linkedChatAgents.map(agent=>agent.id)
-
-  });
+ return agentsModel.create({
+    business,
+      user: user?.id,
+      is_person,
+      ...(!is_person && {
+          bot_info: {
+              name,
+              profile_url
+          }
+      }),
+    linked_chat_agents: linkedChatAgents.map((agent) => agent.id),
+  })
+    
+    
 }

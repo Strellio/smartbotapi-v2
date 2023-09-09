@@ -5,9 +5,9 @@ import gql from "graphql-tag";
 export default gql`
   type Agent {
     id: ID!
-    name: String!
-    profile_url: URL!
-    is_online: Boolean
+    user: User
+    is_person: Boolean
+    availability_status: String!
     linked_chat_agents: [ChatAgent!]
     created_at: DateTime!
     updated_at: DateTime!

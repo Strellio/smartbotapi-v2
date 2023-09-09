@@ -8,6 +8,8 @@ export default gql`
     email: EmailAddress!
     full_name: String
     country: String
+    profile_url: URL
+    is_online: Boolean
     created_at: DateTime!
     updated_at: DateTime!
     businesses: [Business!]
