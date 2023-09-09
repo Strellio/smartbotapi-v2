@@ -46,7 +46,8 @@ export default async function create(data: CreateAgentParams) {
         type: chatPlatform.type,
 
         agent: {
-          is_person,
+            is_person,
+            email,
           name,
           profile_url,
           action_type: ACTION_TYPE_TO_MONGODB_FIELD.CREATE,

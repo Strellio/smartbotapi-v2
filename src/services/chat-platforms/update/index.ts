@@ -24,6 +24,7 @@ interface updateParams {
     id?: string
     external_id?: string;
     name: string;
+    email?: string
     profile_url: string;
     is_person: boolean;
     action_type: ACTION_TYPE_TO_MONGODB_FIELD
