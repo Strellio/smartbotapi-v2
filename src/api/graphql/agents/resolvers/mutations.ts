@@ -11,7 +11,7 @@ export default {
     ) => {
       const result = await agentService.create({
         ...rest,
-        profile_url: profile_url.href,
+        profile_url,
         business_id: business.id
       })
 
@@ -26,7 +26,7 @@ export default {
     ) => {
       const result = await agentService.update({
         ...rest,
-        profile_url: profile_url.href,
+        profile_url,
         business_id: business.id
       })
 

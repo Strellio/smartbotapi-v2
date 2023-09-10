@@ -15,14 +15,14 @@ export default gql`
 
   input CreateAgentInput {
     name: String!
-    profile_url: URL!
+    profile_url: String
     email: EmailAddress!
   }
 
   input UpdateAgentInput {
     id: ID!
     name: String!
-    profile_url: URL!
+    profile_url: String
     email: String!
     linked_chat_agents: [ID]!
   }

@@ -1,6 +1,9 @@
 "use strict";
 import { Storage } from "@google-cloud/storage";
 
+export const GOOGLE_STORAGE_URL = "https://storage.googleapis.com"
+
+
 import axios from "axios";
 
 const { GOOGLE_CLOUD_PROJECT_ID, GOOGLE_CLOUD_KEYFILE } = process.env;
@@ -10,7 +13,7 @@ const storage = new Storage({
   keyFilename: GOOGLE_CLOUD_KEYFILE,
 });
 
-function isDataUrl(url: string) {
+export function isDataUrl(url: string) {
   return url && url.startsWith("data");
 }
 export interface StoragePayload {
@@ -78,12 +81,3 @@ export function uploadToCloudStorage(payload: StoragePayload): Promise<any> {
   });
 }
 
-// The function that returns a JSON string
-export const readJsonFromFile = (
-  bucketName: string,
-  remoteFilePath: string
-) => {
-  const bucket = storage.bucket(bucketName);
-
-  return bucket.file(remoteFilePath).createReadStream();
-};
