@@ -54,9 +54,13 @@ const updateOne =
   }): Promise<any> => {
     const opts = Object.assign({}, { new: true, runValidators: true }, options);
 
+    const doc2 = await Model.findOne(query);
+
     let doc = await Model.findOneAndUpdate(query, update, opts)
       .populate(populate)
       .exec();
+    
+    
     return doc?.toObject();
   };
 
@@ -65,15 +69,17 @@ const upsert =
   async ({
     query,
     update,
+    create:createData,
     populate,
   }: {
     query: object;
-    update: object;
+      update: object;
+      create?: object;
     populate?: any;
   }) => {
     const doc = await findOne(Model)({ query });
-    if (doc) return updateOne(Model)({ query, update, populate });
-    return create(Model)({ data: update, populate });
+    if (doc) return updateOne(Model)({ query, update, populate });      
+    return create(Model)({ data: createData??update, populate });
   };
 
 const fetch =

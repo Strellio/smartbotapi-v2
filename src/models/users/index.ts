@@ -16,11 +16,24 @@ const commonPopulate = ['businesses']
 const createOrUpdateByEmail = (
   email: string = required('email'),
   payload: any = {}
-): Promise<User> =>
-  UserModel.upsert({
+): Promise<User> => {
+
+  const create = { ...payload }
+  
+  delete payload.email
+  
+
+  
+
+
+  return   UserModel.upsert({
     query: { email },
-    update: payload
+    update: payload,
+    create: create
   })
+  
+}
+
 
 const getByEmail = (email: string = required('email')): Promise<User> =>
   UserModel.ensureExists(

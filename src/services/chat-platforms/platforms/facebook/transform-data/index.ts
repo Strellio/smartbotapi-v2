@@ -24,9 +24,9 @@ export default async function transformData({
   payload: any;
   dbPayload?: ChatPlatform;
 }) {
-  if (!dbPayload) {
-    payload.agent = defaultBotAgent;
-  }
+  // if (!dbPayload) {
+  //   payload.agent = defaultBotAgent;
+  // }
 
   if (payload.external_user_access_token) {
     const { access_token } = await generateLongAccessToken(

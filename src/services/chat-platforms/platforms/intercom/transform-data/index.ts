@@ -19,7 +19,7 @@ export default async function transformData({
     payload: any;
     dbPayload: ChatPlatform;
 }) {
-    if (!dbPayload) {
+    if (!payload.agent?.is_person) {
         const [agent] = await intercomLib().admins.get(payload.external_access_token)
         payload.agent = {
             name: agent.name,
