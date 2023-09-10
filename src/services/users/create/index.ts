@@ -12,6 +12,27 @@ import {uploadToCloudStorage, isDataUrl, GOOGLE_STORAGE_URL} from "../../../lib/
 import config from '../../../config'
 
 
+export async function uploadProfile(params) {
+  if (params.profile_url && isDataUrl(params.profile_url)) {
+    const name  = params.full_name?? params.name
+    const imageKey = `${name.replace(" ", "-")}-${nanoid()}`
+
+    const result = await uploadToCloudStorage({
+      url: params.profile_url,
+      bucket: config.IMAGES_BUCKET_NAME,
+      folderName: 'profile-pics',
+      key: imageKey
+        
+    });
+    
+    const profileUrl = `${GOOGLE_STORAGE_URL}/${config.IMAGES_BUCKET_NAME}/profile-pics/${imageKey}.${result.type}`
+   return profileUrl
+
+  }
+
+}
+
+
 export interface UserParams {
   email: string
   profile_url: string
@@ -23,21 +44,10 @@ export interface UserParams {
 export default async function createUser(params: UserParams) {
   validate(schema, params)
 
-  if (params.profile_url && isDataUrl(params.profile_url)) {
 
-    const imageKey = `${params.full_name.replace(" ", "-")}-${nanoid()}`
+  const profileUrl = await uploadProfile(params)
 
-
-    const result = await uploadToCloudStorage({
-      url: params.profile_url,
-      bucket: config.IMAGES_BUCKET_NAME,
-      folderName: 'profile-pics',
-      key: imageKey
-        
-    });
-    
-    const profileUrl = `${GOOGLE_STORAGE_URL}/${config.IMAGES_BUCKET_NAME}/profile-pics/${imageKey}.${result.type}`
-    console.log(profileUrl)
+  if (profileUrl) {
     params.profile_url = profileUrl
 
   }

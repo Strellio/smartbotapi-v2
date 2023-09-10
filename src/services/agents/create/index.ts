@@ -8,6 +8,7 @@ import chatPlatformService from "../../chat-platforms";
 import { ChatPlatform } from "../../../models/businesses/types";
 import { ACTION_TYPE_TO_MONGODB_FIELD } from "../../../models/common";
 import { CHAT_PLATFORMS } from "../../../models/chat-platforms/schema";
+import { uploadProfile } from "../../users/create";
 
 type CreateAgentParams = {
   name: string;
@@ -18,16 +19,24 @@ type CreateAgentParams = {
 };
 
 export default async function create(data: CreateAgentParams) {
+validate(schema, data);
+    
+  const profileUrl = await uploadProfile(data)
+
+  if (profileUrl) {
+    data.profile_url = profileUrl
+
+  }
+    
+    
   const {
     business_id: business,
     email,
     profile_url,
     name,
     is_person = true,
-  }: CreateAgentParams = validate(schema, data);
+  }: CreateAgentParams = data
     
-    
-
   const user = is_person && await userService().updateOrCreate({
     email,
     full_name: name,
@@ -53,6 +62,8 @@ export default async function create(data: CreateAgentParams) {
           action_type: ACTION_TYPE_TO_MONGODB_FIELD.CREATE,
         },
       });
+        
+        console.log(result)
       // find a better way to retrie
       const sortedAgents = result.agents
         .filter((agent) => agent.name === name)

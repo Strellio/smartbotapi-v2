@@ -25,5 +25,6 @@ export default gql`
     profile_url: String
     email: String!
     linked_chat_agents: [ID]!
+    is_person: Boolean
   }
 `;
