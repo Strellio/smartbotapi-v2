@@ -5,8 +5,8 @@ import H from 'highland'
 import { flattenDeep } from "lodash";
 
 
-const attachChatPlatform = (agent: any) => {
-    const { linked_chat_agents, linked_chat_agents_platforms, ...rest } = agent?.toObject()
+export const attachChatPlatform = (agent: any) => {
+    const { linked_chat_agents, linked_chat_agents_platforms, ...rest } =agent?.toObject? agent?.toObject(): agent
     const linkedAgentsList: string[] = linked_chat_agents.map((agentId: any) => String(agentId))
     const linkedChatPlatforms = flattenDeep(
         flattenDeep(linked_chat_agents_platforms).map((chatPlatform: any) => {
