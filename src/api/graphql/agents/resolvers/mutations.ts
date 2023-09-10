@@ -1,5 +1,6 @@
 'use strict'
 import agentService from '../../../../services/agents'
+import { attachChatPlatform } from './queries'
 
 export default {
   Mutation: {
@@ -8,11 +9,14 @@ export default {
       { input: { profile_url, ...rest } }: any,
       { business }: any
     ) => {
-      return agentService.create({
+      const result = await agentService.create({
         ...rest,
-        profile_url: profile_url.href,
+        profile_url,
         business_id: business.id
       })
+
+      return attachChatPlatform(result)
+
     },
 
     updateAgent: async (
@@ -20,11 +24,13 @@ export default {
       { input: { profile_url, ...rest } }: any,
       { business }: any
     ) => {
-      return agentService.update({
+      const result = await agentService.update({
         ...rest,
-        profile_url: profile_url.href,
+        profile_url,
         business_id: business.id
       })
+
+      return attachChatPlatform(result)
     }
   }
 }

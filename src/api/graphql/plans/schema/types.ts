@@ -11,6 +11,7 @@ export default gql`
     duration: String
     icon_class: String
     features: JSONObject
+    display_features:[String]!
   }
 
   # input

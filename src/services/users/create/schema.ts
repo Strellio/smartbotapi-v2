@@ -8,5 +8,6 @@ export default joi.object({
     .required(),
   full_name: joi.string().required(),
   country: joi.string().required(),
-  password: joi.string().required()
+  password: joi.string(),
+  profile_url:joi.string()
 })

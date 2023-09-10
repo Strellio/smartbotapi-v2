@@ -54,9 +54,13 @@ const updateOne =
   }): Promise<any> => {
     const opts = Object.assign({}, { new: true, runValidators: true }, options);
 
+    const doc2 = await Model.findOne(query);
+
     let doc = await Model.findOneAndUpdate(query, update, opts)
       .populate(populate)
       .exec();
+    
+    
     return doc?.toObject();
   };
 
@@ -65,15 +69,17 @@ const upsert =
   async ({
     query,
     update,
+    create:createData,
     populate,
   }: {
     query: object;
-    update: object;
+      update: object;
+      create?: object;
     populate?: any;
   }) => {
     const doc = await findOne(Model)({ query });
-    if (doc) return updateOne(Model)({ query, update, populate });
-    return create(Model)({ data: update, populate });
+    if (doc) return updateOne(Model)({ query, update, populate });      
+    return create(Model)({ data: createData??update, populate });
   };
 
 const fetch =
@@ -81,13 +87,15 @@ const fetch =
   ({
     query = required("query"),
     populate,
+    sort,
     batchSize,
     timeout = true,
     mapper,
   }: {
     populate?: string | Array<any>;
     query: object;
-    batchSize?: number;
+      batchSize?: number;
+    sort?:any,
     timeout?: boolean;
     mapper?: any;
   }): QueryCursor<any> => {
@@ -97,6 +105,10 @@ const fetch =
     
     if (populate) {
       doc = doc.populate(populate) as any
+    }
+
+    if (sort) {
+      doc = doc.sort(sort)
     }
 
     return doc.cursor()

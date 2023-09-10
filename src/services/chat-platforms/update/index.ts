@@ -4,7 +4,7 @@ import chatPlatformModel from "../../../models/chat-platforms";
 import schema from "./schema";
 import { validate } from "../../../lib/utils";
 import * as chatPlatforms from "../platforms";
-import { STATUS_MAP } from "../../../models/common";
+import { ACTION_TYPE_TO_MONGODB_FIELD, STATUS_MAP } from "../../../models/common";
 import H from "highland";
 import { CHAT_TYPE, CHAT_PLATFORMS, } from "../../../models/chat-platforms/schema";
 import errors from "../errors";
@@ -22,10 +22,12 @@ interface updateParams {
   external_id?: string;
   agent?: {
     id?: string
-    external_id: string;
+    external_id?: string;
     name: string;
+    email?: string
     profile_url: string;
-    is_person: string;
+    is_person: boolean;
+    action_type: ACTION_TYPE_TO_MONGODB_FIELD
   };
 }
 
@@ -65,5 +67,7 @@ export default async function update(params: updateParams) {
     },
     dbPayload: chatPlatform,
   });
+
+  console.log(transformedPayload)
   return chatPlatformModel().updateById(id, transformedPayload);
 }

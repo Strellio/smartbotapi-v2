@@ -2,6 +2,11 @@
 
 import mongoose from "mongoose";
 
+enum AGENT_AVAILABILTY_STATUS {
+  AVAILABLE = "available",
+  NOT_AVAILABLE = "not_available",
+}
+
 const schema = new mongoose.Schema(
   {
     business: {
@@ -9,18 +14,34 @@ const schema = new mongoose.Schema(
       ref: "businesses",
       required: true,
     },
-    name: {
-      type: String,
-      required: true,
-    },
-    profile_url: {
-      type: String,
-      required: true,
-    },
-    is_online: {
+    is_person: {
       type: Boolean,
-      default: false,
+      required: true,
     },
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: "users",
+      required: function () {
+        return this.is_person;
+      },
+    },
+    bot_info: {
+      type: {
+        name: String,
+        profile_url: String,
+      },
+
+      required: function () {
+        return !this.is_person;
+      },
+    },
+
+    availability_status: {
+      type: String,
+      enum: Object.values(AGENT_AVAILABILTY_STATUS),
+      default: AGENT_AVAILABILTY_STATUS.NOT_AVAILABLE,
+    },
+
     linked_chat_agents: {
       type: [
         {

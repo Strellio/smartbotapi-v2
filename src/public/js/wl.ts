@@ -62,7 +62,7 @@ function addWidgetRoot() {
   const el = document.createElement("div");
 
   // ✅ Set ID attribute on the element
-  el.setAttribute("id", "app");
+  el.setAttribute("id", "chat-widget");
 
   body.appendChild(el);
 }
