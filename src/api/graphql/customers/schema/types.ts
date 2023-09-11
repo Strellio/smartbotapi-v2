@@ -37,7 +37,7 @@ export default gql`
 
 
   input UpdateCustomerInput {
-    customer_id: String!
+    customer_id: ID!
     is_chat_with_live_agent:Boolean
     name: String
     email: EmailAddress
