@@ -8,6 +8,7 @@ export default gql`
     external_id: String
     source: MessageSource!
     email: EmailAddress
+    is_chat_with_live_agent:Boolean!
     name: String
     profile_url: URL
     subscribed: Boolean
