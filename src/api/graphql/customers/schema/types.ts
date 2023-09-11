@@ -34,4 +34,13 @@ export default gql`
     source: ObjectID!
     profile_url: String
   }
+
+
+  input UpdateCustomerInput {
+    customer_id: String!
+    is_chat_with_live_agent:Boolean
+    name: String
+    email: EmailAddress
+    profile_url: String
+  }
 `;
