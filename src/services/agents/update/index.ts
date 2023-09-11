@@ -21,19 +21,19 @@ type UpdateAgentParams = {
 };
 
 export default async function update(data: UpdateAgentParams) {
-  validate(schema, data);
+  const payload=  validate(schema, data);
 
   const chatPlatforms = await chatPlatformService().list({
-    business_id: data.business_id,
+    business_id: payload.business_id,
   });
 
-  const profileUrl = await uploadProfile(data);
+  const profileUrl = await uploadProfile(payload);
 
   if (profileUrl) {
-    data.profile_url = profileUrl;
+    payload.profile_url = profileUrl;
   }
 
-  const { id, business_id: business, ...rest }: UpdateAgentParams = data;
+  const { id, business_id: business, ...rest }: UpdateAgentParams = payload;
 
   await Promise.all(
     chatPlatforms

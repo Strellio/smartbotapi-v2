@@ -15,19 +15,21 @@ type CreateAgentParams = {
   email?: string;
   is_person: boolean;
   business_id: string;
-  profile_url: string;
+    profile_url?: string;
+    country?:string
 };
 
 export default async function create(data: CreateAgentParams) {
-validate(schema, data);
+  const payload=  validate(schema, data);
     
-  const profileUrl = await uploadProfile(data)
+    console.log(payload)
+    
+  const profileUrl = await uploadProfile(payload)
 
   if (profileUrl) {
-    data.profile_url = profileUrl
+    payload.profile_url = profileUrl
 
   }
-    
     
   const {
     business_id: business,
@@ -35,7 +37,7 @@ validate(schema, data);
     profile_url,
     name,
     is_person = true,
-  }: CreateAgentParams = data
+  }: CreateAgentParams = payload
     
   const user = is_person && await userService().updateOrCreate({
     email,
@@ -63,7 +65,6 @@ validate(schema, data);
         },
       });
         
-        console.log(result)
       // find a better way to retrie
       const sortedAgents = result.agents
         .filter((agent) => agent.name === name)

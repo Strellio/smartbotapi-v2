@@ -57,14 +57,12 @@ export default async function transformData({
     }
 
     if (payload.agent.action_type !== ACTION_TYPE_TO_MONGODB_FIELD.DELETE) {
-
-      console.log("creating fb persona")
       const persona = await createPersona({
         pageAccessToken:
           dbPayload?.external_access_token || payload.external_access_token,
         name: payload.agent.name,
         profile_url: payload.agent.profile_url,
-      }).catch(console.log)
+      })
       payload.agent.external_id = persona.id;
     }
 

@@ -7,6 +7,7 @@ import schema from "./schema";
 import { STATUS_MAP } from "../../../models/common";
 import config from "../../../config";
 import { PLATFORM_MAP } from "../../../models/businesses/schema/enums";
+import { User } from "../../../models/users/types";
 
 export function install({ shop = required("shop") }) {
   return shopifyLib().shopifyToken.generateAuthUrl(shop);
@@ -32,6 +33,9 @@ export async function callback(params: CallbackParams): Promise<string> {
   });
   const shopDetails = await shopifyClient.shop.get();
 
+
+  console.log(shopDetails)
+
   const createBusinessPayload = {
     status: STATUS_MAP.ACTIVE,
     domain: `https://${shopDetails.domain}`,
@@ -50,6 +54,7 @@ export async function callback(params: CallbackParams): Promise<string> {
       city: shopDetails.city,
     },
     platform: PLATFORM_MAP.SHOPIFY,
+    full_name: `${shopDetails.name}'s owner`
   };
 
   let business = await businessService().getByExternalPlatformDomain(
@@ -73,10 +78,12 @@ export async function callback(params: CallbackParams): Promise<string> {
     .catch((err) => {
       console.log(err.response.body.errors);
     });
-
+  
   return `${config.DASHBOARD_URL}/api/auth?token=${generateJwt({
     business_id: business.id,
-  })}&business_id=${business.id}` as any;
+    user_id:  business.user.toString()
+
+  })}&business_id=${business.id}&user_id=${business.user.toString()}` as any;
 }
 
 interface CallbackParams {
