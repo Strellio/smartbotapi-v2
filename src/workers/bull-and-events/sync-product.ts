@@ -1,7 +1,5 @@
 "use strict";
-import { Queue, Worker } from "bullmq";
-import * as db from "../../lib/db";
-// import * as redis from "../../lib/redis";
+import { Worker } from "bullmq";
 import { Business } from "../../models/businesses/types";
 import shopifyService from "../../services/external-platforms/shopify";
 import logger from "../../lib/logger";
