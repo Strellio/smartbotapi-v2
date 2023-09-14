@@ -54,27 +54,27 @@ export function generateOrderContent(order:any) {
     } = order;
   
     // Generate a sentence with order information
-    let sentence = `Order for customer with email ${customer?.email} has the order number ${order_number}  is currently ${generateOrderStatus(fulfillment_status, financial_status, cancelled_at)}.\n`;
-    sentence += `You can track your order's status and details by visiting the following link: ${order_status_url}\n`;
-    sentence += `The total price of the order is ${currency} ${current_total_price}.\n`;
+    let sentence = `Order for customer with email ${customer?.email} has the order number ${order_number}  is currently ${generateOrderStatus(fulfillment_status, financial_status, cancelled_at)}. `;
+    sentence += `You can track your order's status and details by visiting the following link: ${order_status_url} `;
+    sentence += `The total price of the order is ${currency} ${current_total_price}. `;
 
-    sentence += ` And the order items are ${line_items.map((item: any) => item.quantity + " " + item.title + " for " + item.price).join(" and ")}\n`
+    sentence += ` And the order items are ${line_items.map((item: any) => item.quantity + " " + item.title + " for " + item.price).join(" and ")} `
   
     // Include billing and shipping addresses
-    sentence += `Billing Address: ${billing_address? formatAddress(billing_address):"no billing address"}\n`;
-    sentence += `Shipping Address: ${formatAddress(shipping_address)}\n`;
+    sentence += `Billing Address: ${billing_address? formatAddress(billing_address):"no billing address"} `;
+    sentence += `Shipping Address: ${formatAddress(shipping_address)} `;
   
     // Include fulfillments, refunds, and shipping information
-    sentence += fulfillments?.length>0? `Fulfillments: ${fulfillments.map(formatFulfillment).join(', ')}\n`:"";
-    // sentence += refunds?.length>0? `Refunds: ${refunds.map(formatRefund(currency)).join(', ')}\n`:'';
-    // sentence += `Shipping Information: ${shipping_lines.map(formatShippingLine(currency)).join(', ')}\n`;
+    sentence += fulfillments?.length>0? `Fulfillments: ${fulfillments.map(formatFulfillment).join(', ')} `:"";
+    // sentence += refunds?.length>0? `Refunds: ${refunds.map(formatRefund(currency)).join(', ')} `:'';
+    // sentence += `Shipping Information: ${shipping_lines.map(formatShippingLine(currency)).join(', ')} `;
   
     // Include payment gateway names and order processing details
-    sentence += payment_gateway_names?.length >0? `Payment Gateway(s): ${payment_gateway_names.join(', ')}\n`:'';
-    sentence += processed_at?`Processed At: ${processed_at}\n`:'';
+    sentence += payment_gateway_names?.length >0? `Payment Gateway(s): ${payment_gateway_names.join(', ')} `:'';
+    sentence += processed_at?`Processed At: ${processed_at} `:'';
   
     // Include outstanding amount
-    sentence += total_outstanding? `Outstanding Amount: ${currency} ${total_outstanding}\n`:'';
+    sentence += total_outstanding? `Outstanding Amount: ${currency} ${total_outstanding} `:'';
   
     return sentence;
   }
@@ -86,7 +86,7 @@ export function generateOrderContent(order:any) {
   
   // Helper function to format a fulfillment
   function formatFulfillment(fulfillment) {
-    return `Tracking Number: ${fulfillment.tracking_number}, Tracking Company: ${fulfillment.tracking_company} Status: ${fulfillment.status}`;
+    return `Tracking Number: ${fulfillment.tracking_number}, Tracking Company: ${fulfillment.tracking_company}, Status: ${fulfillment.status}`;
   }
   
 //   // Helper function to format a refund
@@ -479,5 +479,5 @@ const order = {
 }
   
 
-// console.log(generateOrderContent(order))
+console.log(generateOrderContent(order))
   
