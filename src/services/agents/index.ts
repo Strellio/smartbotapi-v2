@@ -11,5 +11,6 @@ export default {
     create,
     listByBusinessId: agentsModel.listByBusinessId,
     getAgentById: agentsModel.getById,
-    listByUserId: agentsModel.listByUserId
+    listByUserId: agentsModel.listByUserId,
+    getByBusinessAndUserId: agentsModel.getByBusinessAndUserId
 }

@@ -54,7 +54,7 @@ const wsServer = new WebSocketServer({
 });
 
 const getContext = async (ctx, msg, args) => {
-  return { business: ctx.business };
+  return { business: ctx.business, agent:ctx.agent };
 };
 
 const schema = makeExecutableSchema({ typeDefs: schemas, resolvers });
@@ -74,9 +74,11 @@ const serverCleanup = useServer(
 
         token = authToken.split(" ")[1];
       }
-      const { business } = await isAuthenticated(token, ctx);
+      const { business, agent } = await isAuthenticated(token, ctx);
+      console.log(agent)
 
       ctx.business = business;
+      ctx.agent = agent
     },
     onDisconnect: (ctx) => {
       logger().error("Connection disconnected", ctx.connectionParams);
@@ -127,8 +129,6 @@ export default async function startServer() {
       // @ts-ignore
       expressMiddleware(graphqlServer, {
         context: async ({ req }) => {
-          console.log(req.headers.authorization);
-
           const token = req.headers.authorization?.split("Bearer ")[1];
           const operationsToIgnore = ["createAccount", "login"];
           if (operationsToIgnore.includes(req.body.operationName)) return req;

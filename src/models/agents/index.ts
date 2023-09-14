@@ -59,10 +59,23 @@ const getById = (_id: string = required("id")) =>
     ],
   });
 
+  const getByBusinessAndUserId = ({userId, businessId}: {userId:string, businessId:string}) =>
+  AgentModel.get({
+    query: {
+      user: userId,
+      business: businessId
+    },
+    populate: [
+      { path: "linked_chat_agents_platforms", select: "agents platform" },
+      { path: "user"}
+    ],
+  });
+
 export default {
   create,
   listByBusinessId,
   update,
   getById,
-  listByUserId
+  listByUserId,
+  getByBusinessAndUserId
 };

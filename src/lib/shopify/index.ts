@@ -119,7 +119,7 @@ const api = ({
 }) =>
   new Shopify({
     accessToken,
-    shopName: platformDomain,
+    shopName:  platformDomain.replace(/(^\w+:|^)\/\//, ""),
     apiVersion: LATEST_API_VERSION,
     autoLimit: true
   })
