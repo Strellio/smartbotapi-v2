@@ -30,6 +30,7 @@ const handleOrderEvent = async (
   eventName: string,
   business: Business
 ) => {
+    console.log(data)
   // delete order if event is delete order
   const isDeleteOrUpdateEvent =
     eventName.includes("delete") || eventName.includes("updated");
