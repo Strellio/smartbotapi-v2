@@ -30,66 +30,76 @@ const handleOrderEvent = async (
   eventName: string,
   business: Business
 ) => {
-    console.log(data)
   // delete order if event is delete order
   const isDeleteOrUpdateEvent =
     eventName.includes("delete") || eventName.includes("updated");
 
-  console.log(isDeleteOrUpdateEvent);
   if (isDeleteOrUpdateEvent) {
     await deleteVectoreStoreDocument({
       dbName: business.account_name,
       collectionName: "orders-store",
       id: data.id,
     });
+      
+    logger().info(`deleted order from the vectorestore for ${data.id}`);
+
   }
-  const handler = mapPlatformToOrderHandler[business.platform];
+    
+    if (!eventName.includes("delete")) {
+        const handler = mapPlatformToOrderHandler[business.platform];
 
-  if (handler) {
-    const documents = await handler({ business, data });
+        if (handler) {
+          const documents = await handler({ business, data });
+      
+          await createVectoreStore({
+            dbName: business.account_name,
+            indexName: "orders-retriever",
+            collectionName: "orders-store",
+            documents,
+          });
+      
+          logger().info(`order added to vectorestore for ${business.domain}`);
+        }
+        
+    }
 
-    await createVectoreStore({
-      dbName: business.account_name,
-      indexName: "orders-retriever",
-      collectionName: "orders-store",
-      documents,
-    });
-
-    logger().info(`order added to vectorestore for ${business.domain}`);
-  }
 };
 
 const handleProductEvent = async (
-  data: any,
-  eventName: string,
-  business: Business
+    data: any,
+    eventName: string,
+    business: Business
 ) => {
-  // delete order if event is delete order
-  const isDeleteOrUpdateEvent =
-    eventName.includes("delete") || eventName.includes("update");
+    // delete order if event is delete order
+    const isDeleteOrUpdateEvent =
+        eventName.includes("delete") || eventName.includes("update");
 
-  console.log(isDeleteOrUpdateEvent);
-  if (isDeleteOrUpdateEvent) {
-    await deleteVectoreStoreDocument({
-      dbName: business.account_name,
-      collectionName: "products-store",
-      id: data.id,
-    });
-  }
-  const handler = mapPlatformToProductHandler[business.platform];
+    if (isDeleteOrUpdateEvent) {
+        await deleteVectoreStoreDocument({
+            dbName: business.account_name,
+            collectionName: "products-store",
+            id: data.id,
+        });
+        logger().info(`deleted product from the vectorestore for ${data.id}`);
 
-  if (handler) {
-    const documents = await handler({ business, data });
+    }
+    if (!eventName.includes("delete")) {
 
-    await createVectoreStore({
-      dbName: business.account_name,
-      indexName: "products-retriever",
-      collectionName: "products-store",
-      documents,
-    });
-    logger().info(`Product added to vectorestore for ${business.domain}`);
-  }
-};
+        const handler = mapPlatformToProductHandler[business.platform];
+
+        if (handler) {
+            const documents = await handler({ business, data });
+
+            await createVectoreStore({
+                dbName: business.account_name,
+                indexName: "products-retriever",
+                collectionName: "products-store",
+                documents,
+            });
+            logger().info(`Product added to vectorestore for ${business.domain}`);
+        }
+    };
+}
 
 export default async function handleEvent(
   event: PubsubMessage & {
