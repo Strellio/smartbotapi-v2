@@ -1,4 +1,5 @@
 "use strict";
+import {NextFunction, Request, Response} from "express"
 
 import shopifyLib from "../../../lib/shopify";
 import { required, validate, generateJwt } from "../../../lib/utils";
@@ -8,9 +9,24 @@ import { STATUS_MAP } from "../../../models/common";
 import config from "../../../config";
 import { PLATFORM_MAP } from "../../../models/businesses/schema/enums";
 import { User } from "../../../models/users/types";
+import { DeliveryMethod, PubSubWebhookHandler } from "@shopify/shopify-api";
+import logger from "../../../lib/logger";
 
-export function install({ shop = required("shop") }) {
-  return shopifyLib().shopifyToken.generateAuthUrl(shop);
+export const install = (req: Request, res: Response, next: NextFunction) => {
+  try {
+
+    return shopifyLib.auth.begin({
+      shop: shopifyLib.utils.sanitizeShop(req.query.shop as never, true) as string,
+      callbackPath: `/shopify/callback`,
+      isOnline: false,
+      rawRequest: req,
+      rawResponse: res
+    })
+    
+  } catch (error) {
+    next(error)
+  }
+
 }
 
 const getWidgetCode = (businessId: string) => {
@@ -21,69 +37,122 @@ const getWidgetCode = (businessId: string) => {
   )}`;
 };
 
-export async function callback(params: CallbackParams): Promise<string> {
-  const payload = validate(schema, params);
-  const { access_token }: any = await shopifyLib().shopifyToken.getAccessToken(
-    payload.shop,
-    payload.code
-  );
-  const shopifyClient = shopifyLib().shopifyClient({
-    shop: payload.shop,
-    accessToken: access_token,
-  });
-  const shopDetails = await shopifyClient.shop.get();
+// export async function callback(params: CallbackParams): Promise<string> {
+export const callback = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+        const payload = validate(schema, req.query);
 
-
-  console.log(shopDetails)
-
-  const createBusinessPayload = {
-    status: STATUS_MAP.ACTIVE,
-    domain: `https://${shopDetails.domain}`,
-    email: shopDetails.email,
-    phone_number: shopDetails.phone,
-    shop: {
-      external_platform_domain: `https://${shopDetails.myshopify_domain}`,
-      external_created_at: shopDetails.created_at,
-      money_format: shopDetails.money_format,
-      external_access_token: access_token,
-    },
-    external_id: String(shopDetails.id),
-    business_name: shopDetails.name,
-    location: {
-      country: shopDetails.country_name,
-      city: shopDetails.city,
-    },
-    platform: PLATFORM_MAP.SHOPIFY,
-    full_name: `${shopDetails.name}'s owner`
-  };
-
-  let business = await businessService().getByExternalPlatformDomain(
-    createBusinessPayload.shop.external_platform_domain
-  );
-
-  if (!business) {
-    business = await businessService().create(createBusinessPayload);
-  } else {
-    business = await businessService().updateById({
-      id: business.id,
-      ...createBusinessPayload,
-    });
-  }
-
-  await shopifyClient.scriptTag
-    .create({
-      src: getWidgetCode(business.id),
-      event: "onload",
-    })
-    .catch((err) => {
-      console.log(err.response.body.errors);
-    });
+    const response = await shopifyLib.getAccessToken(
+      payload.shop,
+      payload.code
+    )
   
-  return `${config.DASHBOARD_URL}/api/auth?token=${generateJwt({
-    business_id: business.id,
-    user_id:  business.user.toString()
+    logger().info(response)
+  
+    const shopifyClient = shopifyLib.api({
+      platformDomain: response.shop,
+      accessToken: response.accessToken as string
+    })
+  
+    // const shop = await client.shop.get()
 
-  })}&business_id=${business.id}&user_id=${business.user.toString()}` as any;
+
+    // const payload = validate(schema, params);
+    // const { access_token }: any = await shopifyLib().shopifyToken.getAccessToken(
+    //   payload.shop,
+    //   payload.code
+    // );
+    // const shopifyClient = shopifyLib().shopifyClient({
+    //   shop: payload.shop,
+    //   accessToken: access_token,
+    // });
+    const shopDetails = await shopifyClient.shop.get();
+
+
+
+    const createBusinessPayload = {
+      status: STATUS_MAP.ACTIVE,
+      domain: `https://${shopDetails.domain}`,
+      email: shopDetails.email,
+      phone_number: shopDetails.phone,
+      shop: {
+        external_platform_domain: `https://${shopDetails.myshopify_domain}`,
+        external_created_at: shopDetails.created_at,
+        money_format: shopDetails.money_format,
+        external_access_token: response.accessToken,
+      },
+      external_id: String(shopDetails.id),
+      business_name: shopDetails.name,
+      location: {
+        country: shopDetails.country_name,
+        city: shopDetails.city,
+      },
+      platform: PLATFORM_MAP.SHOPIFY,
+      full_name: `${shopDetails.name}'s owner`
+    };
+
+    let business = await businessService().getByExternalPlatformDomain(
+      createBusinessPayload.shop.external_platform_domain
+    );
+
+    if (!business) {
+      business = await businessService().create(createBusinessPayload);
+    } else {
+      business = await businessService().updateById({
+        id: business.id,
+        ...createBusinessPayload,
+      });
+    }
+
+    await shopifyClient.scriptTag
+      .create({
+        src: getWidgetCode(business.id),
+        event: "onload",
+      })
+      .catch((err) => {
+        console.log(err.response.body.errors);
+      });
+  
+    try {
+      const pubsubHandler: PubSubWebhookHandler = {
+        deliveryMethod: DeliveryMethod.PubSub,
+        pubSubProject: config.GOOGLE_CLOUD_PROJECT,
+        pubSubTopic: config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC
+      }
+
+      await shopifyLib.webhooks.addHandlers({
+        ORDERS_CREATE: [pubsubHandler],
+        ORDERS_UPDATED: [pubsubHandler],
+        ORDERS_DELETE: [pubsubHandler],
+        PRODUCTS_CREATE: [pubsubHandler],
+        PRODUCTS_UPDATE: [pubsubHandler],
+        PRODUCTS_DELETE:[pubsubHandler],
+        APP_UNINSTALLED: [pubsubHandler]
+      })
+    const result =   await shopifyLib.webhooks.register({
+        session: {
+          shop: response.shop,
+          accessToken: response.accessToken,
+          ...req.query
+        } as any
+    })
+      
+      logger().info("done registering webhooks ", result)
+    } catch (error) {
+      logger().error(error)
+    }
+  
+    const redirectUrl = `${config.DASHBOARD_URL}/api/auth?token=${generateJwt({
+      business_id: business.id,
+      user_id: business.user.toString()
+
+    })}&business_id=${business.id}&user_id=${business.user.toString()}` as any;
+
+    
+      res.redirect(redirectUrl)
+  } catch (error) {
+    next(error)
+  }
 }
 
 interface CallbackParams {

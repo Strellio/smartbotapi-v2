@@ -65,7 +65,20 @@ const config = envalid.cleanEnv(
   }
 );
 
+console.log(config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC)
+
 export default {
   ...config,
   SHOPIFY_GOOGLE_PUB_SUB_SUBSCRIPTION_NAME: `projects/${config.GOOGLE_CLOUD_PROJECT}/subscriptions/${config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC}-sub`
 };
+
+// pubsub://strellio:DEVELOPMENT-SHOPIFY-UPDATES
+
+// projects/strellio/subscriptions/DEVEVELOPMENT-SHOPIFY-UPDATES-sub
+
+
+// projects/strellio/subscriptions/DEVELOPMENT-SHOPIFY-UPDATES-sub
+
+
+
+config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC

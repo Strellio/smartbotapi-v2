@@ -47,7 +47,7 @@ type CreateMessageParams = {
 };
 
 const sendMessageForCustomWidget = (message: any) =>
-  pubsub.publish(config.NEW_CUSTOMER_MESSAGE_TOPIC, {
+  pubsub.redisPubSub.publish(config.NEW_CUSTOMER_MESSAGE_TOPIC, {
     onNewCustomerMessage: message,
   });
 
@@ -67,7 +67,7 @@ export default async function create(params: CreateMessageParams) {
   });
 
   // if (rest.is_message_from_customer) {
-  pubsub.publish(config.NEW_ADMIN_MESSAGE_TOPIC, {
+  pubsub.redisPubSub.publish(config.NEW_ADMIN_MESSAGE_TOPIC, {
     onNewAdminMessage: message
   });
   // }

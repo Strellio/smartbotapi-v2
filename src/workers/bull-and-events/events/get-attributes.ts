@@ -4,7 +4,7 @@ const getDomainFromAttributes = ({
   attributes: {
     [x: string]: string
   }
-}) => attributes['X-Shopify-Shop-Domain']
+}) => `https://${attributes['X-Shopify-Shop-Domain']}`
 
 const getTopicFromAttributes = ({
   attributes

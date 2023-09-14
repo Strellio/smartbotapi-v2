@@ -10,7 +10,7 @@ export default {
   Subscription: {
     onNewAdminMessage: {
       subscribe: withFilter(
-        (_, args) => pubsub.asyncIterator(config.NEW_ADMIN_MESSAGE_TOPIC),
+        (_, args) => pubsub.redisPubSub.asyncIterator(config.NEW_ADMIN_MESSAGE_TOPIC),
         (payload, variables, { business }) => {
           return payload.onNewAdminMessage.business === business.id;
         }
@@ -18,7 +18,7 @@ export default {
     },
     onNewCustomerMessage: {
       subscribe: withFilter(
-        (_, args) => pubsub.asyncIterator(config.NEW_CUSTOMER_MESSAGE_TOPIC),
+        (_, args) => pubsub.redisPubSub.asyncIterator(config.NEW_CUSTOMER_MESSAGE_TOPIC),
         (payload, variables, { business }) => {
           return (
             payload.onNewCustomerMessage.business === business.id &&

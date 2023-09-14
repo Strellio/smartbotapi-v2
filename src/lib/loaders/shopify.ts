@@ -148,9 +148,14 @@ export class ShopifyLoader extends BaseDocumentLoader {
 
   private client: Shopify;
 
-  mapResourceToHandler = {
+  mapResourceToSyncHandler = {
     [ShopifyResource.PRODUCTS]: this.loadProducts,
     [ShopifyResource.ORDERS]: this.loadOrders
+  }
+
+  mapResourceToGetHandler = {
+    [ShopifyResource.PRODUCTS]: this.getProductDocuments,
+    [ShopifyResource.ORDERS]: this.getOrderDocuments
   }
 
   constructor(
@@ -165,8 +170,8 @@ export class ShopifyLoader extends BaseDocumentLoader {
     this.domain = domain;
     access_token = access_token;
     this.options = options;
-    this.client = shopifyLib().shopifyClient({
-      shop: domain,
+    this.client = shopifyLib.api({
+      platformDomain: domain,
       accessToken: access_token,
     });
   }
@@ -220,7 +225,12 @@ export class ShopifyLoader extends BaseDocumentLoader {
   }
 
   async load(): Promise<Document[]> {
-    const handler = this.mapResourceToHandler[this.resource]
+    const handler = this.mapResourceToSyncHandler[this.resource]
     return await handler.call(this);
+  }
+
+  async getDocuments(data:any[]): Promise<Document[]> {
+    const handler = this.mapResourceToGetHandler[this.resource]
+    return await handler.call(this, data);
   }
 }
