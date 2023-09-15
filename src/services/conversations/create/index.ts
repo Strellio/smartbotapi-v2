@@ -66,6 +66,8 @@ export default async function create(params: CreateMessageParams) {
     ...rest,
   });
 
+  console.log(message)
+
   // if (rest.is_message_from_customer) {
   pubsub.redisPubSub.publish(config.NEW_ADMIN_MESSAGE_TOPIC, {
     onNewAdminMessage: message

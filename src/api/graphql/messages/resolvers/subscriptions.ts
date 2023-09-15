@@ -12,6 +12,7 @@ export default {
       subscribe: withFilter(
         (_, args) => pubsub.redisPubSub.asyncIterator(config.NEW_ADMIN_MESSAGE_TOPIC),
         (payload, variables, { business }) => {
+          console.log(payload.onNewAdminMessage)
           return payload.onNewAdminMessage.business === business.id;
         }
       ),

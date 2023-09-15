@@ -3,7 +3,7 @@ import { Document } from "langchain/document";
 import handlebars from "handlebars";
 import Shopify from "shopify-api-node";
 import shopifyLib from "../../shopify";
-import { generateOrderContent } from "./generate-text";
+import { generateOrderContent, transformOrder } from "./generate-text";
 
 interface ProductVariant {
   price: string;
@@ -167,7 +167,7 @@ export class ShopifyLoader extends BaseDocumentLoader {
   private getOrderDocuments(orders: any[]): Document[] {
     return orders.map((order) => ({
       pageContent: generateOrderContent(order),
-      metadata: order,
+      metadata: transformOrder(order),
     }));
   }
 

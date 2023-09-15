@@ -75,7 +75,6 @@ const serverCleanup = useServer(
         token = authToken.split(" ")[1];
       }
       const { business, agent } = await isAuthenticated(token, ctx);
-      console.log(agent)
 
       ctx.business = business;
       ctx.agent = agent
