@@ -39,9 +39,11 @@ const config = envalid.cleanEnv(
     MONGODB_PRIVATE_KEY: envalid.str(),
     MONGODB_PROJECT_ID: envalid.str(),
     MONGODB_CLUSTER_NAME: envalid.str(),
-    IS_TS_RUNTIME: envalid.bool({
-      default:false
-    })
+    IMAGES_BUCKET_NAME: envalid.str(),
+    GOOGLE_CLOUD_PROJECT: envalid.str(),
+    GOOGLE_APPLICATION_CREDENTIALS: envalid.str()
+
+
   },
   {
     reporter: ({ errors }) => {

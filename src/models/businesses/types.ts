@@ -1,6 +1,7 @@
 import { PLATFORM_MAP } from "./schema/enums";
 import { CHAT_PLATFORMS, CHAT_TYPE } from "../chat-platforms/schema";
 import { STATUS_MAP } from "../common";
+import { User } from "../users/types";
 
 export type Business = {
   id: string;
@@ -19,6 +20,7 @@ export type Business = {
 };
 
 export type ChatAgent = {
+  id:string
   external_id: string;
   name: string;
   profile_url: string;
@@ -59,10 +61,12 @@ export type Shop = {
 
 export type Agent = {
   id: string;
-  name: string;
-  profile_url: string;
-  is_online: Boolean;
-  is_person: Boolean;
+  user?: User;
+  bot_info?: {
+    name: string
+    profile_url: string
+  }
+  is_person: boolean;
   linked_chat_agents: [ChatAgent];
   created_at: Date;
   updated_at: Date;
