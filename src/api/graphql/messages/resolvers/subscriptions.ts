@@ -10,16 +10,15 @@ export default {
   Subscription: {
     onNewAdminMessage: {
       subscribe: withFilter(
-        (_, args) => pubsub.redisPubSub.asyncIterator(config.NEW_ADMIN_MESSAGE_TOPIC),
+        (_, args) => pubsub.graphqlGooglePubSub.asyncIterator(config.NEW_ADMIN_MESSAGE_TOPIC),
         (payload, variables, { business }) => {
-          console.log(payload.onNewAdminMessage)
           return payload.onNewAdminMessage.business === business.id;
         }
       ),
     },
     onNewCustomerMessage: {
       subscribe: withFilter(
-        (_, args) => pubsub.redisPubSub.asyncIterator(config.NEW_CUSTOMER_MESSAGE_TOPIC),
+        (_, args) => pubsub.graphqlGooglePubSub.asyncIterator(config.NEW_CUSTOMER_MESSAGE_TOPIC),
         (payload, variables, { business }) => {
           return (
             payload.onNewCustomerMessage.business === business.id &&

@@ -3,6 +3,7 @@ import { required, decodeJwt } from "../../lib/utils";
 import customError from "../../lib/errors/custom-error";
 import businessService from "../../services/businesses";
 import agentService from "../../services/agents"
+import logger from "../../lib/logger";
 
 const throwAuthError = () =>
   customError({
@@ -15,8 +16,8 @@ export default async function isAuthenticated(
   req: object = {}
 ) {
   try {
+    console.log(token)
     const decoded: any = await decodeJwt(token);
-    console.log(decoded)
     const [business, agent] = await Promise.all([businessService().getById(decoded.business_id), agentService.getByBusinessAndUserId({ userId: decoded.user_id, businessId: decoded.business_id })])
     return {
       business,
@@ -24,7 +25,7 @@ export default async function isAuthenticated(
       ...req,
     };
   } catch (error) {
-    console.log(error);
+    logger().error(error);
     throw throwAuthError();
   }
 }

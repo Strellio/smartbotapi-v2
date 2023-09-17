@@ -12,6 +12,7 @@ import {
 import pubsub from "../../../lib/pubsub";
 import config from "../../../config";
 import { CHAT_PLATFORMS } from "../../../models/chat-platforms/schema";
+import mongoose from "mongoose";
 
 export type Media = { url: string; type: MESSAGE_MEDIA_TYPE };
 
@@ -47,9 +48,21 @@ type CreateMessageParams = {
 };
 
 const sendMessageForCustomWidget = (message: any) =>
-  pubsub.redisPubSub.publish(config.NEW_CUSTOMER_MESSAGE_TOPIC, {
+  pubsub.graphqlGooglePubSub.publish(config.NEW_CUSTOMER_MESSAGE_TOPIC, {
     onNewCustomerMessage: message,
   });
+
+
+ export const sendMessageToAdmin = async (message: any) =>{
+   return pubsub.graphqlGooglePubSub.publish(config.NEW_ADMIN_MESSAGE_TOPIC, {
+      onNewAdminMessage: message,
+    })
+
+  }
+
+
+
+
 
 export default async function create(params: CreateMessageParams) {
   const validated: CreateMessageParams = validate(schema, params);
@@ -66,12 +79,9 @@ export default async function create(params: CreateMessageParams) {
     ...rest,
   });
 
-  console.log(message)
 
   // if (rest.is_message_from_customer) {
-  pubsub.redisPubSub.publish(config.NEW_ADMIN_MESSAGE_TOPIC, {
-    onNewAdminMessage: message
-  });
+    sendMessageToAdmin(message)
   // }
 
   if (

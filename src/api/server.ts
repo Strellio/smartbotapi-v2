@@ -67,7 +67,7 @@ const serverCleanup = useServer(
 
       let token;
 
-      const headers = ctx.connectionParams.headers;
+      const headers = ctx.connectionParams.headers?? ctx.connectionParams;
 
       if (headers) {
         const authToken = headers["Authorization"] ?? headers["authorization"];
@@ -105,7 +105,7 @@ const graphqlServer = new ApolloServer({
   formatError: (error) => {
     console.log(error);
 
-    return error; //formatError(error) as any;
+    return formatError(error) as any;
   },
   introspection: config.isDev,
   csrfPrevention: true,
@@ -140,7 +140,7 @@ export default async function startServer() {
   httpServer.listen(PORT, () => {
     loggerMaker().info(`Server started on http://localhost:${PORT}`);
     loggerMaker().info(
-      `🚀 Subscriptions ready at ws://localhost:${PORT}${graphqlServer}`
+      `🚀 Subscriptions ready at ws://localhost:${PORT}/graphql}`
     );
   });
 }

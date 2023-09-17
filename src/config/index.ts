@@ -25,10 +25,10 @@ const config = envalid.cleanEnv(
     BOT_API: envalid.url(),
     REDIS_URL: envalid.url(),
     NEW_ADMIN_MESSAGE_TOPIC: envalid.str({
-      default: "NEW_ADMIN_MESSAGE_TOPIC",
+      default: `${process.env.NODE_ENV.toUpperCase()}-NEW_ADMIN_MESSAGE_TOPIC`,
     }),
     NEW_CUSTOMER_MESSAGE_TOPIC: envalid.str({
-      default: "NEW_CUSTOMER_MESSAGE_TOPIC",
+      default: `${process.env.NODE_ENV.toUpperCase()}-NEW_CUSTOMER_MESSAGE_TOPIC`,
     }),
     PUBSUB_PROJECT_ID: envalid.str(),
     PUBSUB_CREDENTIALS: envalid.str(),
@@ -65,7 +65,7 @@ const config = envalid.cleanEnv(
   }
 );
 
-console.log(config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC)
+console.log(`${process.env.NODE_ENV.toUpperCase()}-NEW_CUSTOMER_MESSAGE_TOPIC`)
 
 export default {
   ...config,
