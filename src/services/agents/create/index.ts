@@ -21,9 +21,7 @@ type CreateAgentParams = {
 
 export default async function create(data: CreateAgentParams) {
   const payload=  validate(schema, data);
-    
-    console.log(payload)
-    
+        
   const profileUrl = await uploadProfile(payload)
 
   if (profileUrl) {
