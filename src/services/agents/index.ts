@@ -13,5 +13,6 @@ export default {
     listByBusinessId: agentsModel.listByBusinessId,
     getAgentById: agentsModel.getById,
     listByUserId: agentsModel.listByUserId,
-    getByBusinessAndUserId: agentsModel.getByBusinessAndUserId
+    getByBusinessAndUserId: agentsModel.getByBusinessAndUserId,
+    getBotAgent: agentsModel.getBotAgent
 }

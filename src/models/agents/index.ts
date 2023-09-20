@@ -71,11 +71,25 @@ const getById = (_id: string = required("id")) =>
     ],
   });
 
+
+  const getBotAgent = (businessId:string) =>
+  AgentModel.get({
+    query: {
+      is_person: false,
+      business: businessId
+    },
+    populate: [
+      { path: "linked_chat_agents_platforms", select: "agents platform" },
+      { path: "user"}
+    ],
+  });
+
 export default {
   create,
   listByBusinessId,
   update,
   getById,
   listByUserId,
-  getByBusinessAndUserId
+  getByBusinessAndUserId,
+  getBotAgent
 };

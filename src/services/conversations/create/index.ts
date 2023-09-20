@@ -12,7 +12,8 @@ import {
 import pubsub from "../../../lib/pubsub";
 import config from "../../../config";
 import { CHAT_PLATFORMS } from "../../../models/chat-platforms/schema";
-import mongoose from "mongoose";
+
+import agentService from "../../agents"
 
 export type Media = { url: string; type: MESSAGE_MEDIA_TYPE };
 
@@ -66,6 +67,16 @@ const sendMessageForCustomWidget = (message: any) =>
 
 export default async function create(params: CreateMessageParams) {
   const validated: CreateMessageParams = validate(schema, params);
+
+
+  if (!validated.is_chat_with_live_agent && !validated.is_message_from_customer) {
+
+    const botAgent = await agentService.getBotAgent(validated.business_id)
+
+    validated.agent_id = botAgent.id
+    
+  }
+
   const {
     customer_id: customer,
     business_id: business,
