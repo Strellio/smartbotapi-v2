@@ -6,6 +6,7 @@ import { AGENT_AVAILABILTY_STATUS } from '../../../models/agents/schema'
 
 
 export default joi.object({
+    id: objectId().required(),
     name: joi.string().max(20).required(),
     profile_url: joi.string().default(defaultProfilePic),
     business_id: objectId().required(),
