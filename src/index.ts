@@ -38,8 +38,6 @@ app
         Authorization: `Bearer dG9rOjgwNWVkMTU2XzJhZDdfNGQ2ZF85ZDZkXzEwNDg1OGQ2Mjc5YzoxOjA=`
       }
     })
-
-    console.log(req.body.data.item.conversation_message)
     await axios
       .post(
         `https://api.intercom.io/conversations/${req.body.data.item.id}/reply`,

@@ -3,7 +3,6 @@ export function generateOrderStatus(
   financialStatus,
   cancelledAt
 ) {
-  console.log(fulfillmentStatus, financialStatus, cancelledAt);
   if (cancelledAt !== null) {
     if (financialStatus === "refunded") {
       return "cancelled and refunded";

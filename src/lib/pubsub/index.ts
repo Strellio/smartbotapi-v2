@@ -14,12 +14,9 @@ const pubsub = new GooglePubSub(
     // credentials: JSON.parse(config.PUBSUB_CREDENTIALS as string)
   },
     topicName => {
-        console.log(`${topicName}-sub`)
-
         return `${topicName}-sub`
     },
     ({ data }) => {
-      console.log(parseString(data.toString()))
     return parseString(data.toString())
   }
 )

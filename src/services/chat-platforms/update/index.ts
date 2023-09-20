@@ -68,6 +68,6 @@ export default async function update(params: updateParams) {
     dbPayload: chatPlatform,
   });
 
-  console.log(transformedPayload)
-  return chatPlatformModel().updateById(id, transformedPayload);
+
+  return chatPlatformModel().updateById(chatPlatform.id, transformedPayload);
 }

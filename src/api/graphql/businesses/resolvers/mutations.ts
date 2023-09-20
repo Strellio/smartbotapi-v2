@@ -14,8 +14,6 @@ export default {
         business_id: business.id,
       })
 
-      console.log(result)
-
       return result
     },
     createChatPlatform: (parent: any, { input }: any, { business }: any) => {

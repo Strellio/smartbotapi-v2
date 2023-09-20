@@ -28,6 +28,8 @@ type UpdateAvailabilityParams={
 }
 
 export default async function update(data: UpdateAgentParams) {
+
+  console.log("agent data ", data)
   const payload=  validate(schema, data);
 
   const chatPlatforms = await chatPlatformService().list({

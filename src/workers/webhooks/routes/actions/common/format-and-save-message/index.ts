@@ -37,7 +37,6 @@ export default function formatAndSaveMessage({
     title: string
   }[]
 }) {
-  console.log("running format and save")
   return conversationsService().create({
     business_id: chatPlatform.business.id,
     source: chatPlatform.id,

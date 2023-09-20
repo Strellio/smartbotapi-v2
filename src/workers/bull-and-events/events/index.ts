@@ -126,7 +126,6 @@ export default async function handleEvent(
   let type: ResourceType;
 
   if (eventName && eventName.includes("order")) {
-    console.log("order event")
     type = ResourceType.ORDER;
     resource = await handleOrderEvent(data, eventName, business);
   }

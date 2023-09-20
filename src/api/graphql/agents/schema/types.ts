@@ -9,6 +9,7 @@ export default gql`
   type Agent {
     id: ID!
     user: User
+    bot_info: BotInfo
     is_person: Boolean
     availability_status: AgentAvailabiltiyStatusEnum!
     linked_chat_agents: [ChatAgent!]
@@ -35,6 +36,11 @@ export default gql`
     linked_chat_agents: [ID]!
     is_person: Boolean
     availability_status:AgentAvailabiltiyStatusEnum
+  }
+
+  type BotInfo{
+    name: String!
+    profile_url: String
   }
 
 

@@ -16,7 +16,6 @@ export default async function isAuthenticated(
   req: object = {}
 ) {
   try {
-    console.log(token)
     const decoded: any = await decodeJwt(token);
     const [business, agent] = await Promise.all([businessService().getById(decoded.business_id), agentService.getByBusinessAndUserId({ userId: decoded.user_id, businessId: decoded.business_id })])
     return {

@@ -65,8 +65,6 @@ const config = envalid.cleanEnv(
   }
 );
 
-console.log(`${process.env.NODE_ENV.toUpperCase()}-NEW_CUSTOMER_MESSAGE_TOPIC`)
-
 export default {
   ...config,
   SHOPIFY_GOOGLE_PUB_SUB_SUBSCRIPTION_NAME: `projects/${config.GOOGLE_CLOUD_PROJECT}/subscriptions/${config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC}-sub`
