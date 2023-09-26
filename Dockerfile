@@ -16,7 +16,7 @@ COPY package*.json ./
 # Install dependencies.
 # If you add a package-lock.json speed your build by switching to 'npm ci'.
 # RUN npm ci --only=production && npm i typescript
-RUN npm i && npm i typescript
+RUN npm i --legacy-peer-deps && npm i typescript --legacy-peer-deps
 
 # Copy local code to the container image.
 COPY . ./
