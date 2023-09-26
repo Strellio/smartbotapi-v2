@@ -5,3 +5,5 @@ dist
 .env.old
 service-account-dev.json
 egs-service-account-dev.json
+.env.enc
+service-account-dev.json.enc
