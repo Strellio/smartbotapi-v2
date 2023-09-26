@@ -6,10 +6,10 @@ export const GOOGLE_STORAGE_URL = "https://storage.googleapis.com"
 
 import axios from "axios";
 
-const { GOOGLE_CLOUD_PROJECT_ID, GOOGLE_CLOUD_KEYFILE } = process.env;
+const { GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_KEYFILE } = process.env;
 
 const storage = new Storage({
-  projectId: GOOGLE_CLOUD_PROJECT_ID,
+  projectId: GOOGLE_CLOUD_PROJECT,
   keyFilename: GOOGLE_CLOUD_KEYFILE,
 });
 

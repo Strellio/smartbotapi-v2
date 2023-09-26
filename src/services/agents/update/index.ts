@@ -1,6 +1,6 @@
 "use strict";
 
-import schema from "./schema";
+import schema, { updateAvailabilitySchema } from "./schema";
 import { validate } from "../../../lib/utils";
 import agentsModel from "../../../models/agents";
 import userService from "../../users";
@@ -9,6 +9,7 @@ import { ChatPlatform } from "../../../models/businesses/types";
 import { ACTION_TYPE_TO_MONGODB_FIELD } from "../../../models/common";
 import { CHAT_PLATFORMS } from "../../../models/chat-platforms/schema";
 import { uploadProfile } from "../../users/create";
+import { AGENT_AVAILABILTY_STATUS } from "../../../models/agents/schema";
 
 type UpdateAgentParams = {
   id: string;
@@ -20,20 +21,28 @@ type UpdateAgentParams = {
   linked_chat_agents: [string];
 };
 
+
+type UpdateAvailabilityParams={
+  id: string;
+  availability_status: AGENT_AVAILABILTY_STATUS
+}
+
 export default async function update(data: UpdateAgentParams) {
-  validate(schema, data);
+
+  console.log("agent data ", data)
+  const payload=  validate(schema, data);
 
   const chatPlatforms = await chatPlatformService().list({
-    business_id: data.business_id,
+    business_id: payload.business_id,
   });
 
-  const profileUrl = await uploadProfile(data);
+  const profileUrl = await uploadProfile(payload);
 
   if (profileUrl) {
-    data.profile_url = profileUrl;
+    payload.profile_url = profileUrl;
   }
 
-  const { id, business_id: business, ...rest }: UpdateAgentParams = data;
+  const { id, business_id: business, ...rest }: UpdateAgentParams = payload;
 
   await Promise.all(
     chatPlatforms
@@ -71,4 +80,15 @@ export default async function update(data: UpdateAgentParams) {
   }
 
   return agentsModel.update(id, business, rest);
+}
+
+
+
+export function updateAvailability(data: UpdateAvailabilityParams) {
+  const payload = validate(updateAvailabilitySchema, data);
+  
+  const { id, availability_status, business_id } = payload
+
+  return agentsModel.update(id, business_id, {availability_status});
+
 }

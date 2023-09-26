@@ -9,6 +9,7 @@ import {
   CHAT_TYPE,
 } from "../../../../../models/chat-platforms/schema";
 import config from "../../../../../config";
+import logger from "../../../../../lib/logger";
 
 export default async function addCallback(
   businessId: string = required("businessId"),
@@ -30,6 +31,8 @@ export default async function addCallback(
 
     redirectUrl = `${config.DASHBOARD_URL}/chat-platforms?intercom_connection=successfully`;
   } catch (error) {
+    console.error(error)
+    logger().error(error)
     redirectUrl = `${config.DASHBOARD_URL}/chat-platforms?intercom_connection=failed&errorMessage=${error.message}`;
   }
   return redirectUrl;

@@ -15,8 +15,8 @@ export const createCharge = async ({
   returnUrl: string;
   trialDays: number;
 }) => {
-  const client = shopifyLib().shopifyClient({
-    shop: shop.external_platform_domain,
+  const client = shopifyLib.api({
+    platformDomain: shop.external_platform_domain,
     accessToken: shop.external_access_token,
   });
 
@@ -45,8 +45,8 @@ export const activateCharge = async ({
   isFree: boolean;
   oldChargeId?: number;
 }) => {
-  const client = shopifyLib().shopifyClient({
-    shop: shop.external_platform_domain,
+  const client = shopifyLib.api({
+    platformDomain: shop.external_platform_domain,
     accessToken: shop.external_access_token,
   });
   if (oldChargeId) {

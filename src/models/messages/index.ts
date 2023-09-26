@@ -12,7 +12,9 @@ const FIELDS_TO_POPULATE = [
   'agent',
   'source',
   'customer',
-  { path: 'customer', populate: 'source' }
+  { path: 'customer', populate: 'source' },
+  { path: 'agent', populate: 'user' }
+
 ]
 
 function listByBusiness ({

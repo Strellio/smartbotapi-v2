@@ -31,6 +31,24 @@ export default {
       })
 
       return attachChatPlatform(result)
+    },
+
+    updateAgentAvailability: async (
+      parent: any,
+      { input }: any,
+      { business }: any
+    ) => {
+      const result = await agentService.updateAvailability({
+        ...input,
+        business_id: business.id
+      })
+
+      return attachChatPlatform(result)
     }
+
+
+
+
+
   }
 }

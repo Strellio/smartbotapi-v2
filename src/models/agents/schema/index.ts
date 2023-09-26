@@ -2,7 +2,7 @@
 
 import mongoose from "mongoose";
 
-enum AGENT_AVAILABILTY_STATUS {
+export enum AGENT_AVAILABILTY_STATUS {
   AVAILABLE = "available",
   NOT_AVAILABLE = "not_available",
 }

@@ -17,6 +17,7 @@ export type Business = {
   date_upgraded: Date;
   shop: Shop;
   chat_platforms: [ChatPlatform];
+  user: User | string
 };
 
 export type ChatAgent = {
@@ -62,6 +63,7 @@ export type Shop = {
 export type Agent = {
   id: string;
   user?: User;
+  business: Business | string
   bot_info?: {
     name: string
     profile_url: string
