@@ -11,7 +11,7 @@
     "dev": "nodemon --exec babel-node src/api/index.ts --extensions \".ts\"",
     "dev:webhooks": "PORT=3333 nodemon --exec babel-node src/workers/webhooks/index.ts --extensions \".ts\"",
     "dev:bull": "nodemon --exec babel-node src/workers/bull-and-events/index.ts --extensions \".ts\"",
-    "start": "node dist/src/api/index.js"
+    "start": "node dist/api/index.js"
   },
   "keywords": [],
   "author": "",

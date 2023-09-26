@@ -40,7 +40,7 @@ env:
   ENV_FILE_BASE64: ${{ secrets[inputs.ENV_FILE_BASE64_SECRET_NAME] }}
   POOL_PROVIDER: ${{ inputs.POOL_PROVIDER }}
 jobs:
-  release-to-staging:
+  deploy-to-cloud-run:
     runs-on: "ubuntu-latest"
     permissions:
       contents: "read"
