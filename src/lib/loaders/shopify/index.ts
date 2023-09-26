@@ -2,7 +2,8 @@ import { BaseDocumentLoader } from "langchain/document_loaders/base";
 import { Document } from "langchain/document";
 import handlebars from "handlebars";
 import Shopify from "shopify-api-node";
-import shopifyLib from "../shopify";
+import shopifyLib from "../../shopify";
+import { generateOrderContent, transformOrder } from "./generate-text";
 
 interface ProductVariant {
   price: string;
@@ -81,63 +82,9 @@ function generateProductContent(
   return sentence;
 }
 
-function generateOrderContent(order) {
-
-  let sentence = `Order for customer with email ${order.customer.email} has the order number ${order.order_number} with  status as  ${order.confirmed ? "Confirmed" : "Pending"}`
-  sentence += ` You can track your order's status and details by visiting the following link ${order.order_status_url}`
-  sentence += ` The total price of the order is ${order.currency}  ${order.current_total_price} `
-  sentence += ` And the order items are ${order.line_items.map((item: any) => item.quantity + "" + item.title + " for " + item.price).join(" and ")}`
-  
-  return sentence
 
 
-//   const orderDetails = `
-// Order Details:
-// - Order Number: #${order.order_number}
-// - Order Status: ${order.confirmed ? "Confirmed" : "Pending"}
-// - Order Date: ${order.created_at}
-// - Total Price: ${order.current_total_price} ${order.currency}
-// - Total Tax: ${order.current_total_tax} ${order.currency}
-// - Currency: ${order.currency}
-// - Payment Method: ${order.payment_gateway_names[0]}
-// - Customer Email: ${order.contact_email}
-// `;
 
-//   const shippingAddress = `
-// Shipping Address:
-// - Name: ${order.customer.first_name} ${order.customer.last_name}
-// - Address: ${order.customer.default_address.address1}, ${order.customer.default_address.country_name}, ${order.customer.default_address.zip}
-// - Phone: ${order.customer.default_address.phone}
-// `;
-
-//   const orderedItems = order.line_items
-//     .map(
-//       (item) => `
-// ${item.title}:
-// - Price: ${item.price} ${order.currency}
-// - Quantity: ${item.quantity}
-// - Total Tax: ${item.tax_lines[0].price} ${order.currency} (${item.tax_lines[0].title})
-// `
-//     )
-//     .join("");
-
-//   const orderTracking = `
-// Order Tracking:
-// You can track your order's status and details by visiting the following link:
-// ${order.order_status_url}
-
-// For any inquiries or assistance, please contact us at ${order.contact_email} or visit our website.
-// `;
-
-//   const trackingInfo = `
-// ${orderDetails}
-// ${shippingAddress}
-// ${orderedItems}
-// ${orderTracking}
-// `;
-
-//   return `A customer with email ${order.customer.email} is the owner of the order with these details ${trackingInfo}`;
-}
 
 
 
@@ -148,9 +95,14 @@ export class ShopifyLoader extends BaseDocumentLoader {
 
   private client: Shopify;
 
-  mapResourceToHandler = {
+  mapResourceToSyncHandler = {
     [ShopifyResource.PRODUCTS]: this.loadProducts,
     [ShopifyResource.ORDERS]: this.loadOrders
+  }
+
+  mapResourceToGetHandler = {
+    [ShopifyResource.PRODUCTS]: this.getProductDocuments,
+    [ShopifyResource.ORDERS]: this.getOrderDocuments
   }
 
   constructor(
@@ -165,8 +117,8 @@ export class ShopifyLoader extends BaseDocumentLoader {
     this.domain = domain;
     access_token = access_token;
     this.options = options;
-    this.client = shopifyLib().shopifyClient({
-      shop: domain,
+    this.client = shopifyLib.api({
+      platformDomain: domain,
       accessToken: access_token,
     });
   }
@@ -215,12 +167,17 @@ export class ShopifyLoader extends BaseDocumentLoader {
   private getOrderDocuments(orders: any[]): Document[] {
     return orders.map((order) => ({
       pageContent: generateOrderContent(order),
-      metadata: order,
+      metadata: transformOrder(order),
     }));
   }
 
   async load(): Promise<Document[]> {
-    const handler = this.mapResourceToHandler[this.resource]
+    const handler = this.mapResourceToSyncHandler[this.resource]
     return await handler.call(this);
+  }
+
+  async getDocuments(data:any[]): Promise<Document[]> {
+    const handler = this.mapResourceToGetHandler[this.resource]
+    return await handler.call(this, data);
   }
 }

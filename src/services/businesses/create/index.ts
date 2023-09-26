@@ -5,6 +5,7 @@ import { Business } from "../../../models/businesses/types";
 import { validate } from "../../../lib/utils";
 import errors from "../../../lib/errors";
 import userService from "../../users";
+import agentService from "../../agents"
 import queues from "../../../lib/queues";
 import { createSearchIndex } from "../../../lib/db/atlas";
 import logger from "../../../lib/logger";
@@ -49,6 +50,8 @@ export default async function create(
 ): Promise<Business> {
   validate(schema, params);
   await ensureBusinessDoesNotExist(params.shop.external_platform_domain);
+
+
   const user = await userService().updateOrCreate({
     email: params.email,
     full_name: params.full_name,
@@ -62,6 +65,14 @@ export default async function create(
       user: user.id,
     },
   });
+
+await agentService.create({
+    email: params.email,
+    name: params.full_name,
+    country: params.location?.country,
+    business_id: business.id,
+    is_person:true
+  })
 
   const productSyncQueue = queues.productSyncQueue();
   const orderSyncQueue = queues.orderSyncQueue();

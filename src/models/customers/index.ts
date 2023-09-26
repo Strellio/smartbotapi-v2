@@ -18,6 +18,15 @@ const createOrUpdate = ({
 }): Promise<Customer> =>
   CustomerModel.upsert({ query, update, populate: FIELDS_TO_POPULATE })
 
+  const update = ({
+    update = required('data'),
+    query = required('query')
+  }: {
+    update: any
+    query: any
+  }): Promise<Customer> =>
+    CustomerModel.updateOne({ query, update, populate: FIELDS_TO_POPULATE })
+
 const fetchByBusinessId = ({
   businessId = required('businessId'),
   cursor,
@@ -111,6 +120,7 @@ export default function customerModel () {
     fetchByBusinessId,
     ensureExists: CustomerModel.ensureExists,
     getById,
-    aggregateGroupByPlatform
+    aggregateGroupByPlatform,
+    update: update
   }
 }

@@ -2,7 +2,8 @@
 import { required, decodeJwt } from "../../lib/utils";
 import customError from "../../lib/errors/custom-error";
 import businessService from "../../services/businesses";
-import businesses from "../../models/businesses";
+import agentService from "../../services/agents"
+import logger from "../../lib/logger";
 
 const throwAuthError = () =>
   customError({
@@ -16,12 +17,14 @@ export default async function isAuthenticated(
 ) {
   try {
     const decoded: any = await decodeJwt(token);
+    const [business, agent] = await Promise.all([businessService().getById(decoded.business_id), agentService.getByBusinessAndUserId({ userId: decoded.user_id, businessId: decoded.business_id })])
     return {
-      business: await businessService().getById(decoded.business_id),
+      business,
+      agent,
       ...req,
     };
   } catch (error) {
-    console.log(error);
+    logger().error(error);
     throw throwAuthError();
   }
 }

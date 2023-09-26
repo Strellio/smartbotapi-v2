@@ -25,10 +25,10 @@ const config = envalid.cleanEnv(
     BOT_API: envalid.url(),
     REDIS_URL: envalid.url(),
     NEW_ADMIN_MESSAGE_TOPIC: envalid.str({
-      default: "NEW_ADMIN_MESSAGE_TOPIC",
+      default: `${process.env.NODE_ENV.toUpperCase()}-NEW_ADMIN_MESSAGE_TOPIC`,
     }),
     NEW_CUSTOMER_MESSAGE_TOPIC: envalid.str({
-      default: "NEW_CUSTOMER_MESSAGE_TOPIC",
+      default: `${process.env.NODE_ENV.toUpperCase()}-NEW_CUSTOMER_MESSAGE_TOPIC`,
     }),
     PUBSUB_PROJECT_ID: envalid.str(),
     PUBSUB_CREDENTIALS: envalid.str(),
@@ -39,9 +39,14 @@ const config = envalid.cleanEnv(
     MONGODB_PRIVATE_KEY: envalid.str(),
     MONGODB_PROJECT_ID: envalid.str(),
     MONGODB_CLUSTER_NAME: envalid.str(),
-    IMAGES_BUCKET_NAME: envalid.str(),
+    IMAGES_BUCKET_NAME: envalid.str({
+      default: "smartbot-assets"
+    }),
     GOOGLE_CLOUD_PROJECT: envalid.str(),
-    GOOGLE_APPLICATION_CREDENTIALS: envalid.str()
+    GOOGLE_APPLICATION_CREDENTIALS: envalid.str(),
+    SHOPIFY_GOOGLE_PUB_SUB_TOPIC: envalid.str({
+      default: `${process.env.NODE_ENV.toUpperCase()}-SHOPIFY-UPDATES`
+    }),
 
 
   },
@@ -60,4 +65,18 @@ const config = envalid.cleanEnv(
   }
 );
 
-export default config;
+export default {
+  ...config,
+  SHOPIFY_GOOGLE_PUB_SUB_SUBSCRIPTION_NAME: `projects/${config.GOOGLE_CLOUD_PROJECT}/subscriptions/${config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC}-sub`
+};
+
+// pubsub://strellio:DEVELOPMENT-SHOPIFY-UPDATES
+
+// projects/strellio/subscriptions/DEVEVELOPMENT-SHOPIFY-UPDATES-sub
+
+
+// projects/strellio/subscriptions/DEVELOPMENT-SHOPIFY-UPDATES-sub
+
+
+
+config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC

@@ -6,9 +6,10 @@ import shopifyService  from "../../services/external-platforms/shopify"
 import logger from "../../lib/logger";
 import { createVectoreStore } from "../../lib/vectorstore/create-vectorstore";
 import { BULL_QUEUES_NAMES, ioredis } from "../../lib/queues";
+import { PLATFORM_MAP } from "../../models/businesses/schema/enums";
 
 const mapPlatformToHandler = {
-  "shopify": shopifyService().syncOrders
+  [PLATFORM_MAP.SHOPIFY]: shopifyService().syncOrders
 }
 
 export default async function syncOrdersWorker() {
@@ -18,10 +19,7 @@ export default async function syncOrdersWorker() {
       const business = job.data.business as Business
 
       const handler = mapPlatformToHandler[business.platform]
-      
-      console.log(handler)
-      
-      
+            
       if (handler) {
       
         const documents = await handler({ business })

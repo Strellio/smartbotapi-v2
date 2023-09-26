@@ -10,7 +10,7 @@
     "build:js": "babel src -d dist --extensions \".ts\" --source-maps inline",
     "dev": "nodemon --exec babel-node src/api/index.ts --extensions \".ts\"",
     "dev:webhooks": "PORT=3333 nodemon --exec babel-node src/workers/webhooks/index.ts --extensions \".ts\"",
-    "dev:bull": "nodemon --exec babel-node src/workers/bull/index.ts --extensions \".ts\"",
+    "dev:bull": "nodemon --exec babel-node src/workers/bull-and-events/index.ts --extensions \".ts\"",
     "start": "node dist/src/api/index.js"
   },
   "keywords": [],
@@ -20,6 +20,7 @@
     "@apollo/server": "4.9.1",
     "@axelspringer/graphql-google-pubsub": "2.1.0",
     "@bull-monitor/express": "^5.4.0",
+    "@google-cloud/pubsub": "^4.0.5",
     "@google-cloud/storage": "^7.1.0",
     "@graphql-tools/schema": "10.0.0",
     "@shopify/shopify-api": "7.5.2",
