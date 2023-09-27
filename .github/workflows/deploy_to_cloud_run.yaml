@@ -32,7 +32,7 @@ concurrency:
 env:
   PROJECT_NUMBER: ${{ inputs.PROJECT_NUMBER }}
   PROJECT_ID: ${{ inputs.PROJECT_ID }}
-  SERVICE_ACCOUNT: github-action-sa@${{ inputs.PROJECT_ID }}.iam.gserviceaccount.com
+  SERVICE_ACCOUNT: smartbot@${{ inputs.PROJECT_ID }}.iam.gserviceaccount.com
   GOOGLE_APPLICATION_CREDENTIALS_FILE_NAME: ${{ inputs.GOOGLE_APPLICATION_CREDENTIALS_FILE_NAME }}
   SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
   WORKING_DIR: ${{ inputs.WORKING_DIR }}
