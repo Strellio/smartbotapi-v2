@@ -25,6 +25,15 @@ const schema = new mongoose.Schema(
     password: {
       type: String,
       set: (value: string) => value && hashPassword(value)
+    },
+
+    verification_code: {
+      type: String,
+      set: (value: string) => value && hashPassword(value)
+    },
+
+    verification_code_expires_at: {
+      type: Date
     }
   },
   {

@@ -128,9 +128,9 @@ export default async function startServer() {
       // @ts-ignore
       expressMiddleware(graphqlServer, {
         context: async ({ req }) => {
-          const token = req.headers.authorization?.split("Bearer ")[1];
-          const operationsToIgnore = ["createAccount", "login"];
+          const operationsToIgnore = ["createAccount", "CreateAccount", "login",  "Login", "verifyCode", "VerifyCode"];
           if (operationsToIgnore.includes(req.body.operationName)) return req;
+          const token = req.headers.authorization?.split("Bearer ")[1];
           const result = await isAuthenticated(token, req);
           return result;
         },
