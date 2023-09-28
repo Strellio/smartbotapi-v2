@@ -27,7 +27,7 @@ on:
         required: true
         type: string
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.SERVICE_NAME }}
   cancel-in-progress: true
 env:
   PROJECT_NUMBER: ${{ inputs.PROJECT_NUMBER }}
