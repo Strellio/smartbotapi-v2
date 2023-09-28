@@ -12,15 +12,15 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
-    strategy:
-      matrix:
-        apis: [api]
     steps:
       - shell: bash
         run: |
-          echo Running Flow for ${{ matrix.apis }}
+          echo Running Flow
   call-workflow-passing-data:
     name: Build Service
+    strategy:
+      matrix:
+        apis: [api]
     uses: ./.github/workflows/deploy_backend_service.yaml
     with:
       SERVICE_NAME: ${{ matrix.apis }}
