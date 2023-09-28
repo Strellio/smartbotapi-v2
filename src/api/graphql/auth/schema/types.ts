@@ -6,6 +6,7 @@ export default gql`
   type AuthUser {
     user: User!
     token: String!
+    redirect_url: String!
   }
 
   input CreateAccountInput {
@@ -17,6 +18,9 @@ export default gql`
   }
   input LoginInput {
     email: EmailAddress!
-    password: String!
+  }
+  input VerifyCodeInput {
+    email: EmailAddress!
+    verification_code: String!
   }
 `;

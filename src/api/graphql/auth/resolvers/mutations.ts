@@ -13,6 +13,9 @@ export default {
     },
     login: async (parent, { input }) => {
       return authService.login(input)
+    },
+    verifyCode: async (parent, { input }) => {
+      return authService.verifyCode(input)
     }
   }
 }

@@ -6,6 +6,8 @@ export type User = {
   country: string
   full_name: string
   profile_url:string
-  password?: string
+  password?: string,
+  verification_code?: string,
+verification_code_expires_at?: Date,
   businesses: any[]
 }

@@ -47,8 +47,9 @@ const config = envalid.cleanEnv(
     SHOPIFY_GOOGLE_PUB_SUB_TOPIC: envalid.str({
       default: `${process.env.NODE_ENV.toUpperCase()}-SHOPIFY-UPDATES`
     }),
-
-
+    EMAIL_SMTP_HOST: envalid.str(),
+    EMAIL_SMTP_PORT: envalid.port(),
+    EMAIL_SMTP_PASSWORD: envalid.str(),
   },
   {
     reporter: ({ errors }) => {
@@ -67,7 +68,9 @@ const config = envalid.cleanEnv(
 
 export default {
   ...config,
-  SHOPIFY_GOOGLE_PUB_SUB_SUBSCRIPTION_NAME: `projects/${config.GOOGLE_CLOUD_PROJECT}/subscriptions/${config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC}-sub`
+  SHOPIFY_GOOGLE_PUB_SUB_SUBSCRIPTION_NAME: `projects/${config.GOOGLE_CLOUD_PROJECT}/subscriptions/${config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC}-sub`,
+  isProduction: process.env.NODE_ENV === "production",
+  isTest: process.env.NODE_ENV === "test",
 };
 
 // pubsub://strellio:DEVELOPMENT-SHOPIFY-UPDATES

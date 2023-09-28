@@ -10,5 +10,7 @@ export default {
   OnlyOneChatPlatformCanBeOnSiteAndActiveError:
     'OnlyOneChatPlatformCanBeOnSiteAndActiveError',
   WebhookValidationFailed: 'WebhookValidationFailed',
-  InvalidPasswordOrEmailError: 'InvalidPasswordOrEmailError'
+  InvalidPasswordOrEmailError: 'InvalidPasswordOrEmailError',
+  InvalidVerificationCode: 'InvalidVerificationCode'
+
 }

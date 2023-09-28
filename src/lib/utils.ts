@@ -10,8 +10,13 @@ import bcrypt from "bcrypt";
 
 const saltRounds = 10;
 
-export const hashPassword = (password: string = required("password")) =>
-  bcrypt.hashSync(password, saltRounds);
+export const hashPassword = (password: string = required("password")) => {
+
+  console.log(password, saltRounds, "saltRounds")
+  return   bcrypt.hashSync(password, saltRounds);
+
+  
+}
 
 export const comparePassword = (
   hashedPassword: string = required("hashedPassword"),
