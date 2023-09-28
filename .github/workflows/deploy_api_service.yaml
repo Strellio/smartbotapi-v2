@@ -20,7 +20,7 @@ jobs:
     name: Build Service
     strategy:
       matrix:
-        apis: [api]
+        apis: [api, webhooks, bull]
     uses: ./.github/workflows/deploy_backend_service.yaml
     with:
       SERVICE_NAME: ${{ matrix.apis }}
