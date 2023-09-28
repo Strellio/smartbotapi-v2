@@ -18,7 +18,7 @@ jobs:
     steps:
       - shell: bash
         run: |
-          echo Running Flow
+          echo Running Flow for ${{ matrix.apis }}
   call-workflow-passing-data:
     name: Build Service
     uses: ./.github/workflows/deploy_backend_service.yaml
