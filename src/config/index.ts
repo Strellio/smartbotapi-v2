@@ -3,7 +3,7 @@ import * as envalid from "envalid";
 
 if (!process.env.NODE_ENV) process.env.NODE_ENV = "development";
 
-if (process.env.NODE_ENV === "development") require("dotenv").config();
+ require("dotenv").config();
 
 const config = envalid.cleanEnv(
   process.env,
@@ -30,8 +30,6 @@ const config = envalid.cleanEnv(
     NEW_CUSTOMER_MESSAGE_TOPIC: envalid.str({
       default: `${process.env.NODE_ENV.toUpperCase()}-NEW_CUSTOMER_MESSAGE_TOPIC`,
     }),
-    PUBSUB_PROJECT_ID: envalid.str(),
-    PUBSUB_CREDENTIALS: envalid.str(),
     FLUTTERWAVE_SEC_KEY: envalid.str(),
 
     OPENAI_API_KEY: envalid.str(),
@@ -73,13 +71,3 @@ export default {
   isTest: process.env.NODE_ENV === "test",
 };
 
-// pubsub://strellio:DEVELOPMENT-SHOPIFY-UPDATES
-
-// projects/strellio/subscriptions/DEVEVELOPMENT-SHOPIFY-UPDATES-sub
-
-
-// projects/strellio/subscriptions/DEVELOPMENT-SHOPIFY-UPDATES-sub
-
-
-
-config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC

@@ -11,7 +11,6 @@ import { parseString } from '../utils'
 const pubsub = new GooglePubSub(
   {
     projectId: config.GOOGLE_CLOUD_PROJECT
-    // credentials: JSON.parse(config.PUBSUB_CREDENTIALS as string)
   },
     topicName => {
         return `${topicName}-sub`
@@ -24,7 +23,9 @@ const pubsub = new GooglePubSub(
 // export default pubsub
 
 const pubSubClient = new PubSub({
-    projectId: config.GOOGLE_CLOUD_PROJECT
+  projectId: config.GOOGLE_CLOUD_PROJECT,
+  keyFilename: config.GOOGLE_APPLICATION_CREDENTIALS
+  
 })
 
 const subscribe = ({
