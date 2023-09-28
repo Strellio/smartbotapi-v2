@@ -25,9 +25,9 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
-    strategy:
-      matrix:
-        node-version: [19.x]
+    # strategy:
+    #   matrix:
+    #     node-version: [19.x]
     steps:
       - shell: bash
         run: |

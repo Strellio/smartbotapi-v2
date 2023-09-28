@@ -63,6 +63,12 @@ jobs:
       - name: Print the ENV NAME
         shell: bash
         run: echo ${{ inputs.ENV_FILE_BASE64_SECRET_NAME }}}
+      - name: Print the INPUT SERVICE NAME
+        shell: bash
+        run: echo ${{ inputs.SERVICE_NAME }}}
+      - name: Print the ENV SERVICE NAME
+        shell: bash
+        run: echo ${{ env.SERVICE_NAME }}}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -106,7 +112,7 @@ jobs:
         run: "gcloud auth configure-docker us-central1-docker.pkg.dev"
 
       - name: "Build"
-        run: "docker build -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} . -f ${{ env.SERVICE_NAME }}.Dockerfile"
+        run: "docker build -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} . -f ${{ inputs.SERVICE_NAME }}.Dockerfile"
         working-directory: ${{ env.WORKING_DIR }}
       - name: "Push"
         run: "docker push us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }}"
