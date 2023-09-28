@@ -10,7 +10,7 @@
     "build:js": "babel src -d dist --extensions \".ts\" --source-maps inline",
     "dev": "nodemon --exec babel-node src/api/index.ts --extensions \".ts\"",
     "dev:webhooks": "PORT=3333 nodemon --exec babel-node src/workers/webhooks/index.ts --extensions \".ts\"",
-    "dev:bull": "nodemon --exec babel-node src/workers/bull-and-events/index.ts --extensions \".ts\"",
+    "dev:bull": "PORT=3335 nodemon --exec babel-node src/workers/bull-and-events/index.ts --extensions \".ts\"",
     "start": "node dist/api/index.js",
     "start:webhooks": "node dist/workers/webhooks/index.js",
     "start:bull-events": "node dist/workers/bull-and-events/index.js"
