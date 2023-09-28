@@ -47,7 +47,7 @@ jobs:
       id-token: "write"
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [19.x]
 
     steps:
       - uses: "actions/checkout@v3"
@@ -106,7 +106,7 @@ jobs:
         run: "gcloud auth configure-docker us-central1-docker.pkg.dev"
 
       - name: "Build"
-        run: "docker build -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} ."
+        run: "docker build -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} . -f ${{ env.SERVICE_NAME }}.Dockerfile"
         working-directory: ${{ env.WORKING_DIR }}
       - name: "Push"
         run: "docker push us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }}"
