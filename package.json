@@ -7,7 +7,7 @@
     "type-check:watch": "npm run type-check -- --watch",
     "build": "tsc",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src -d dist --extensions \".ts\" --source-maps inline",
+    "build:js": "babel src -d dist --extensions \".ts\" --source-maps inline --copy-files",
     "dev": "nodemon --exec babel-node src/api/index.ts --extensions \".ts\"",
     "dev:webhooks": "PORT=3333 nodemon --exec babel-node src/workers/webhooks/index.ts --extensions \".ts\"",
     "dev:bull": "PORT=3335 nodemon --exec babel-node src/workers/bull-and-events/index.ts --extensions \".ts\"",
