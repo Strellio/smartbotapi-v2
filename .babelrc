@@ -11,5 +11,5 @@
     "@babel/typescript",
     "minify"
   ],
-  "ignore": ["**/node_modules/**"]
+  "ignore": ["**/node_modules/**", "**/dist/**"]
 }
