@@ -80,7 +80,14 @@ await agentService.create({
   await Promise.all([
     productSyncQueue.add({ data: { business }, jobId: business.id }),
     orderSyncQueue.add({ data: { business }, jobId: business.id }),
-  ]);
+  ]).catch((err) => {
+    logger().info("error while adding to queue")
+    logger().error(err);
+    throw err;
+  }
+  );
+
+
 
   logger().info("queue added for ", business.business_name);
   await Promise.all([
@@ -94,7 +101,12 @@ await agentService.create({
       indexName: "orders-retriever",
       collectionName: "orders-store",
     }),
-  ]);
+  ]).catch((err) => {
+    logger().info("error while creating search index")
+    logger().error(err);
+    throw err;
+  } 
+  );
   logger().info("Done adding indexes for ", business.business_name);
   return business;
 }
