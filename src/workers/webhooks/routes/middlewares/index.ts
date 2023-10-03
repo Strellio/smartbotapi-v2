@@ -4,6 +4,33 @@ import { createHmac } from '../../../../lib/utils'
 import errors from '../../../../lib/errors'
 import { get } from 'lodash/fp'
 import isAuthenticated from '../../../../api/middlewares/is-authenticated'
+import config from "../../../../config"
+import crypto from 'crypto'
+
+export function validateShopifyHmac(req: any, res: Response, next: NextFunction) {
+  try{
+  const calculatedHmac = crypto
+    .createHmac('SHA256', config.SHOPIFY_APP_SECRET)
+    .update(req.buffer)
+    .digest('base64')
+
+  const shopifyHmac = req.headers['x-shopify-hmac-sha256']
+  if (calculatedHmac !== shopifyHmac) {
+    throw new Error('Invalid signature')
+  }
+
+  req.shop = req.headers['x-shopify-shop-domain']
+
+  next()
+
+} catch (error) {
+  res.status(403).json({
+    message: error.message,
+    name: error.name,
+    time_thrown: error.time_thrown
+  })
+}
+}
 
 export const verifyWebhook = ({
   path,

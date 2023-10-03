@@ -107,10 +107,11 @@ export default async function handleEvent(
   }
 ) {
   const data = parseString(event.data as any);
-//   logger().info(
-//     "New Event" + JSON.stringify(data),
-//     +" " + getTopicFromAttributes({ attributes: (event as any).attributes })
-//   );
+
+  logger().info(
+    "New Event" + JSON.stringify(data),
+    +" " + getTopicFromAttributes({ attributes: (event as any).attributes })
+  );
 
   const eventName =
     event.attributes &&

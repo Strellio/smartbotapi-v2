@@ -6,8 +6,9 @@ import {
   facebookWebhook,
   hubspotWebhook,
   customActionWebhook,
+  shopifyWebhook
 } from "./actions";
-import { isAuthenticatedMiddleware, verifyWebhook } from "./middlewares";
+import { isAuthenticatedMiddleware, validateShopifyHmac, verifyWebhook } from "./middlewares";
 import config from "../../../config";
 import "../../../services/plans";
 
@@ -33,5 +34,7 @@ export default function routes() {
       facebookWebhook
     )
     .post("/hubspot/message", hubspotWebhook)
-    .post("/custom/message", isAuthenticatedMiddleware, customActionWebhook);
+    .post("/custom/message", isAuthenticatedMiddleware, customActionWebhook)
+    .use("/shopify", validateShopifyHmac,   shopifyWebhook())
+  
 }

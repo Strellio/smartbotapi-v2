@@ -1,5 +1,5 @@
 "use strict";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, Router } from "express";
 import config from "../../../../config";
 import facebookWebhookController from "./facebook";
 import { FaceBookWebhookPayload } from "./types";
@@ -7,6 +7,11 @@ import intercomWebhookController from "./intercom";
 import hubSpotController from "./hubspot";
 import customController from "./custom";
 import logger from "../../../../lib/logger";
+import { validateShopifyHmac } from "../middlewares";
+import { handleGdpr } from "./shopify";
+import { TYPES } from "../../../../models/gdpr/schema";
+
+
 
 export const intercomWebhook = async (
   req: Request,
@@ -63,3 +68,24 @@ export const customActionWebhook = (
   customController(req.body)
     .then((message) => res.json(message))
     .catch((error) => res.status(400).json(error));
+
+
+
+export function shopifyWebhook() {
+  
+  const customerRedact = (req:Request, res:Response, next:NextFunction) => handleGdpr({ payload: req.body, type: TYPES.CUSTOMERS_REDACT }).then(()=>res.sendStatus(200)).catch(next)
+
+
+const shopRedact = (req:Request, res:Response, next:NextFunction) => handleGdpr({ payload: req.body, type: TYPES.SHOP_REDACT }).then(()=>res.sendStatus(200)).catch(next)
+
+  const customerRequest = (req: Request, res: Response, next: NextFunction) => handleGdpr({ payload: req.body, type: TYPES.CUSTOMER_DATA_REQUEST }).then(() => res.sendStatus(200)).catch(next)
+  
+  return Router()
+    .post("/shop/redact", shopRedact)
+    .post("/customers/redact", customerRedact)
+    .post("/customers/data_request", customerRequest)
+
+
+}
+
+
