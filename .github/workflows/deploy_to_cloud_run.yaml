@@ -120,7 +120,7 @@ jobs:
       - name: Deploy
         id: deploy
         run: |
-          output=$(gcloud run deploy ${{ env.SERVICE_NAME }} --image us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} --region us-central1 --platform managed)
+          output=$(gcloud run deploy ${{ env.SERVICE_NAME }} --image us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} --region us-central1 --platform managed  --vpc-connector=smartbot --vpc-egress=all-traffic)
           echo "service_url=$output" >> "$GITHUB_OUTPUT"
       - id: "test"
         run: 'echo "${{ steps.deploy.outputs.service_url }}/health"'
