@@ -43,6 +43,7 @@ export type ChatPlatform = {
   type: CHAT_TYPE;
   status: STATUS_MAP;
   business: Business;
+  is_external_agent_supported: boolean;
 };
 
 export type Location = {

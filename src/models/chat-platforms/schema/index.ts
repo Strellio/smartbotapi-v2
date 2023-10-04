@@ -69,7 +69,14 @@ export default new mongoose.Schema(
       type: String,
       enum: Object.values(STATUS_MAP),
       default: STATUS_MAP.DEACTIVATED
-    }
+    },
+    is_external_agent_supported: {
+      type: Boolean,
+      default: function () {
+        return this.platform === CHAT_PLATFORMS.FACEBOOK || this.platform === CHAT_PLATFORMS.INTERCOM
+      }
+    },
+    
   },
   {
     timestamps: {

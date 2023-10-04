@@ -47,8 +47,9 @@ export default async function create(data: CreateAgentParams) {
     business_id: business,
   });
 
+
   const linkedChatAgents = await Promise.all(
-    chatPlatforms.filter((chatPlatform:ChatPlatform)=> chatPlatform.platform !== CHAT_PLATFORMS.CUSTOM).map(async (chatPlatform: ChatPlatform) => {
+    chatPlatforms.filter((chatPlatform:ChatPlatform)=> chatPlatform.is_external_agent_supported).map(async (chatPlatform: ChatPlatform) => {
       const result = await chatPlatformService().update({
         id: chatPlatform.id,
         business_id: business,
@@ -69,7 +70,10 @@ export default async function create(data: CreateAgentParams) {
         .sort((a, b) => b.created_at.getTime() - a.created_at.getTime());
       return sortedAgents[0];
     })
-  );
+  )
+
+
+  console.log('linkedChatAgents', linkedChatAgents)
     
 
  return agentsModel.create({
@@ -82,7 +86,7 @@ export default async function create(data: CreateAgentParams) {
               profile_url
           }
       }),
-    linked_chat_agents: linkedChatAgents.map((agent) => agent.id),
+    linked_chat_agents: linkedChatAgents.filter(agent=>agent).map((agent) => agent.id),
   })
     
     

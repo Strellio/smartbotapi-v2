@@ -59,7 +59,7 @@ export default async function update(params: updateParams) {
   );
   const chatPlatform = await chatPlatformModel().getById(id);
 
-  await ensureNoPlatformIsOnsiteAndActive(rest.status as any, businessId, chatPlatform.platform, rest.type);
+  // await ensureNoPlatformIsOnsiteAndActive(rest.status as any, businessId, chatPlatform.platform, rest.type);
   const transformedPayload = await chatPlatforms.transformByPlatform({
     payload: {
       ...rest,

@@ -48,7 +48,7 @@ export default async function update(data: UpdateAgentParams) {
     chatPlatforms
       .filter(
         (chatPlatform: ChatPlatform) =>
-          chatPlatform.platform !== CHAT_PLATFORMS.CUSTOM
+          chatPlatform.is_external_agent_supported
       )
       .map(async (chatPlatform: ChatPlatform) => {
         const agent = chatPlatform.agents.find((agent) =>
