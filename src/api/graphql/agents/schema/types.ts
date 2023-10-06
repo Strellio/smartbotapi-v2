@@ -32,7 +32,7 @@ export default gql`
     id: ID!
     name: String!
     profile_url: String
-    email: String!
+    email: String
     linked_chat_agents: [ID]!
     is_person: Boolean
     availability_status:AgentAvailabiltiyStatusEnum

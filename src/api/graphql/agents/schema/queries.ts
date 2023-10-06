@@ -5,6 +5,7 @@ export default gql`
   extend type Query {
     listAgents: [Agent!]
     getAgent: Agent!
+    getBotAgent: Agent!
 
   }
 `;

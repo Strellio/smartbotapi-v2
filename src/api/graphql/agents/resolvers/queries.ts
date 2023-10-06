@@ -31,6 +31,8 @@ export default {
             return H(agentService.listByBusinessId(business.id)).map(attachChatPlatform).collect().toPromise(Promise as any)
         },
         getAgent: (parent: any, { input }: any, { agent }: any) => attachChatPlatform(agent),
+        getBotAgent: (parent: any, { input }: any, { business }: any) => agentService.getBotAgent(business.id),
+
 
     }
 }
