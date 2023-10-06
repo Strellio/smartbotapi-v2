@@ -5,9 +5,9 @@ import schema from "./schema"
 import BaseModel from "../common/base-model"
 
 
-const Model = mongoose.model('gdpr', schema)
+const Model = mongoose.model('knowlege_base', schema)
 
-const GdprBaseModel = BaseModel(Model)
+const KnowledgeBaseModel = BaseModel(Model)
 
 
 
@@ -16,6 +16,6 @@ const GdprBaseModel = BaseModel(Model)
 
 export default function () {
     return {
-      ...GdprBaseModel
+      ...KnowledgeBaseModel
     }
   }

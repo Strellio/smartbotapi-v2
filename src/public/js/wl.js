@@ -48,7 +48,11 @@ var cssSrc = WIDGET_URL + "/smartbot-widget.min.css";
 
 function addWidgetRoot() {
     
-var body = document.getElementsByTagName('body')[0];
+    var body = document.getElementsByTagName('body')[0];
+    
+    var chatWidget = document.getElementById('chat-widget');
+
+    if (chatWidget) return
 
 
 
