@@ -1,5 +1,5 @@
 "use strict";
-import {NextFunction, Request, Response} from "express"
+import { NextFunction, Request, Response } from "express";
 
 import shopifyLib from "../../../lib/shopify";
 import { required, validate, generateJwt } from "../../../lib/utils";
@@ -14,20 +14,20 @@ import logger from "../../../lib/logger";
 
 export const install = (req: Request, res: Response, next: NextFunction) => {
   try {
-
     return shopifyLib.auth.begin({
-      shop: shopifyLib.utils.sanitizeShop(req.query.shop as never, true) as string,
+      shop: shopifyLib.utils.sanitizeShop(
+        req.query.shop as never,
+        true
+      ) as string,
       callbackPath: `/shopify/callback`,
       isOnline: false,
       rawRequest: req,
-      rawResponse: res
-    })
-    
+      rawResponse: res,
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
-
-}
+};
 
 const getWidgetCode = (businessId: string) => {
   return `${config.APP_URL}/static/js/wl.js?token=${generateJwt(
@@ -38,24 +38,27 @@ const getWidgetCode = (businessId: string) => {
 };
 
 // export async function callback(params: CallbackParams): Promise<string> {
-export const callback = async (req: Request, res: Response, next: NextFunction) => {
+export const callback = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-        const payload = validate(schema, req.query);
+    const payload = validate(schema, req.query);
 
     const response = await shopifyLib.getAccessToken(
       payload.shop,
       payload.code
-    )
-  
-    logger().info(response)
-  
+    );
+
+    logger().info(response);
+
     const shopifyClient = shopifyLib.api({
       platformDomain: response.shop,
-      accessToken: response.accessToken as string
-    })
-  
-    // const shop = await client.shop.get()
+      accessToken: response.accessToken as string,
+    });
 
+    // const shop = await client.shop.get()
 
     // const payload = validate(schema, params);
     // const { access_token }: any = await shopifyLib().shopifyToken.getAccessToken(
@@ -67,8 +70,6 @@ export const callback = async (req: Request, res: Response, next: NextFunction) 
     //   accessToken: access_token,
     // });
     const shopDetails = await shopifyClient.shop.get();
-
-
 
     const createBusinessPayload = {
       status: STATUS_MAP.ACTIVE,
@@ -88,7 +89,7 @@ export const callback = async (req: Request, res: Response, next: NextFunction) 
         city: shopDetails.city,
       },
       platform: PLATFORM_MAP.SHOPIFY,
-      full_name: `${shopDetails.name}'s owner`
+      full_name: `${shopDetails.name}'s owner`,
     };
 
     let business = await businessService().getByExternalPlatformDomain(
@@ -104,6 +105,16 @@ export const callback = async (req: Request, res: Response, next: NextFunction) 
       });
     }
 
+    await shopifyClient.scriptTag.list().then(async (scriptTags) => {
+      await Promise.all(
+        scriptTags.map(async (scriptTag) => {
+          if (scriptTag.src.startsWith(`${config.APP_URL}/static/js/wl.js`)) {
+            await shopifyClient.scriptTag.delete(scriptTag.id);
+          }
+        })
+      );
+    });
+
     await shopifyClient.scriptTag
       .create({
         src: getWidgetCode(business.id),
@@ -112,48 +123,46 @@ export const callback = async (req: Request, res: Response, next: NextFunction) 
       .catch((err) => {
         console.log(err.response.body.errors);
       });
-  
+
     try {
       const pubsubHandler: PubSubWebhookHandler = {
         deliveryMethod: DeliveryMethod.PubSub,
         pubSubProject: config.GOOGLE_CLOUD_PROJECT,
-        pubSubTopic: config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC
-      }
+        pubSubTopic: config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC,
+      };
 
-      await shopifyLib.webhooks.addHandlers({
+       shopifyLib.webhooks.addHandlers({
         ORDERS_CREATE: [pubsubHandler],
         ORDERS_UPDATED: [pubsubHandler],
         ORDERS_DELETE: [pubsubHandler],
         PRODUCTS_CREATE: [pubsubHandler],
         PRODUCTS_UPDATE: [pubsubHandler],
-        PRODUCTS_DELETE:[pubsubHandler],
-        APP_UNINSTALLED: [pubsubHandler]
-      })
-    const result =   await shopifyLib.webhooks.register({
+        PRODUCTS_DELETE: [pubsubHandler],
+        APP_UNINSTALLED: [pubsubHandler],
+      });
+      const result = await shopifyLib.webhooks.register({
         session: {
           shop: response.shop,
           accessToken: response.accessToken,
-          ...req.query
-        } as any
-    })
-      
-      logger().info("done registering webhooks ", result)
+          ...req.query,
+        } as any,
+      });
+
+      logger().info("done registering webhooks ", result);
     } catch (error) {
-      logger().error(error)
+      logger().error(error);
     }
-  
+
     const redirectUrl = `${config.DASHBOARD_URL}/api/auth?token=${generateJwt({
       business_id: business.id,
-      user_id: business.user.toString()
-
+      user_id: business.user.toString(),
     })}&business_id=${business.id}&user_id=${business.user.toString()}` as any;
 
-    
-      res.redirect(redirectUrl)
+    res.redirect(redirectUrl);
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
 interface CallbackParams {
   code: string;
