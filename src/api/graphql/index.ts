@@ -43,6 +43,11 @@ import analyticsSchema from "./analytics/schema";
 import authResolver from "./auth/resolvers";
 import authSchema from "./auth/schema";
 
+
+// knowlege base
+import knowlegeBaseResolver from "./knowlege-base/resolvers";
+import  knowlegeBaseSchema from "./knowlege-base/schema";
+
 const baseSchema = gql`
   type Query {
     welcome: String
@@ -69,6 +74,7 @@ export const schemas = [
   ...agentsSchema,
   ...ticketsSchema,
   ...analyticsSchema,
+  ...knowlegeBaseSchema,
 ] as any;
 
 export const resolvers = [
@@ -81,4 +87,5 @@ export const resolvers = [
   ...agentsResolver,
   ...ticketsResolver,
   ...analyticsResolver,
+  ...knowlegeBaseResolver,
 ];
