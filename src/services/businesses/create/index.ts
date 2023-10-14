@@ -101,6 +101,11 @@ await agentService.create({
       indexName: "orders-retriever",
       collectionName: "orders-store",
     }),
+    createSearchIndex({
+      dbName: business.account_name,
+      indexName: "knowledge-base-retriever",
+      collectionName: "knowledge-base",
+    }),
   ]).catch((err) => {
     logger().info("error while creating search index")
     logger().error(err);

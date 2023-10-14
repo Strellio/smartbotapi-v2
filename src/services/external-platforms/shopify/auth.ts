@@ -51,7 +51,6 @@ export const callback = async (
       payload.code
     );
 
-    logger().info(response);
 
     const shopifyClient = shopifyLib.api({
       platformDomain: response.shop,

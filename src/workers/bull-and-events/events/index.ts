@@ -7,7 +7,7 @@ import {
 } from "./get-attributes";
 import businessService from "../../../services/businesses";
 import { Business } from "../../../models/businesses/types";
-import { deleteVectoreStoreDocument } from "../../../lib/vectorstore/delete-vectoresore";
+import { deleteVectoreStoreDocument } from "../../../lib/vectorstore/delete-vectoresore-document";
 import shopifyService from "../../../services/external-platforms/shopify";
 import { createVectoreStore } from "../../../lib/vectorstore/create-vectorstore";
 import { PLATFORM_MAP } from "../../../models/businesses/schema/enums";
