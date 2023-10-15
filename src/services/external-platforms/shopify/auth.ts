@@ -46,11 +46,15 @@ export const callback = async (
   try {
     const payload = validate(schema, req.query);
 
-    const response = await shopifyLib.getAccessToken(
-      payload.shop,
-      payload.code
-    );
+    const response = await shopifyLib
+      .getAccessToken(payload.shop, payload.code)
+      .catch((err) => {
+        logger().error(err);
+      });
 
+    if (!response) {
+      return;
+    }
 
     const shopifyClient = shopifyLib.api({
       platformDomain: response.shop,
@@ -130,7 +134,7 @@ export const callback = async (
         pubSubTopic: config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC,
       };
 
-       shopifyLib.webhooks.addHandlers({
+      shopifyLib.webhooks.addHandlers({
         ORDERS_CREATE: [pubsubHandler],
         ORDERS_UPDATED: [pubsubHandler],
         ORDERS_DELETE: [pubsubHandler],
@@ -149,6 +153,7 @@ export const callback = async (
 
       logger().info("done registering webhooks ", result);
     } catch (error) {
+      console.log("error registering webhooks", error);
       logger().error(error);
     }
 
