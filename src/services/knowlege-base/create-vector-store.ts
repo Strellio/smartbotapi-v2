@@ -56,7 +56,6 @@ export default async function createOrUpdateKnowledgeBaseVectorStore({
     )
   ).reduce((acc, val) => acc.concat(val), []);
 
-
   await deleteVectoreStore({
     dbName: business.account_name,
     collectionName: "knowledge-base",
@@ -68,5 +67,6 @@ export default async function createOrUpdateKnowledgeBaseVectorStore({
     collectionName: "knowledge-base",
     documents,
   });
+
   logger().info(`knowledge-base vectore store created for ${business.domain}`);
 }

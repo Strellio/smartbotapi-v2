@@ -77,7 +77,9 @@ export function generateOrderContent(order: any) {
   sentence += `Billing Address: ${
     billing_address ? formatAddress(billing_address) : "no billing address"
   } `;
-  sentence += `Shipping Address: ${formatAddress(shipping_address)} `;
+  sentence += `Shipping Address: ${
+    shipping_address ? formatAddress(shipping_address) : "no shipping address"
+  }`;
 
   // Include fulfillments, refunds, and shipping information
   sentence +=
@@ -205,11 +207,11 @@ export function transformOrder(inputObject: any) {
     total_weight,
     updated_at,
     user_id,
-    customer_id: customer.id,
-    customer_first_name: customer.first_name,
-    customer_last_name: customer.last_name,
-    customer_accepts_marketing: customer.accepts_marketing,
-    customer_country: customer.default_address.country,
+    customer_id: customer?.id,
+    customer_first_name: customer?.first_name,
+    customer_last_name: customer?.last_name,
+    customer_accepts_marketing: customer?.accepts_marketing,
+    customer_country: customer?.default_address?.country,
     total_shipping_price: "0.00",
   };
 

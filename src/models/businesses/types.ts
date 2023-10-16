@@ -17,11 +17,12 @@ export type Business = {
   date_upgraded: Date;
   shop: Shop;
   chat_platforms: [ChatPlatform];
-  user: User | string
+  user: User | string;
+  onboarding: Onboarding;
 };
 
 export type ChatAgent = {
-  id:string
+  id: string;
   external_id: string;
   name: string;
   profile_url: string;
@@ -64,13 +65,22 @@ export type Shop = {
 export type Agent = {
   id: string;
   user?: User;
-  business: Business | string
+  business: Business | string;
   bot_info?: {
-    name: string
-    profile_url: string
-  }
+    name: string;
+    profile_url: string;
+  };
   is_person: boolean;
   linked_chat_agents: [ChatAgent];
   created_at: Date;
   updated_at: Date;
+};
+
+export type Onboarding = {
+  is_product_index_created: boolean;
+  is_order_index_created: boolean;
+  is_knowledge_base_index_created: boolean;
+  is_product_vector_store_created: boolean;
+  is_order_vector_store_created: boolean;
+  is_knowledge_base_vector_store_created: boolean;
 };
