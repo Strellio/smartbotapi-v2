@@ -92,7 +92,7 @@ export const callback = async (
         city: shopDetails.city,
       },
       platform: PLATFORM_MAP.SHOPIFY,
-      full_name: `${shopDetails.name}'s owner`,
+      full_name: `Admin`,
     };
 
     let business = await businessService().getByExternalPlatformDomain(

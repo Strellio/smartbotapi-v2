@@ -58,7 +58,7 @@ const handleOrderEvent = async (
         documents,
       });
 
-      if (business.onboarding.is_order_vector_store_created === false) {
+      if (!business.onboarding.is_order_vector_store_created) {
         await businessService().updateById({
           id: business.id,
           onboarding: {
@@ -66,7 +66,7 @@ const handleOrderEvent = async (
           },
         });
       }
-      if (business.onboarding.is_order_index_created === false) {
+      if (!business.onboarding.is_order_index_created) {
         await createSearchIndex({
           dbName: business.account_name,
           indexName: "orders-retriever",
@@ -124,7 +124,7 @@ const handleProductEvent = async (
         collectionName: "products-store",
         documents,
       });
-      if (business.onboarding.is_product_vector_store_created === false) {
+      if (!business.onboarding.is_product_vector_store_created) {
         await businessService().updateById({
           id: business.id,
           onboarding: {
@@ -132,7 +132,7 @@ const handleProductEvent = async (
           },
         });
       }
-      if (business.onboarding.is_product_index_created === false) {
+      if (!business.onboarding.is_product_index_created) {
         await createSearchIndex({
           dbName: business.account_name,
           indexName: "products-retriever",

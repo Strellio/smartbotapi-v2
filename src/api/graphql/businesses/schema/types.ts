@@ -111,4 +111,8 @@ export default gql`
     type: ChatTypeEnum
     platform: ChatPlatformEnum
   }
+
+  input DeleteChatPlatformInput {
+    id: ID!
+  }
 `;

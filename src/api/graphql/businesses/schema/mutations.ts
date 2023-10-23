@@ -6,5 +6,6 @@ export default gql`
     addIntercom: String!
     updateChatPlatform(input: UpdateChatPlatformInput!): ChatPlatform!
     createChatPlatform(input: CreateChatPlatformInput!): ChatPlatform!
+    deleteChatPlatform(input: DeleteChatPlatformInput!): String!
   }
 `;
