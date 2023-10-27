@@ -3,7 +3,7 @@ import * as envalid from "envalid";
 
 if (!process.env.NODE_ENV) process.env.NODE_ENV = "development";
 
- require("dotenv").config();
+require("dotenv").config();
 
 const config = envalid.cleanEnv(
   process.env,
@@ -38,16 +38,17 @@ const config = envalid.cleanEnv(
     MONGODB_PROJECT_ID: envalid.str(),
     MONGODB_CLUSTER_NAME: envalid.str(),
     IMAGES_BUCKET_NAME: envalid.str({
-      default: "smartbot-assets"
+      default: "smartbot-assets",
     }),
     GOOGLE_CLOUD_PROJECT: envalid.str(),
     GOOGLE_APPLICATION_CREDENTIALS: envalid.str(),
     SHOPIFY_GOOGLE_PUB_SUB_TOPIC: envalid.str({
-      default: `${process.env.NODE_ENV.toUpperCase()}-SHOPIFY-UPDATES`
+      default: `${process.env.NODE_ENV.toUpperCase()}-SHOPIFY-UPDATES`,
     }),
     EMAIL_SMTP_HOST: envalid.str(),
     EMAIL_SMTP_PORT: envalid.port(),
     EMAIL_SMTP_PASSWORD: envalid.str(),
+    WEBHOOK_URL: envalid.str(),
   },
   {
     reporter: ({ errors }) => {
@@ -70,4 +71,3 @@ export default {
   isProduction: process.env.NODE_ENV === "production",
   isTest: process.env.NODE_ENV === "test",
 };
-

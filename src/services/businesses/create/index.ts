@@ -14,7 +14,7 @@ interface CreateBusinessParams {
   domain: string;
   email: string;
   status: string;
-  external_id: string;
+  external_id?: string;
   business_name: string;
   shop: {
     external_created_at?: string;

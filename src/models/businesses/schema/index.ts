@@ -33,9 +33,11 @@ const schema = new mongoose.Schema(
     },
     external_id: {
       type: String,
-      unique: true,
       sparse: true,
-      index: true,
+      index: {
+        unique: true,
+        partialFilterExpression: { external_id: { $type: "string" } },
+      },
     },
     platform: {
       type: String,
