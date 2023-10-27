@@ -1,44 +1,44 @@
-'use strict'
+"use strict";
 
-import mongoose from 'mongoose'
-import agent from './agents'
-import { STATUS_MAP } from '../../common'
+import mongoose from "mongoose";
+import agent from "./agents";
+import { STATUS_MAP } from "../../common";
 
 export enum CHAT_PLATFORMS {
-  CUSTOM = 'custom',
-  FACEBOOK = 'facebook',
-  INTERCOM = 'intercom',
-  HUBSPOT = 'hubspot',
-  WHATSAPP = 'whatsapp'
+  CUSTOM = "custom",
+  FACEBOOK = "facebook",
+  INTERCOM = "intercom",
+  HUBSPOT = "hubspot",
+  WHATSAPP = "whatsapp",
 }
 
 export enum CHAT_TYPE {
-  ON_SITE = 'on_site',
-  OFF_SITE = 'off_site',
-  BOTH = 'both' 
+  ON_SITE = "on_site",
+  OFF_SITE = "off_site",
+  BOTH = "both",
 }
 
 export default new mongoose.Schema(
   {
     business: {
       type: mongoose.Types.ObjectId,
-      ref: 'businesses',
-      required: true
+      ref: "businesses",
+      required: true,
     },
     platform: {
       type: String,
       required: true,
-      enum: Object.values(CHAT_PLATFORMS)
+      enum: Object.values(CHAT_PLATFORMS),
     },
     external_id: {
       type: String,
       unique: true,
       sparse: true,
-      index: true
+      index: true,
     },
     agents: {
       type: [agent],
-      default: []
+      default: [],
     },
     external_user_id: String,
     external_user_access_token: String,
@@ -49,45 +49,51 @@ export default new mongoose.Schema(
     logged_in_greetings: {
       type: String,
       default: "Have any questions?",
-      maxlength: 80
-    }, 
+      maxlength: 80,
+    },
     logged_out_greetings: {
       type: String,
       default: "See you soon",
-      maxlength: 80
+      maxlength: 80,
     },
     theme_color: {
       type: String,
-      default: "#0084FF"
+      default: "#0084FF",
     },
     type: {
       type: String,
       enum: Object.values(CHAT_TYPE),
-      required: true
+      required: true,
     },
     status: {
       type: String,
       enum: Object.values(STATUS_MAP),
-      default: STATUS_MAP.DEACTIVATED
+      default: STATUS_MAP.DEACTIVATED,
     },
     is_external_agent_supported: {
       type: Boolean,
       default: function () {
-        return this.platform === CHAT_PLATFORMS.FACEBOOK || this.platform === CHAT_PLATFORMS.INTERCOM
-      }
+        return (
+          this.platform === CHAT_PLATFORMS.FACEBOOK ||
+          this.platform === CHAT_PLATFORMS.INTERCOM
+        );
+      },
     },
-    
+    is_deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at'
+      createdAt: "created_at",
+      updatedAt: "updated_at",
     },
     toJSON: {
-      virtuals: true
+      virtuals: true,
     },
     toObject: {
-      virtuals: true
-    }
+      virtuals: true,
+    },
   }
-)
+);

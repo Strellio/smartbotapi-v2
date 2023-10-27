@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import shop from "./shop";
 import { PLATFORM_MAP } from "./enums";
 import { STATUS_MAP } from "../../common";
+import onboarding from "./onboarding";
 
 const schema = new mongoose.Schema(
   {
@@ -32,9 +33,11 @@ const schema = new mongoose.Schema(
     },
     external_id: {
       type: String,
-      unique: true,
       sparse: true,
-      index: true,
+      index: {
+        unique: true,
+        partialFilterExpression: { external_id: { $type: "string" } },
+      },
     },
     platform: {
       type: String,
@@ -49,7 +52,7 @@ const schema = new mongoose.Schema(
     account_name: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     location: {
       country: String,
@@ -58,6 +61,7 @@ const schema = new mongoose.Schema(
     trial_expiry_date: Date,
     date_upgraded: Date,
     shop,
+    onboarding,
   },
   {
     timestamps: {

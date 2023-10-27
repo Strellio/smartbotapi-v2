@@ -7,10 +7,11 @@ import {
 } from "./get-attributes";
 import businessService from "../../../services/businesses";
 import { Business } from "../../../models/businesses/types";
-import { deleteVectoreStoreDocument } from "../../../lib/vectorstore/delete-vectoresore";
+import { deleteVectoreStoreDocument } from "../../../lib/vectorstore/delete-vectoresore-document";
 import shopifyService from "../../../services/external-platforms/shopify";
 import { createVectoreStore } from "../../../lib/vectorstore/create-vectorstore";
 import { PLATFORM_MAP } from "../../../models/businesses/schema/enums";
+import { createSearchIndex } from "../../../lib/db/atlas";
 
 export enum ResourceType {
   ORDER = "ORDER",
@@ -40,66 +41,124 @@ const handleOrderEvent = async (
       collectionName: "orders-store",
       id: data.id,
     });
-      
+
     logger().info(`deleted order from the vectorestore for ${data.id}`);
-
   }
-    
-    if (!eventName.includes("delete")) {
-        const handler = mapPlatformToOrderHandler[business.platform];
 
-        if (handler) {
-          const documents = await handler({ business, data });
-      
-          await createVectoreStore({
-            dbName: business.account_name,
-            indexName: "orders-retriever",
-            collectionName: "orders-store",
-            documents,
+  if (!eventName.includes("delete")) {
+    const handler = mapPlatformToOrderHandler[business.platform];
+
+    if (handler) {
+      const documents = await handler({ business, data });
+
+      await createVectoreStore({
+        dbName: business.account_name,
+        indexName: "orders-retriever",
+        collectionName: "orders-store",
+        documents,
+      });
+
+      if (!business.onboarding.is_order_vector_store_created) {
+        await businessService().updateById({
+          id: business.id,
+          onboarding: {
+            is_order_vector_store_created: true,
+          },
+        });
+      }
+      if (!business.onboarding.is_order_index_created) {
+        await createSearchIndex({
+          dbName: business.account_name,
+          indexName: "orders-retriever",
+          collectionName: "orders-store",
+        })
+          .then(async () => {
+            await businessService().updateById({
+              id: business.id,
+              onboarding: {
+                is_order_index_created: true,
+              },
+            });
+            logger().info("Done adding indexes for ", business.business_name);
+          })
+          .catch((err) => {
+            logger().error(
+              "Error creating orders-retriever index ",
+              business.business_name,
+              err
+            );
           });
-      
-          logger().info(`order added to vectorestore for ${business.domain}`);
-        }
-        
-    }
+      }
 
+      logger().info(`order added to vectorestore for ${business.domain}`);
+    }
+  }
 };
 
 const handleProductEvent = async (
-    data: any,
-    eventName: string,
-    business: Business
+  data: any,
+  eventName: string,
+  business: Business
 ) => {
-    // delete order if event is delete order
-    const isDeleteOrUpdateEvent =
-        eventName.includes("delete") || eventName.includes("update");
+  // delete order if event is delete order
+  const isDeleteOrUpdateEvent =
+    eventName.includes("delete") || eventName.includes("update");
 
-    if (isDeleteOrUpdateEvent) {
-        await deleteVectoreStoreDocument({
-            dbName: business.account_name,
-            collectionName: "products-store",
-            id: data.id,
+  if (isDeleteOrUpdateEvent) {
+    await deleteVectoreStoreDocument({
+      dbName: business.account_name,
+      collectionName: "products-store",
+      id: data.id,
+    });
+    logger().info(`deleted product from the vectorestore for ${data.id}`);
+  }
+  if (!eventName.includes("delete")) {
+    const handler = mapPlatformToProductHandler[business.platform];
+
+    if (handler) {
+      const documents = await handler({ business, data });
+
+      await createVectoreStore({
+        dbName: business.account_name,
+        indexName: "products-retriever",
+        collectionName: "products-store",
+        documents,
+      });
+      if (!business.onboarding.is_product_vector_store_created) {
+        await businessService().updateById({
+          id: business.id,
+          onboarding: {
+            is_product_vector_store_created: true,
+          },
         });
-        logger().info(`deleted product from the vectorestore for ${data.id}`);
-
-    }
-    if (!eventName.includes("delete")) {
-
-        const handler = mapPlatformToProductHandler[business.platform];
-
-        if (handler) {
-            const documents = await handler({ business, data });
-
-            await createVectoreStore({
-                dbName: business.account_name,
-                indexName: "products-retriever",
-                collectionName: "products-store",
-                documents,
+      }
+      if (!business.onboarding.is_product_index_created) {
+        await createSearchIndex({
+          dbName: business.account_name,
+          indexName: "products-retriever",
+          collectionName: "products-store",
+        })
+          .then(async () => {
+            await businessService().updateById({
+              id: business.id,
+              onboarding: {
+                is_product_index_created: true,
+              },
             });
-            logger().info(`Product added to vectorestore for ${business.domain}`);
-        }
-    };
-}
+            logger().info("Done adding indexes for ", business.business_name);
+          })
+          .catch((err) => {
+            logger().error(
+              "Error creating products-retriever index ",
+              business.business_name,
+              err
+            );
+          });
+      }
+      logger().info(`Product added to vectorestore for ${business.domain}`);
+    }
+  }
+};
 
 export default async function handleEvent(
   event: PubsubMessage & {
@@ -135,9 +194,9 @@ export default async function handleEvent(
     resource = await handleProductEvent(data, eventName, business);
   }
 
-//   if (resource) {
-//     console.log(resource);
-//   }
+  //   if (resource) {
+  //     console.log(resource);
+  //   }
 
   logger().info("ack event");
 

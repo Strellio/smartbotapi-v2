@@ -14,12 +14,10 @@ const Schema = new mongoose.Schema(
       ref: "businesses",
       required: true,
     },
-    return_policy: {
+    return_refund_policy: {
       type: String,
     },
-    refund_policy: {
-      type: String,
-    },
+
     privacy_policy: {
       type: String,
     },
@@ -41,6 +39,13 @@ const Schema = new mongoose.Schema(
       type: String,
     },
     cancellation_policy: {
+      type: String,
+    },
+    promotions_discounts: {
+
+      type: String,
+    },
+    contacts: {
       type: String,
     },
   },

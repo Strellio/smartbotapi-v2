@@ -1,26 +1,41 @@
-'use strict'
+"use strict";
 
-import * as intercomService from '../../../../services/chat-platforms/platforms/intercom'
-import chatPlatformService from '../../../../services/chat-platforms'
+import * as intercomService from "../../../../services/chat-platforms/platforms/intercom";
+import chatPlatformService from "../../../../services/chat-platforms";
 
 export default {
   Mutation: {
     addIntercom: async (parent: any, { input }: any, { business }: any) => {
-      return intercomService.add(business.id)
+      return intercomService.add(business.id);
     },
-    updateChatPlatform: async (parent: any, { input }: any, { business }: any) => {
+    updateChatPlatform: async (
+      parent: any,
+      { input }: any,
+      { business }: any
+    ) => {
       const result = await chatPlatformService().update({
         ...input,
         business_id: business.id,
-      })
+      });
 
-      return result
+      return result;
     },
     createChatPlatform: (parent: any, { input }: any, { business }: any) => {
       return chatPlatformService().create({
         ...input,
         business_id: business.id,
-      })
-    }
-  }
-}
+      });
+    },
+    deleteChatPlatform: async (
+      parent: any,
+      { input }: any,
+      { business }: any
+    ) => {
+      await chatPlatformService().deleteChatPlatform({
+        businessId: business.id,
+        chatPlatformId: input.id,
+      });
+      return "success";
+    },
+  },
+};

@@ -17,7 +17,7 @@ const create =
     const item = new Model(data);
     let doc = await item.save();
     if (populate) {
-      doc = await doc.populate(populate)
+      doc = await doc.populate(populate);
     }
     return doc.toObject() as any;
   };
@@ -31,7 +31,7 @@ const findOne =
     populate?: string | Array<any>;
     query: object;
   }) => {
-    const doc = Model.findOne(query);
+    const doc = Model.findOne({ is_deleted: { $ne: true }, ...query });
     if (populate) {
       doc.populate(populate);
     }
@@ -54,13 +54,10 @@ const updateOne =
   }): Promise<any> => {
     const opts = Object.assign({}, { new: true, runValidators: true }, options);
 
-    const doc2 = await Model.findOne(query);
-
     let doc = await Model.findOneAndUpdate(query, update, opts)
       .populate(populate)
       .exec();
-    
-    
+
     return doc?.toObject();
   };
 
@@ -69,17 +66,17 @@ const upsert =
   async ({
     query,
     update,
-    create:createData,
+    create: createData,
     populate,
   }: {
     query: object;
-      update: object;
-      create?: object;
+    update: object;
+    create?: object;
     populate?: any;
   }) => {
     const doc = await findOne(Model)({ query });
-    if (doc) return updateOne(Model)({ query, update, populate });      
-    return create(Model)({ data: createData??update, populate });
+    if (doc) return updateOne(Model)({ query, update, populate });
+    return create(Model)({ data: createData ?? update, populate });
   };
 
 const fetch =
@@ -94,33 +91,35 @@ const fetch =
   }: {
     populate?: string | Array<any>;
     query: object;
-      batchSize?: number;
-    sort?:any,
+    batchSize?: number;
+    sort?: any;
     timeout?: boolean;
     mapper?: any;
   }): QueryCursor<any> => {
-    let doc = Model.find(query);
+    let doc = Model.find({ is_deleted: { $ne: true }, ...query });
 
-    doc = doc.batchSize(200)
-    
+    doc = doc.batchSize(200);
+
     if (populate) {
-      doc = doc.populate(populate) as any
+      doc = doc.populate(populate) as any;
     }
 
     if (sort) {
-      doc = doc.sort(sort)
+      doc = doc.sort(sort);
     }
 
-    return doc.cursor()
-      .map(mapper || ((doc) => doc)) as any
+    return doc.cursor().map(mapper || ((doc) => doc)) as any;
   };
 
 const count =
   (Model: MongooseModel<Document>) =>
-  async (query = required("query")) => {
+  async (query: object = required("query")) => {
     const count = Model.countDocuments
-      ? await Model.countDocuments(query).exec()
-      : await Model.count(query).exec();
+      ? await Model.countDocuments({
+          is_deleted: { $ne: true },
+          ...query,
+        }).exec()
+      : await Model.count({ is_deleted: { $ne: true }, ...query }).exec();
 
     return count;
   };

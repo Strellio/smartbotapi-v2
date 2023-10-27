@@ -29,7 +29,6 @@ type UpdateAvailabilityParams={
 
 export default async function update(data: UpdateAgentParams) {
 
-  console.log("agent data ", data)
   const payload=  validate(schema, data);
 
   const chatPlatforms = await chatPlatformService().list({
@@ -78,6 +77,12 @@ export default async function update(data: UpdateAgentParams) {
       email: rest.email as string,
     });
   }
+  if (!rest.is_person) {
+    rest["bot_info"] = {
+      name: rest.name,
+      profile_url: rest.profile_url,
+    } as any
+  } 
 
   return agentsModel.update(id, business, rest);
 }

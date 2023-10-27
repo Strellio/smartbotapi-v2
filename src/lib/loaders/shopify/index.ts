@@ -13,9 +13,9 @@ interface ProductVariant {
   title: string;
 }
 
-export enum ShopifyResource{
-  PRODUCTS = 'products',
-  ORDERS = 'orders'
+export enum ShopifyResource {
+  PRODUCTS = "products",
+  ORDERS = "orders",
 }
 
 interface Product {
@@ -82,12 +82,6 @@ function generateProductContent(
   return sentence;
 }
 
-
-
-
-
-
-
 export class ShopifyLoader extends BaseDocumentLoader {
   private resource: ShopifyResource;
   private domain: string;
@@ -97,13 +91,13 @@ export class ShopifyLoader extends BaseDocumentLoader {
 
   mapResourceToSyncHandler = {
     [ShopifyResource.PRODUCTS]: this.loadProducts,
-    [ShopifyResource.ORDERS]: this.loadOrders
-  }
+    [ShopifyResource.ORDERS]: this.loadOrders,
+  };
 
   mapResourceToGetHandler = {
     [ShopifyResource.PRODUCTS]: this.getProductDocuments,
-    [ShopifyResource.ORDERS]: this.getOrderDocuments
-  }
+    [ShopifyResource.ORDERS]: this.getOrderDocuments,
+  };
 
   constructor(
     domain: string,
@@ -112,7 +106,7 @@ export class ShopifyLoader extends BaseDocumentLoader {
     options: Options
   ) {
     super();
-    
+
     this.resource = resource;
     this.domain = domain;
     access_token = access_token;
@@ -139,12 +133,11 @@ export class ShopifyLoader extends BaseDocumentLoader {
     return this.getProductDocuments(products);
   }
 
-
   private async loadOrders(): Promise<Document[]> {
     let orders: any[] = [];
 
     let params = { limit: 250 };
-    
+
     do {
       const result = await this.client.order.list(params);
 
@@ -163,7 +156,6 @@ export class ShopifyLoader extends BaseDocumentLoader {
     }));
   }
 
-
   private getOrderDocuments(orders: any[]): Document[] {
     return orders.map((order) => ({
       pageContent: generateOrderContent(order),
@@ -172,12 +164,12 @@ export class ShopifyLoader extends BaseDocumentLoader {
   }
 
   async load(): Promise<Document[]> {
-    const handler = this.mapResourceToSyncHandler[this.resource]
+    const handler = this.mapResourceToSyncHandler[this.resource];
     return await handler.call(this);
   }
 
-  async getDocuments(data:any[]): Promise<Document[]> {
-    const handler = this.mapResourceToGetHandler[this.resource]
+  async getDocuments(data: any[]): Promise<Document[]> {
+    const handler = this.mapResourceToGetHandler[this.resource];
     return await handler.call(this, data);
   }
 }

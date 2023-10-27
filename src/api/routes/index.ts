@@ -7,8 +7,10 @@ import {
   intercomAuthCallback,
   activePlatformCharge,
   insertSeeds,
+  checkWordpressStatus,
+  wordpressCallback,
+  wordpressInstall,
 } from "./actions";
-
 
 export default function router() {
   return Router()
@@ -16,5 +18,8 @@ export default function router() {
     .get("/shopify/callback", shopifyAuthCallback)
     .get("/plans/charge", activePlatformCharge)
     .get("/intercom/callback", intercomAuthCallback)
-    .get("/seeds", insertSeeds)
+    .get("/wordpress/status", checkWordpressStatus)
+    .post("/wordpress/install", wordpressInstall)
+    .post("/wordpress/callback", wordpressCallback)
+    .get("/seeds", insertSeeds);
 }
