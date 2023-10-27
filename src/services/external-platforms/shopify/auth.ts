@@ -113,7 +113,7 @@ export const callback = async (
       const policies = await shopifyClient.policy.list();
 
       const policiesMap = policies.reduce((acc: any, policy: any) => {
-        acc[shopifyPolicyMap[policy.title]] = policy.body;
+        acc[shopifyPolicyMap[policy.handle]] = policy.body;
         return acc;
       }, {});
 
