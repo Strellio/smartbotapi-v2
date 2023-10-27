@@ -11,6 +11,7 @@ import { PLATFORM_MAP } from "../../../models/businesses/schema/enums";
 import { User } from "../../../models/users/types";
 import { DeliveryMethod, PubSubWebhookHandler } from "@shopify/shopify-api";
 import logger from "../../../lib/logger";
+import knowlegeBase from "../../knowlege-base";
 
 export const install = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -101,6 +102,25 @@ export const callback = async (
 
     if (!business) {
       business = await businessService().create(createBusinessPayload);
+      const shopifyPolicyMap = {
+        "contact-information": "contacts",
+        "privacy-policy": "privacy_policy",
+        "terms-of-service": "terms_of_service",
+        "refund-policy": "return_refund_policy",
+        "shipping-policy": "shipping_policy",
+      };
+
+      const policies = await shopifyClient.policy.list();
+
+      const policiesMap = policies.reduce((acc: any, policy: any) => {
+        acc[shopifyPolicyMap[policy.title]] = policy.body;
+        return acc;
+      }, {});
+
+      await knowlegeBase.createOrUpdateKnowlegeBase({
+        ...policiesMap,
+        businessId: business.id,
+      });
     } else {
       business = await businessService().updateById({
         id: business.id,
@@ -167,10 +187,3 @@ export const callback = async (
     next(error);
   }
 };
-
-interface CallbackParams {
-  code: string;
-  hmac: string;
-  shop: string;
-  time: string;
-}

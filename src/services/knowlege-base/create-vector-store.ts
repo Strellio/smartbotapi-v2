@@ -5,6 +5,7 @@ import logger from "../../lib/logger";
 import { deleteVectoreStore } from "../../lib/vectorstore/delete-vectorstore";
 import stripTags from "striptags";
 import { createSearchIndex } from "../../lib/db/atlas";
+import businessService from "../businesses";
 
 function concatenateStoreInfo(knowledgeBase: any) {
   const {
@@ -42,6 +43,29 @@ export default async function createOrUpdateKnowledgeBaseVectorStore({
   knowledgeBase: any;
   business: Business;
 }) {
+  if (!business.onboarding.is_knowledge_base_vector_store_created) {
+    await createSearchIndex({
+      dbName: business.account_name,
+      indexName: "knowledge-base-retriever",
+      collectionName: "knowledge-base",
+    })
+      .then(async () => {
+        await businessService().updateById({
+          id: business.id,
+          onboarding: {
+            is_knowledge_base_vector_store_created: true,
+          },
+        });
+      })
+      .catch((err) => {
+        logger().error(
+          "Error creating knowledge-base-retriever index for ",
+          business.account_name,
+          err
+        );
+      });
+  }
+
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 500,
     chunkOverlap: 100,
