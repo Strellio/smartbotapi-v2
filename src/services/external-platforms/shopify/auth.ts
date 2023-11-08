@@ -111,16 +111,17 @@ export const callback = async (
       };
 
       const policies = await shopifyClient.policy.list();
+      if (policies.length === 0) {
+        const policiesMap = policies.reduce((acc: any, policy: any) => {
+          acc[shopifyPolicyMap[policy.handle]] = policy.body;
+          return acc;
+        }, {});
 
-      const policiesMap = policies.reduce((acc: any, policy: any) => {
-        acc[shopifyPolicyMap[policy.handle]] = policy.body;
-        return acc;
-      }, {});
-
-      await knowlegeBase.createOrUpdateKnowlegeBase({
-        ...policiesMap,
-        businessId: business.id,
-      });
+        await knowlegeBase.createOrUpdateKnowlegeBase({
+          ...policiesMap,
+          businessId: business.id,
+        });
+      }
     } else {
       business = await businessService().updateById({
         id: business.id,
