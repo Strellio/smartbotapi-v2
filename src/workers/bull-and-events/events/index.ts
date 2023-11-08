@@ -46,6 +46,7 @@ const handleOrderEvent = async (
   }
 
   if (!eventName.includes("delete")) {
+    console.log("handleOrderEvent", business);
     const handler = mapPlatformToOrderHandler[business.platform];
 
     if (handler) {
@@ -165,40 +166,53 @@ export default async function handleEvent(
     ack: Function;
   }
 ) {
-  const data = parseString(event.data as any);
+  try {
+    const data = parseString(event.data as any);
 
-  logger().info(
-    "New Event" + JSON.stringify(data),
-    +" " + getTopicFromAttributes({ attributes: (event as any).attributes })
-  );
+    logger().info(
+      "New Event" + JSON.stringify(data),
+      +" " + getTopicFromAttributes({ attributes: (event as any).attributes })
+    );
 
-  const eventName =
-    event.attributes &&
-    getTopicFromAttributes({ attributes: event.attributes });
+    const eventName =
+      event.attributes &&
+      getTopicFromAttributes({ attributes: event.attributes });
 
-  const business = await businessService().getByExternalPlatformDomain(
-    getDomainFromAttributes({
-      attributes: event.attributes as never,
-    })
-  );
+    const business = await businessService().getByExternalPlatformDomain(
+      getDomainFromAttributes({
+        attributes: event.attributes as never,
+      })
+    );
 
-  let resource;
-  let type: ResourceType;
+    if (!business) {
+      logger().error(
+        `No business found for ${getDomainFromAttributes({
+          attributes: event.attributes as never,
+        })}`
+      );
+      return;
+    }
 
-  if (eventName && eventName.includes("order")) {
-    type = ResourceType.ORDER;
-    resource = await handleOrderEvent(data, eventName, business);
+    let resource;
+    let type: ResourceType;
+
+    if (eventName && eventName.includes("order")) {
+      type = ResourceType.ORDER;
+      resource = await handleOrderEvent(data, eventName, business);
+    }
+    if (eventName && eventName.includes("product")) {
+      type = ResourceType.PRODUCT;
+      resource = await handleProductEvent(data, eventName, business);
+    }
+
+    //   if (resource) {
+    //     console.log(resource);
+    //   }
+
+    logger().info("ack event");
+
+    event.ack();
+  } catch (error) {
+    logger().error(error);
   }
-  if (eventName && eventName.includes("product")) {
-    type = ResourceType.PRODUCT;
-    resource = await handleProductEvent(data, eventName, business);
-  }
-
-  //   if (resource) {
-  //     console.log(resource);
-  //   }
-
-  logger().info("ack event");
-
-  event.ack();
 }
