@@ -67,8 +67,6 @@ export default async function create(
     },
   });
 
-  console.log("business is ", business);
-
   await agentService.create({
     email: params.email,
     name: params.full_name,
@@ -80,7 +78,7 @@ export default async function create(
   const productSyncQueue = queues.productSyncQueue();
   const orderSyncQueue = queues.orderSyncQueue();
 
-  await Promise.all([
+  Promise.all([
     productSyncQueue.add({ data: { business }, jobId: business.id }),
     orderSyncQueue.add({ data: { business }, jobId: business.id }),
   ]).catch((err) => {
