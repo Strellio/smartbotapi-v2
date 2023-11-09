@@ -32,19 +32,27 @@ export default async function syncOrdersWorker() {
           indexName: "orders-retriever",
           collectionName: "orders-store",
           documents,
-        }).then(async (res) => {
-          logger().info(
-            "Done adding orders to vectore store for ",
-            business.business_name
-          );
+        })
+          .then(async (res) => {
+            logger().info(
+              "Done adding orders to vectore store for ",
+              business.business_name
+            );
 
-          await businessService().updateById({
-            id: business.id,
-            onboarding: {
-              is_order_vector_store_created: true,
-            },
+            await businessService().updateById({
+              id: business.id,
+              onboarding: {
+                is_order_vector_store_created: true,
+              },
+            });
+          })
+          .catch((err) => {
+            logger().error(
+              "Error creating orders-retriever index for ",
+              business.account_name,
+              err
+            );
           });
-        });
 
         await createSearchIndex({
           dbName: business.account_name,
@@ -58,14 +66,15 @@ export default async function syncOrdersWorker() {
                 is_order_index_created: true,
               },
             });
-            logger().info("Done adding indexes for ", business.business_name);
+            logger().info("Done adding indexes for " + business.business_name);
           })
           .catch((err) => {
+            console.log(err);
             logger().error("Error creating orders-retriever index ", err);
           });
       }
     } catch (error) {
-      console.log(error);
+      logger().error("Error in syncOrdersWorker", error);
     }
   }
 

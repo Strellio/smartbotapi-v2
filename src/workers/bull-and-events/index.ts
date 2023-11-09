@@ -10,6 +10,7 @@ import H from "highland";
 import express from "express";
 import cors from "cors";
 import loggerMaker from "../../lib/logger";
+import updateKnowlegeBaseWorker from "./update-knowlege-base";
 
 const app = express();
 
@@ -34,6 +35,7 @@ function startServer() {
 db.connect().then(() => {
   syncProductsWorker();
   syncOrdersWorker();
+  updateKnowlegeBaseWorker();
   H(planService().getAll()).collect().toPromise(Promise);
   pubsub.googlePubSub.subscribe({
     subscriberName: config.SHOPIFY_GOOGLE_PUB_SUB_SUBSCRIPTION_NAME,
