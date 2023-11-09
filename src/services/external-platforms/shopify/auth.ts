@@ -125,7 +125,7 @@ export const callback = async (
 
         const knowlegeBaseUpdateQueue = queues.knowledgeBaseUpdateQueue();
 
-        await knowlegeBaseUpdateQueue.add({
+        knowlegeBaseUpdateQueue.add({
           data: { business, knowlegeBase: knowlegeBaseRes },
           jobId: knowlegeBaseRes.id,
         });
