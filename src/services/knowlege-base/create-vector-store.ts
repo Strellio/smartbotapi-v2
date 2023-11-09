@@ -43,7 +43,11 @@ export default async function createOrUpdateKnowledgeBaseVectorStore({
   knowledgeBase: any;
   business: Business;
 }) {
-  if (!business.onboarding.is_knowledge_base_vector_store_created) {
+  console.log(
+    "!business.onboarding.is_knowledge_base_vector_store_created",
+    !business.onboarding.is_knowledge_base_index_created
+  );
+  if (!business.onboarding.is_knowledge_base_index_created) {
     await createSearchIndex({
       dbName: business.account_name,
       indexName: "knowledge-base-retriever",
@@ -53,7 +57,7 @@ export default async function createOrUpdateKnowledgeBaseVectorStore({
         await businessService().updateById({
           id: business.id,
           onboarding: {
-            is_knowledge_base_vector_store_created: true,
+            is_knowledge_base_index_created: true,
           },
         });
       })
