@@ -44,6 +44,8 @@ export default async function syncProductsWorker() {
           );
         })
         .catch((err) => {
+          console.log(err);
+
           logger().error(
             "Error creating products-retriever index for ",
             business.account_name,
@@ -70,6 +72,7 @@ export default async function syncProductsWorker() {
           );
         })
         .catch((err) => {
+          console.log(err);
           logger().error("Error creating products-retriever index ", err);
         });
 

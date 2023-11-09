@@ -60,10 +60,14 @@ export default async function create(
   const business = await BusinessModel().create({
     data: {
       ...params,
-      account_name: params.business_name.replace(" ", "-").toLocaleLowerCase(),
+      account_name: params.business_name
+        .replaceAll(" ", "-")
+        .toLocaleLowerCase(),
       user: user.id,
     },
   });
+
+  console.log("business is ", business);
 
   await agentService.create({
     email: params.email,

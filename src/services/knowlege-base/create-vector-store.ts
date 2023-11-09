@@ -80,6 +80,9 @@ export default async function createOrUpdateKnowledgeBaseVectorStore({
     )
   ).reduce((acc, val) => acc.concat(val), []);
 
+  if (documents.length === 0)
+    return logger().info(`No knowledge-base found for ${business.domain}`);
+
   await deleteVectoreStore({
     dbName: business.account_name,
     collectionName: "knowledge-base",

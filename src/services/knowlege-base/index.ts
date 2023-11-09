@@ -1,4 +1,5 @@
 "use strict";
+import queues from "../../lib/queues";
 import KnowlegeBaseModel from "../../models/knowledge-base";
 import createOrUpdateKnowledgeBaseVectorStore from "./create-vector-store";
 
@@ -8,9 +9,12 @@ async function createOrUpdateKnowlegeBase({ businessId, ...rest }) {
     update: { ...rest, business: businessId },
     populate: "business",
   });
-  await createOrUpdateKnowledgeBaseVectorStore({
-    knowledgeBase: result,
-    business: result.business,
+
+  const knowlegeBaseUpdateQueue = queues.knowledgeBaseUpdateQueue();
+
+  knowlegeBaseUpdateQueue.add({
+    data: { business: result.business, knowlegeBase: result },
+    jobId: result.id,
   });
   return result;
 }

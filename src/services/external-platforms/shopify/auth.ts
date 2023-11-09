@@ -12,6 +12,7 @@ import { User } from "../../../models/users/types";
 import { DeliveryMethod, PubSubWebhookHandler } from "@shopify/shopify-api";
 import logger from "../../../lib/logger";
 import knowlegeBase from "../../knowlege-base";
+import queues from "../../../lib/queues";
 
 export const install = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -111,15 +112,22 @@ export const callback = async (
       };
 
       const policies = await shopifyClient.policy.list();
-      if (policies.length === 0) {
+      if (policies.length > 0) {
         const policiesMap = policies.reduce((acc: any, policy: any) => {
           acc[shopifyPolicyMap[policy.handle]] = policy.body;
           return acc;
         }, {});
 
-        await knowlegeBase.createOrUpdateKnowlegeBase({
+        const knowlegeBaseRes = await knowlegeBase.createOrUpdateKnowlegeBase({
           ...policiesMap,
           businessId: business.id,
+        });
+
+        const knowlegeBaseUpdateQueue = queues.knowledgeBaseUpdateQueue();
+
+        await knowlegeBaseUpdateQueue.add({
+          data: { business, knowlegeBase: knowlegeBaseRes },
+          jobId: knowlegeBaseRes.id,
         });
       }
     } else {
@@ -178,10 +186,12 @@ export const callback = async (
       logger().error(error);
     }
 
-    const redirectUrl = `${config.DASHBOARD_URL}/api/auth?token=${generateJwt({
-      business_id: business.id,
-      user_id: business.user.toString(),
-    })}&business_id=${business.id}&user_id=${business.user.toString()}` as any;
+    const redirectUrl = `${config.DASHBOARD_URL}/auth/token?token=${generateJwt(
+      {
+        business_id: business.id,
+        user_id: business.user.toString(),
+      }
+    )}&business_id=${business.id}&user_id=${business.user.toString()}` as any;
 
     res.redirect(redirectUrl);
   } catch (error) {
