@@ -140,7 +140,7 @@ export const callback = async (
     await shopifyClient.scriptTag.list().then(async (scriptTags) => {
       await Promise.all(
         scriptTags.map(async (scriptTag) => {
-          if (scriptTag.src.startsWith(`${config.APP_URL}/static/js/wl.js`)) {
+          if (scriptTag.src.includes(`static/js/wl.js`)) {
             await shopifyClient.scriptTag.delete(scriptTag.id);
           }
         })
