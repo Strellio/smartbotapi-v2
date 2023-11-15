@@ -1,4 +1,5 @@
 import chatPlatformModel from "../../../models/chat-platforms";
+import { STATUS_MAP } from "../../../models/common";
 
 export default async function deleteChatPlatform({
   businessId,
@@ -20,6 +21,7 @@ export default async function deleteChatPlatform({
         external_refresh_token: "",
         workspace_id: "",
       },
+      status: STATUS_MAP.DEACTIVATED,
     },
   });
 }

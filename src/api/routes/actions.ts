@@ -79,8 +79,6 @@ export const wordpressCallback = (
     ...req.query,
   };
 
-  console.log(transformBody);
-
   return wordpressService()
     .callback(transformBody)
     .then((result) => res.json(result))

@@ -7,7 +7,6 @@ import userService from "../../users";
 import chatPlatformService from "../../chat-platforms";
 import { ChatPlatform } from "../../../models/businesses/types";
 import { ACTION_TYPE_TO_MONGODB_FIELD } from "../../../models/common";
-import { CHAT_PLATFORMS } from "../../../models/chat-platforms/schema";
 import { uploadProfile } from "../../users/create";
 import { AGENT_AVAILABILTY_STATUS } from "../../../models/agents/schema";
 
@@ -21,15 +20,13 @@ type UpdateAgentParams = {
   linked_chat_agents: [string];
 };
 
-
-type UpdateAvailabilityParams={
+type UpdateAvailabilityParams = {
   id: string;
-  availability_status: AGENT_AVAILABILTY_STATUS
-}
+  availability_status: AGENT_AVAILABILTY_STATUS;
+};
 
 export default async function update(data: UpdateAgentParams) {
-
-  const payload=  validate(schema, data);
+  const payload = validate(schema, data);
 
   const chatPlatforms = await chatPlatformService().list({
     business_id: payload.business_id,
@@ -46,8 +43,7 @@ export default async function update(data: UpdateAgentParams) {
   await Promise.all(
     chatPlatforms
       .filter(
-        (chatPlatform: ChatPlatform) =>
-          chatPlatform.is_external_agent_supported
+        (chatPlatform: ChatPlatform) => chatPlatform.is_external_agent_supported
       )
       .map(async (chatPlatform: ChatPlatform) => {
         const agent = chatPlatform.agents.find((agent) =>
@@ -81,19 +77,16 @@ export default async function update(data: UpdateAgentParams) {
     rest["bot_info"] = {
       name: rest.name,
       profile_url: rest.profile_url,
-    } as any
-  } 
+    } as any;
+  }
 
   return agentsModel.update(id, business, rest);
 }
 
-
-
 export function updateAvailability(data: UpdateAvailabilityParams) {
   const payload = validate(updateAvailabilitySchema, data);
-  
-  const { id, availability_status, business_id } = payload
 
-  return agentsModel.update(id, business_id, {availability_status});
+  const { id, availability_status, business_id } = payload;
 
+  return agentsModel.update(id, business_id, { availability_status });
 }
