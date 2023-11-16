@@ -195,6 +195,7 @@ export const callback = async (
 
     res.redirect(redirectUrl);
   } catch (error) {
+    logger().error(error);
     next(error);
   }
 };
