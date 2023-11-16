@@ -195,7 +195,10 @@ export const callback = async (
 
     res.redirect(redirectUrl);
   } catch (error) {
-    logger().error(error);
+    // logger().error(error);
+
+    console.log("Error in shopify callback", error.message);
+    console.log(error);
     next(error);
   }
 };
