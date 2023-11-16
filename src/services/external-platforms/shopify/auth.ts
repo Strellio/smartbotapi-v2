@@ -180,7 +180,8 @@ export const callback = async (
         } as any,
       });
 
-      logger().info("done registering webhooks ", result);
+      logger().info("done registering webhooks ");
+      logger().info(result);
     } catch (error) {
       console.log("error registering webhooks", error);
       logger().error(error);
