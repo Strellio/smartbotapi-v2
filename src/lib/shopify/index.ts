@@ -70,26 +70,21 @@
 //   };
 // }
 
-
-
-
-import '@shopify/shopify-api/adapters/node'
-import axios from 'axios'
+import "@shopify/shopify-api/adapters/node";
+import axios from "axios";
 import {
   shopifyApi as OwnShopify,
-  LATEST_API_VERSION
-} from '@shopify/shopify-api'
+  LATEST_API_VERSION,
+} from "@shopify/shopify-api";
 
-import Shopify from 'shopify-api-node'
-import config from '../../config'
-import { required } from '../utils'
-
-
+import Shopify from "shopify-api-node";
+import config from "../../config";
+import { required } from "../utils";
 
 const shopifySelf = OwnShopify({
   apiKey: config.SHOPIFY_APP_KEY,
   apiSecretKey: config.SHOPIFY_APP_SECRET,
-  
+
   scopes: [
     "read_content",
     "read_product_listings",
@@ -100,49 +95,45 @@ const shopifySelf = OwnShopify({
     "read_script_tags",
     "write_script_tags",
   ],
-  hostName: config.APP_URL.replace(/https?:\/\//, '').replace(
-    /http?:\/\//,
-    ''
-  ),
-  hostScheme: config.isProduction ? 'https' : 'http',
+  hostName: config.APP_URL.replace(/https?:\/\//, "").replace(/http?:\/\//, ""),
+  hostScheme: config.isProduction ? "https" : "http",
   apiVersion: LATEST_API_VERSION,
   isEmbeddedApp: false,
-
-})
+});
 
 const api = ({
-  platformDomain = required('platformDomain'),
-  accessToken = required('accessToken')
+  platformDomain = required("platformDomain"),
+  accessToken = required("accessToken"),
 }: {
-  platformDomain: string
-  accessToken: string
+  platformDomain: string;
+  accessToken: string;
 }) =>
   new Shopify({
     accessToken,
-    shopName:  platformDomain.replace(/(^\w+:|^)\/\//, ""),
+    shopName: platformDomain.replace(/(^\w+:|^)\/\//, ""),
     apiVersion: LATEST_API_VERSION,
-    autoLimit: true
-  })
+    autoLimit: true,
+  });
 
 const getAccessToken = (shop: string, code: string) =>
   axios
     .post<{
-      access_token: string
+      access_token: string;
     }>(`https://${shop}/admin/oauth/access_token`, {
       client_secret: config.SHOPIFY_APP_SECRET,
       client_id: config.SHOPIFY_APP_KEY,
-      code
+      code,
     })
     .then((response) => ({
       accessToken: response.data.access_token,
-      shop
-    }))
+      shop,
+    }));
 
 export default {
   auth: shopifySelf.auth,
   utils: shopifySelf.utils,
   webhooks: shopifySelf.webhooks,
+  clients: shopifySelf.clients,
   getAccessToken,
-  api
-}
-
+  api,
+};
