@@ -13,6 +13,7 @@ import { DeliveryMethod, PubSubWebhookHandler } from "@shopify/shopify-api";
 import logger from "../../../lib/logger";
 import knowlegeBase from "../../knowlege-base";
 import queues from "../../../lib/queues";
+import { rest } from "lodash";
 
 export const install = (req: Request, res: Response, next: NextFunction) => {
   try {

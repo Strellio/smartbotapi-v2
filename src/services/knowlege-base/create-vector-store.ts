@@ -47,28 +47,6 @@ export default async function createOrUpdateKnowledgeBaseVectorStore({
     "!business.onboarding.is_knowledge_base_vector_store_created",
     !business.onboarding.is_knowledge_base_index_created
   );
-  if (!business.onboarding.is_knowledge_base_index_created) {
-    await createSearchIndex({
-      dbName: business.account_name,
-      indexName: "knowledge-base-retriever",
-      collectionName: "knowledge-base",
-    })
-      .then(async () => {
-        await businessService().updateById({
-          id: business.id,
-          onboarding: {
-            is_knowledge_base_index_created: true,
-          },
-        });
-      })
-      .catch((err) => {
-        logger().error(
-          "Error creating knowledge-base-retriever index for ",
-          business.account_name,
-          err
-        );
-      });
-  }
 
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 500,
@@ -98,6 +76,29 @@ export default async function createOrUpdateKnowledgeBaseVectorStore({
     collectionName: "knowledge-base",
     documents,
   });
+
+  if (!business.onboarding.is_knowledge_base_index_created) {
+    await createSearchIndex({
+      dbName: business.account_name,
+      indexName: "knowledge-base-retriever",
+      collectionName: "knowledge-base",
+    })
+      .then(async () => {
+        await businessService().updateById({
+          id: business.id,
+          onboarding: {
+            is_knowledge_base_index_created: true,
+          },
+        });
+      })
+      .catch((err) => {
+        logger().error(
+          "Error creating knowledge-base-retriever index for ",
+          business.account_name,
+          err
+        );
+      });
+  }
 
   logger().info(`knowledge-base vectore store created for ${business.domain}`);
 }
