@@ -19,6 +19,28 @@ const generateAppProf = (accessToken: string) =>
     data: accessToken,
   });
 
+function subscribeAppToPage({
+  pageId = required("pageId"),
+  pageAccessToken = required("pageAccessToken"),
+}: {
+  pageId: string;
+  pageAccessToken: string;
+}) {
+  return request.post(
+    `${formPageOrPersonaUrl(pageId)}/subscribed_apps`,
+    {
+      subscribed_fields: "messages,messaging_postbacks,message_reads",
+    },
+
+    {
+      params: {
+        access_token: pageAccessToken,
+        appsecret_proof: generateAppProf(pageAccessToken),
+      },
+    }
+  );
+}
+
 /**
  * Generate long access token for fb
  */
@@ -211,4 +233,5 @@ export {
   generatePageAccessToken,
   deletePersona,
   createPersona,
+  subscribeAppToPage,
 };

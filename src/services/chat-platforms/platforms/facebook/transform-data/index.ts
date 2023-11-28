@@ -5,6 +5,7 @@ import {
   deletePersona,
   createPersona,
   updateMessengerProfile,
+  subscribeAppToPage,
 } from "../../../../../lib/facebook";
 import { required } from "../../../../../lib/utils";
 import { ChatPlatform } from "../../../../../models/businesses/types";
@@ -39,13 +40,21 @@ export default async function transformData({
       pageId: payload.external_id,
       accessToken: payload.external_user_access_token,
     });
-    await updateMessengerProfile({
-      pageAccessToken: pageResponse.access_token,
-      whitelistedDomains: payload.whitelistedDomains
-    })
+
+    await Promise.all([
+      updateMessengerProfile({
+        pageAccessToken: pageResponse.access_token,
+        whitelistedDomains: payload.whitelistedDomains,
+      }),
+
+      subscribeAppToPage({
+        pageId: payload.external_id,
+        pageAccessToken: pageResponse.access_token,
+      }),
+    ]);
+
     payload.external_access_token = pageResponse.access_token;
   }
-
 
   if (payload.agent) {
     if (payload.agent.external_id) {
@@ -53,7 +62,7 @@ export default async function transformData({
         pageAccessToken:
           dbPayload?.external_access_token || payload.external_access_token,
         id: payload.agent.external_id,
-      })
+      });
     }
 
     if (payload.agent.action_type !== ACTION_TYPE_TO_MONGODB_FIELD.DELETE) {
@@ -62,11 +71,9 @@ export default async function transformData({
           dbPayload?.external_access_token || payload.external_access_token,
         name: payload.agent.name,
         profile_url: payload.agent.profile_url,
-      })
+      });
       payload.agent.external_id = persona.id;
     }
-
-
   }
 
   return payload;

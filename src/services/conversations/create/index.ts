@@ -13,7 +13,7 @@ import pubsub from "../../../lib/pubsub";
 import config from "../../../config";
 import { CHAT_PLATFORMS } from "../../../models/chat-platforms/schema";
 
-import agentService from "../../agents"
+import agentService from "../../agents";
 
 export type Media = { url: string; type: MESSAGE_MEDIA_TYPE };
 
@@ -53,28 +53,22 @@ const sendMessageForCustomWidget = (message: any) =>
     onNewCustomerMessage: message,
   });
 
-
- export const sendMessageToAdmin = async (message: any) =>{
-   return pubsub.graphqlGooglePubSub.publish(config.NEW_ADMIN_MESSAGE_TOPIC, {
-      onNewAdminMessage: message,
-    })
-
-  }
-
-
-
-
+export const sendMessageToAdmin = async (message: any) => {
+  return pubsub.graphqlGooglePubSub.publish(config.NEW_ADMIN_MESSAGE_TOPIC, {
+    onNewAdminMessage: message,
+  });
+};
 
 export default async function create(params: CreateMessageParams) {
   const validated: CreateMessageParams = validate(schema, params);
 
+  if (
+    !validated.is_chat_with_live_agent &&
+    !validated.is_message_from_customer
+  ) {
+    const botAgent = await agentService.getBotAgent(validated.business_id);
 
-  if (!validated.is_chat_with_live_agent && !validated.is_message_from_customer) {
-
-    const botAgent = await agentService.getBotAgent(validated.business_id)
-
-    validated.agent_id = botAgent.id
-    
+    validated.agent_id = botAgent.id;
   }
 
   const {
@@ -90,9 +84,8 @@ export default async function create(params: CreateMessageParams) {
     ...rest,
   });
 
-
   // if (rest.is_message_from_customer) {
-    sendMessageToAdmin(message)
+  sendMessageToAdmin(message);
   // }
 
   if (
