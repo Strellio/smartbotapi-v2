@@ -133,9 +133,9 @@ export default async function facebookWebhookController(
         url: attachment.payload.url,
       })),
     }),
-    ...(!customer.is_chat_with_live_agent && [
-      handleAsBot({ facebookPayload, chatPlatform, customer }),
-    ]),
+    ...(!customer.is_chat_with_live_agent
+      ? [handleAsBot({ facebookPayload, chatPlatform, customer })]
+      : []),
   ]);
 
   return response;

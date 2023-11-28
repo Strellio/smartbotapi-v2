@@ -114,9 +114,9 @@ export default async function customAction(params: CustomWidgetParams) {
       media: validated.media,
     }),
 
-    ...(!customer.is_chat_with_live_agent && [
-      handleAsBot({ chatPlatform, customer, payload: params }),
-    ]),
+    ...(!customer.is_chat_with_live_agent
+      ? [handleAsBot({ chatPlatform, customer, payload: params })]
+      : []),
   ]);
 
   // if (customer.is_chat_with_live_agent) return message;
