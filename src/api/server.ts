@@ -22,6 +22,7 @@ import { BullMonitorExpress } from "@bull-monitor/express";
 import { BullMQAdapter } from "@bull-monitor/root/dist/bullmq-adapter";
 import { Queue } from "bullmq";
 import { BULL_QUEUES_NAMES, ioredis } from "../lib/queues";
+import { subscribeAppToPage } from "../lib/facebook";
 
 const PORT = config.PORT;
 
@@ -54,7 +55,7 @@ const wsServer = new WebSocketServer({
 });
 
 const getContext = async (ctx, msg, args) => {
-  return { business: ctx.business, agent:ctx.agent };
+  return { business: ctx.business, agent: ctx.agent };
 };
 
 const schema = makeExecutableSchema({ typeDefs: schemas, resolvers });
@@ -67,7 +68,7 @@ const serverCleanup = useServer(
 
       let token;
 
-      const headers = ctx.connectionParams.headers?? ctx.connectionParams;
+      const headers = ctx.connectionParams.headers ?? ctx.connectionParams;
 
       if (headers) {
         const authToken = headers["Authorization"] ?? headers["authorization"];
@@ -77,7 +78,7 @@ const serverCleanup = useServer(
       const { business, agent } = await isAuthenticated(token, ctx);
 
       ctx.business = business;
-      ctx.agent = agent
+      ctx.agent = agent;
     },
     onDisconnect: (ctx) => {
       logger().error("Connection disconnected", ctx.connectionParams);
@@ -128,7 +129,14 @@ export default async function startServer() {
       // @ts-ignore
       expressMiddleware(graphqlServer, {
         context: async ({ req }) => {
-          const operationsToIgnore = ["createAccount", "CreateAccount", "login",  "Login", "verifyCode", "VerifyCode"];
+          const operationsToIgnore = [
+            "createAccount",
+            "CreateAccount",
+            "login",
+            "Login",
+            "verifyCode",
+            "VerifyCode",
+          ];
           if (operationsToIgnore.includes(req.body.operationName)) return req;
           const token = req.headers.authorization?.split("Bearer ")[1];
           const result = await isAuthenticated(token, req);

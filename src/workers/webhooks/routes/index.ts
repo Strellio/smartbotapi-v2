@@ -1,14 +1,18 @@
 "use strict";
-import { Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import {
   intercomWebhook,
   facebookHubVerify,
   facebookWebhook,
   hubspotWebhook,
   customActionWebhook,
-  shopifyWebhook
+  shopifyWebhook,
 } from "./actions";
-import { isAuthenticatedMiddleware, validateShopifyHmac, verifyWebhook } from "./middlewares";
+import {
+  isAuthenticatedMiddleware,
+  validateShopifyHmac,
+  verifyWebhook,
+} from "./middlewares";
 import config from "../../../config";
 import "../../../services/plans";
 
@@ -35,6 +39,9 @@ export default function routes() {
     )
     .post("/hubspot/message", hubspotWebhook)
     .post("/custom/message", isAuthenticatedMiddleware, customActionWebhook)
-    .use("/shopify", validateShopifyHmac,   shopifyWebhook())
-  
+    .use("/shopify", validateShopifyHmac, shopifyWebhook())
+    .use((error: any, req: Request, res: Response, next: NextFunction) => {
+      console.log(error);
+      res.sendStatus(500);
+    });
 }

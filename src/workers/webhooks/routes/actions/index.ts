@@ -10,8 +10,7 @@ import logger from "../../../../lib/logger";
 import { validateShopifyHmac } from "../middlewares";
 import { handleGdpr } from "./shopify";
 import { TYPES } from "../../../../models/gdpr/schema";
-
-
+import { ca } from "date-fns/locale";
 
 export const intercomWebhook = async (
   req: Request,
@@ -47,9 +46,15 @@ export const facebookWebhook = async (
   res.sendStatus(200);
   const body = req.body;
   if (body.object !== "page") return;
-  body.entry.forEach((singleEntry: { messaging: FaceBookWebhookPayload[] }) => {
-    return singleEntry.messaging.map(facebookWebhookController);
-  });
+  try {
+    body.entry.forEach(
+      (singleEntry: { messaging: FaceBookWebhookPayload[] }) => {
+        return singleEntry.messaging.map(facebookWebhookController);
+      }
+    );
+  } catch (error) {
+    logger().error(error);
+  }
 };
 
 export const hubspotWebhook = async (
@@ -69,23 +74,24 @@ export const customActionWebhook = (
     .then((message) => res.json(message))
     .catch((error) => res.status(400).json(error));
 
-
-
 export function shopifyWebhook() {
-  
-  const customerRedact = (req:Request, res:Response, next:NextFunction) => handleGdpr({ payload: req.body, type: TYPES.CUSTOMERS_REDACT }).then(()=>res.sendStatus(200)).catch(next)
+  const customerRedact = (req: Request, res: Response, next: NextFunction) =>
+    handleGdpr({ payload: req.body, type: TYPES.CUSTOMERS_REDACT })
+      .then(() => res.sendStatus(200))
+      .catch(next);
 
+  const shopRedact = (req: Request, res: Response, next: NextFunction) =>
+    handleGdpr({ payload: req.body, type: TYPES.SHOP_REDACT })
+      .then(() => res.sendStatus(200))
+      .catch(next);
 
-const shopRedact = (req:Request, res:Response, next:NextFunction) => handleGdpr({ payload: req.body, type: TYPES.SHOP_REDACT }).then(()=>res.sendStatus(200)).catch(next)
+  const customerRequest = (req: Request, res: Response, next: NextFunction) =>
+    handleGdpr({ payload: req.body, type: TYPES.CUSTOMER_DATA_REQUEST })
+      .then(() => res.sendStatus(200))
+      .catch(next);
 
-  const customerRequest = (req: Request, res: Response, next: NextFunction) => handleGdpr({ payload: req.body, type: TYPES.CUSTOMER_DATA_REQUEST }).then(() => res.sendStatus(200)).catch(next)
-  
   return Router()
     .post("/shop/redact", shopRedact)
     .post("/customers/redact", customerRedact)
-    .post("/customers/data_request", customerRequest)
-
-
+    .post("/customers/data_request", customerRequest);
 }
-
-
