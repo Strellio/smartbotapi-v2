@@ -139,7 +139,7 @@ const updateMessengerProfile = ({
     }
   );
 
-const messengerClient = (accessToken: string) =>
+export const messengerClient = (accessToken: string) =>
   MessengerClient.connect({
     accessToken,
     appId: config.FB_CLIENT_ID,
@@ -155,9 +155,22 @@ const sendTextMessage = async ({
   options = { persona_id: personaId },
 }: any) => {
   const client = messengerClient(accessToken);
-  await client.sendSenderAction(recipientId, "typing_on");
+  // await client.sendSenderAction(recipientId, "typing_on");
 
   return client.sendText(recipientId, text, options);
+};
+
+const sendSenderAction = async ({
+  accessToken = required("accessToken"),
+  recipientId = required("recipientId"),
+  action = "typing_on",
+}: {
+  accessToken: string;
+  recipientId: string;
+  action?: string;
+}) => {
+  const client = messengerClient(accessToken);
+  return client.sendSenderAction(recipientId, action);
 };
 
 const sendMediaMessage = async ({
@@ -234,4 +247,5 @@ export {
   deletePersona,
   createPersona,
   subscribeAppToPage,
+  sendSenderAction,
 };

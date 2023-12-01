@@ -9,6 +9,7 @@ import {
   sendTextMessage,
   sendGenericTemplate,
   getChatUserProfile,
+  sendSenderAction,
 } from "../../../../../lib/facebook";
 import * as customerService from "../../../../../services/customers";
 import { formatAndSaveMessage } from "../common";
@@ -37,14 +38,21 @@ const handleAsBot = async ({
     }
     const textMessage = facebookPayload.message?.text;
 
-    const response = await getBotResponse({
-      senderId: facebookPayload.sender.id,
-      message: textMessage as any,
-      metadata: {
-        business_id: String(chatPlatform.business.id),
-        chat_platform_id: String(chatPlatform.id),
-      },
-    });
+    const [response] = await Promise.all([
+      getBotResponse({
+        senderId: facebookPayload.sender.id,
+        message: textMessage as any,
+        metadata: {
+          business_id: String(chatPlatform.business.id),
+          chat_platform_id: String(chatPlatform.id),
+        },
+      }),
+      sendSenderAction({
+        accessToken: chatPlatform.external_access_token,
+        recipientId: facebookPayload.sender.id,
+        action: "typing_on",
+      }),
+    ]);
     for (let i = 0; i < response.length; i++) {
       const singleEntity = response[i];
       if (singleEntity.text) {
