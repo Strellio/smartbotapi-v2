@@ -34,7 +34,7 @@ export default gql`
 
   type ChatAgent {
     id: ID!
-    external_id: String!
+    external_id: String
     name: String!
     profile_url: URL
     is_person: Boolean
