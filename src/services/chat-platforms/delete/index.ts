@@ -20,7 +20,9 @@ export default async function deleteChatPlatform({
         external_access_token: "",
         external_refresh_token: "",
         workspace_id: "",
+        "agents.$[].external_id": "",
       },
+
       status: STATUS_MAP.DEACTIVATED,
     },
   });

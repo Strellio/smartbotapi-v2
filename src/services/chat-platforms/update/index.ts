@@ -4,9 +4,15 @@ import chatPlatformModel from "../../../models/chat-platforms";
 import schema from "./schema";
 import { validate } from "../../../lib/utils";
 import * as chatPlatforms from "../platforms";
-import { ACTION_TYPE_TO_MONGODB_FIELD, STATUS_MAP } from "../../../models/common";
+import {
+  ACTION_TYPE_TO_MONGODB_FIELD,
+  STATUS_MAP,
+} from "../../../models/common";
 import H from "highland";
-import { CHAT_TYPE, CHAT_PLATFORMS, } from "../../../models/chat-platforms/schema";
+import {
+  CHAT_TYPE,
+  CHAT_PLATFORMS,
+} from "../../../models/chat-platforms/schema";
 import errors from "../errors";
 
 interface updateParams {
@@ -18,16 +24,16 @@ interface updateParams {
   external_user_id?: string;
   external_user_name?: string;
   external_access_token?: string;
-  type: CHAT_TYPE
+  type: CHAT_TYPE;
   external_id?: string;
   agent?: {
-    id?: string
+    id?: string;
     external_id?: string;
     name: string;
-    email?: string
+    email?: string;
     profile_url: string;
     is_person: boolean;
-    action_type: ACTION_TYPE_TO_MONGODB_FIELD
+    action_type: ACTION_TYPE_TO_MONGODB_FIELD;
   };
 }
 
@@ -46,17 +52,19 @@ const ensureNoPlatformIsOnsiteAndActive = async (
   )
     .collect()
     .toPromise(Promise as any);
-  const isTypeBothOrOnSite = type == CHAT_TYPE.BOTH || type === CHAT_TYPE.ON_SITE
+  const isTypeBothOrOnSite =
+    type == CHAT_TYPE.BOTH || type === CHAT_TYPE.ON_SITE;
   if (list.length && list[0].platform !== platform && isTypeBothOrOnSite) {
     throw errors.onlyOneChatPlatformCanBeOnSiteAndActiveError(list[0].platform);
   }
 };
 
 export default async function update(params: updateParams) {
-  const { id, business_id: businessId, ...rest }: updateParams = validate(
-    schema,
-    params
-  );
+  const {
+    id,
+    business_id: businessId,
+    ...rest
+  }: updateParams = validate(schema, params);
   const chatPlatform = await chatPlatformModel().getById(id);
 
   // await ensureNoPlatformIsOnsiteAndActive(rest.status as any, businessId, chatPlatform.platform, rest.type);
@@ -67,7 +75,6 @@ export default async function update(params: updateParams) {
     },
     dbPayload: chatPlatform,
   });
-
 
   return chatPlatformModel().updateById(chatPlatform.id, transformedPayload);
 }
