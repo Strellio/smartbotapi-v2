@@ -7,7 +7,14 @@ import { Business } from "./types";
 const Model = mongoose.model("businesses", schema);
 const BusinessBaseModel = BaseModel(Model);
 
-const POPULATE = [{path: "plan", model:"plans"}, {path: "chat_platforms", model:"chat_platforms"}] as any
+const POPULATE = [
+  { path: "plan", model: "plans" },
+  {
+    path: "chat_platforms",
+    model: "chat_platforms",
+    match: { is_deleted: { $ne: true } },
+  },
+] as any;
 
 const getByEmail = (email: string = required("email")): Promise<Business> =>
   BusinessBaseModel.ensureExists({
