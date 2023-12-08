@@ -14,7 +14,7 @@ const schema = new mongoose.Schema(
     },
     domain: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
       sparse: true,
     },
@@ -51,7 +51,7 @@ const schema = new mongoose.Schema(
     business_name: String,
     account_name: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
     },
     location: {

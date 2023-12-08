@@ -2,9 +2,9 @@
 import express from "express";
 import config from "../../config";
 import loggerMaker from "../../lib/logger";
-import bodyParser from "body-parser";
 import routes from "./routes";
 import cors from "cors";
+import { IncomingMessage } from "http";
 
 const app = express();
 
@@ -16,7 +16,20 @@ const reqLogger = require("express-pino-logger")({
 
 app
   .use(cors())
-  .use(express.json())
+  .use(
+    express.json({
+      // Because Stripe needs the raw body, we compute it but only when hitting the Stripe callback URL.
+      verify: (
+        req: IncomingMessage & { rawBody?: string; originalUrl: string },
+        res,
+        buf
+      ) => {
+        if (req.originalUrl.includes("/webhooks/shopify")) {
+          req.rawBody = buf.toString();
+        }
+      },
+    })
+  )
   .use(express.urlencoded({ extended: false }))
   .use(reqLogger)
   .use("/webhooks", routes())

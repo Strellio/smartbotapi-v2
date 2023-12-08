@@ -9,7 +9,11 @@ import { STATUS_MAP } from "../../../models/common";
 import config from "../../../config";
 import { PLATFORM_MAP } from "../../../models/businesses/schema/enums";
 import { User } from "../../../models/users/types";
-import { DeliveryMethod, PubSubWebhookHandler } from "@shopify/shopify-api";
+import {
+  DeliveryMethod,
+  PubSubWebhookHandler,
+  HttpWebhookHandler,
+} from "@shopify/shopify-api";
 import logger from "../../../lib/logger";
 import knowlegeBase from "../../knowlege-base";
 import queues from "../../../lib/queues";
@@ -164,6 +168,13 @@ export const callback = async (
         pubSubTopic: config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC,
       };
 
+      const getHandler = (path: string): HttpWebhookHandler => {
+        return {
+          deliveryMethod: DeliveryMethod.Http,
+          callbackUrl: `${config.WEBHOOK_URL}/webhooks/shopify/${path}`,
+        };
+      };
+
       shopifyLib.webhooks.addHandlers({
         ORDERS_CREATE: [pubsubHandler],
         ORDERS_UPDATED: [pubsubHandler],
@@ -171,7 +182,7 @@ export const callback = async (
         PRODUCTS_CREATE: [pubsubHandler],
         PRODUCTS_UPDATE: [pubsubHandler],
         PRODUCTS_DELETE: [pubsubHandler],
-        APP_UNINSTALLED: [pubsubHandler],
+        APP_UNINSTALLED: [getHandler("uninstall")],
       });
       const result = await shopifyLib.webhooks.register({
         session: {

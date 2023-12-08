@@ -41,7 +41,6 @@ export default function routes() {
     .post("/custom/message", isAuthenticatedMiddleware, customActionWebhook)
     .use("/shopify", validateShopifyHmac, shopifyWebhook())
     .use((error: any, req: Request, res: Response, next: NextFunction) => {
-      console.log(error);
       res.sendStatus(500);
     });
 }

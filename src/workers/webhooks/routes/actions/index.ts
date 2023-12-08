@@ -7,10 +7,8 @@ import intercomWebhookController from "./intercom";
 import hubSpotController from "./hubspot";
 import customController from "./custom";
 import logger from "../../../../lib/logger";
-import { validateShopifyHmac } from "../middlewares";
-import { handleGdpr } from "./shopify";
+import { handleGdpr, handleUninstall } from "./shopify";
 import { TYPES } from "../../../../models/gdpr/schema";
-import { ca } from "date-fns/locale";
 
 export const intercomWebhook = async (
   req: Request,
@@ -90,8 +88,21 @@ export function shopifyWebhook() {
       .then(() => res.sendStatus(200))
       .catch(next);
 
+  const uninstallRequest = (req: Request, res: Response, next: NextFunction) =>
+    handleUninstall((req as any).shop)
+      .then(() => res.sendStatus(200))
+      .catch(console.error);
+
   return Router()
     .post("/shop/redact", shopRedact)
     .post("/customers/redact", customerRedact)
-    .post("/customers/data_request", customerRequest);
+    .post("/customers/data_request", customerRequest)
+    .post(
+      "/uninstall",
+      (req, res, nex) => {
+        logger().info("uninstalling request");
+        nex();
+      },
+      uninstallRequest
+    );
 }

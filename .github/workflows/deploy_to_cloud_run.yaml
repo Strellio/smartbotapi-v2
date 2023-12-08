@@ -27,7 +27,7 @@ on:
         required: true
         type: string
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.SERVICE_NAME }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.SERVICE_NAME }} 
   cancel-in-progress: true
 env:
   PROJECT_NUMBER: ${{ inputs.PROJECT_NUMBER }}
@@ -74,13 +74,12 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           node-version: ${{ matrix.node-version }}
-          registry-url: "https://npm.pkg.github.com/eggseed"
           always-auth: true
       - id: "auth"
         name: "Authenticate with Google Cloud"
         uses: "google-github-actions/auth@v1"
         with:
-          workload_identity_provider: "projects/${{ env.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/dev-pool/providers/${{ env.POOL_PROVIDER }}"
+          workload_identity_provider: "projects/530345774393/locations/global/workloadIdentityPools/dev-pool/providers/${{ env.POOL_PROVIDER }}"
           service_account: ${{ env.SERVICE_ACCOUNT }}
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
