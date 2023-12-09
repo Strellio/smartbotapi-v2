@@ -1,5 +1,5 @@
 "use strict";
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import config from "../../config";
 import loggerMaker from "../../lib/logger";
 import routes from "./routes";
@@ -33,6 +33,11 @@ app
   .use(express.urlencoded({ extended: false }))
   .use(reqLogger)
   .use("/webhooks", routes())
+  .use((err: any, req: Request, res: Response, next: NextFunction) => {
+    res.status(500).json({
+      message: err.message,
+    });
+  })
   .listen(PORT, () => {
     loggerMaker().info(`Server started on http://localhost:${PORT}`);
   });

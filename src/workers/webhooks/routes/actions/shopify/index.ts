@@ -20,5 +20,5 @@ export const handleGdpr = async ({ payload, type }) => {
 };
 
 export const handleUninstall = async (domain: string) => {
-  await uninstall(domain);
+  return uninstall(`https://${domain}`);
 };

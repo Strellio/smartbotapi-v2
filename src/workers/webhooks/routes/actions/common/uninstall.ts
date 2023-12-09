@@ -1,6 +1,6 @@
 "use strict";
 
-import deleteBusiness from "../../../../../services/businesses/delete";
+import businessService from "../../../../../services/businesses";
 import deleteAllBusinessChatPlatforms from "../../../../../services/chat-platforms/delete-business-chat-platforms";
 
 // const {
@@ -18,12 +18,14 @@ const cancelCharge = (settings) => {
   }
 };
 
-/**
- *
- * @returns {Promise}
- */
-export default async function uninstall(domain) {
-  const business = await deleteBusiness(domain);
+export default async function uninstall(domain: string) {
+  console.log("uninstall", domain);
+  const business = await businessService().getByExternalPlatformDomain(domain);
+
+  if (!business) return;
+
+  await businessService().delete(business.id);
 
   await deleteAllBusinessChatPlatforms(business.id);
+  return;
 }
