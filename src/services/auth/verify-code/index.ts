@@ -32,6 +32,7 @@ export default async function verifyCode(payload) {
       message: "No business is associated to your account",
     });
   }
+
   return {
     user,
     token: generateJwt({

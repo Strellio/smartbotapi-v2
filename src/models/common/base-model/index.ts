@@ -61,6 +61,28 @@ const updateOne =
     return doc?.toObject();
   };
 
+const updateMany =
+  (Model: MongooseModel<Document>) =>
+  async ({
+    query = required("query"),
+    update,
+    populate,
+    options = {},
+  }: {
+    update: object;
+    query: object;
+    populate?: any;
+    options?: object;
+  }): Promise<any> => {
+    const opts = Object.assign({}, { new: true, runValidators: true }, options);
+
+    let doc = await Model.updateMany(query, update, opts)
+      .populate(populate)
+      .exec();
+
+    return doc;
+  };
+
 const upsert =
   (Model: MongooseModel<Document>) =>
   async ({
@@ -173,6 +195,7 @@ const BaseModel = (Model: MongooseModel<any>) => {
     paginate: paginate(Model, count(Model)),
     upsert: upsert(Model),
     updateOne: updateOne(Model),
+    updateMany: updateMany(Model),
     ensureExists: async (
       query: object = required("query"),
       populate?: string[]
