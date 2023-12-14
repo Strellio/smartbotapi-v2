@@ -5,6 +5,7 @@ import businessService from "../../services/businesses";
 import agentService from "../../services/agents";
 import logger from "../../lib/logger";
 import { STATUS_MAP } from "../../models/common";
+import { Agent } from "../../models/businesses/types";
 
 const throwAuthError = () =>
   customError({
@@ -23,10 +24,14 @@ export default async function isAuthenticated(
       agentService.getByBusinessAndUserId({
         userId: decoded.user_id,
         businessId: decoded.business_id,
-      }),
+      }) as Promise<any> as Promise<Agent>,
     ]);
 
-    if (!business || business.status !== STATUS_MAP.ACTIVE) {
+    if (
+      !business ||
+      business.status !== STATUS_MAP.ACTIVE ||
+      agent?.status !== STATUS_MAP.ACTIVE
+    ) {
       throw throwAuthError();
     }
     return {

@@ -3,6 +3,7 @@ import { CHAT_PLATFORMS, CHAT_TYPE } from "../chat-platforms/schema";
 import { STATUS_MAP } from "../common";
 import { User } from "../users/types";
 import { Plan } from "../plans/types";
+import { AGENT_AVAILABILTY_STATUS } from "../agents/schema";
 
 export type Business = {
   id: string;
@@ -74,6 +75,8 @@ export type Agent = {
   };
   is_person: boolean;
   linked_chat_agents: [ChatAgent];
+  status: STATUS_MAP;
+  availability_status: AGENT_AVAILABILTY_STATUS;
   created_at: Date;
   updated_at: Date;
 };
