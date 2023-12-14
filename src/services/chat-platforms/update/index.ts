@@ -14,10 +14,12 @@ import {
   CHAT_PLATFORMS,
 } from "../../../models/chat-platforms/schema";
 import errors from "../errors";
+import businessModel from "../../../models/businesses";
+import { Plan } from "../../../models/plans/types";
 
 interface updateParams {
   id: string;
-  status?: string;
+  status?: STATUS_MAP;
   business_id: string;
   external_page_name?: string;
   external_user_access_token?: string;
@@ -59,6 +61,20 @@ const ensureNoPlatformIsOnsiteAndActive = async (
   }
 };
 
+const ensurePlanSupportPlatform = async (
+  businessId: string,
+  platform: CHAT_PLATFORMS,
+  status: STATUS_MAP
+) => {
+  const business = await businessModel().getById(businessId);
+  const isPlatformSupported = (
+    business.plan as Plan
+  )?.features?.allowed_external_platforms.includes(platform);
+  if (!isPlatformSupported && status === STATUS_MAP.ACTIVE) {
+    throw errors.upgradeToAccessChatPlatformError(platform);
+  }
+};
+
 export default async function update(params: updateParams) {
   const {
     id,
@@ -67,8 +83,14 @@ export default async function update(params: updateParams) {
   }: updateParams = validate(schema, params);
   const chatPlatform = await chatPlatformModel().getById(id);
 
+  await ensurePlanSupportPlatform(
+    businessId,
+    chatPlatform.platform,
+    rest.status
+  );
+
   await ensureNoPlatformIsOnsiteAndActive(
-    rest.status as any,
+    rest.status,
     businessId,
     chatPlatform.platform,
     rest.type

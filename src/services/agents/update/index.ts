@@ -5,10 +5,16 @@ import { validate } from "../../../lib/utils";
 import agentsModel from "../../../models/agents";
 import userService from "../../users";
 import chatPlatformService from "../../chat-platforms";
-import { ChatPlatform } from "../../../models/businesses/types";
-import { ACTION_TYPE_TO_MONGODB_FIELD } from "../../../models/common";
+import { Business, ChatPlatform } from "../../../models/businesses/types";
+import {
+  ACTION_TYPE_TO_MONGODB_FIELD,
+  STATUS_MAP,
+} from "../../../models/common";
 import { uploadProfile } from "../../users/create";
 import { AGENT_AVAILABILTY_STATUS } from "../../../models/agents/schema";
+import { Plan } from "../../../models/plans/types";
+import H from "highland";
+import businessService from "../../businesses";
 
 type UpdateAgentParams = {
   id: string;
@@ -25,8 +31,46 @@ type UpdateAvailabilityParams = {
   availability_status: AGENT_AVAILABILTY_STATUS;
 };
 
+const ensureCanAddMoreLiveAgents = async (
+  business: Business,
+  status: STATUS_MAP
+) => {
+  const businessAgents = await H(
+    agentsModel.fetch({
+      query: {
+        business: business.id,
+        is_person: true,
+      },
+    })
+  )
+    .collect()
+    .toPromise(Promise as any);
+
+  if (!(business.plan as Plan)) {
+    if (businessAgents.length >= 1 && status === STATUS_MAP.ACTIVE) {
+      throw new Error("You have to subscribe to a plan to add more agents");
+    }
+  } else {
+    if (
+      status === STATUS_MAP.ACTIVE &&
+      (business.plan as Plan).features.max_number_of_live_agent !==
+        "unlimited" &&
+      businessAgents.length >
+        ((business.plan as Plan).features.max_number_of_live_agent as number)
+    ) {
+      throw new Error(
+        "You have reached the maximum number of agents for your plan"
+      );
+    }
+  }
+};
+
 export default async function update(data: UpdateAgentParams) {
   const payload = validate(schema, data);
+
+  const business = await businessService().getById(payload.business_id);
+
+  await ensureCanAddMoreLiveAgents(business, payload.status as STATUS_MAP);
 
   const chatPlatforms = await chatPlatformService().list({
     business_id: payload.business_id,
@@ -38,7 +82,7 @@ export default async function update(data: UpdateAgentParams) {
     payload.profile_url = profileUrl;
   }
 
-  const { id, business_id: business, ...rest }: UpdateAgentParams = payload;
+  const { id, business_id, ...rest }: UpdateAgentParams = payload;
 
   await Promise.all(
     chatPlatforms
@@ -53,7 +97,7 @@ export default async function update(data: UpdateAgentParams) {
         if (agent) {
           return chatPlatformService().update({
             id: chatPlatform.id,
-            business_id: business,
+            business_id,
             type: chatPlatform.type,
 
             agent: {
@@ -80,7 +124,7 @@ export default async function update(data: UpdateAgentParams) {
     } as any;
   }
 
-  return agentsModel.update(id, business, rest);
+  return agentsModel.update(id, business_id, rest);
 }
 
 export function updateAvailability(data: UpdateAvailabilityParams) {

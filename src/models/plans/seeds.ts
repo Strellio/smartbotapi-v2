@@ -9,7 +9,7 @@ const PLANS = [
   //   price: 0,
   //   icon_class: 'bx bx-car',
   //   duration: PlanDuration.MONTHLY,
-  //   free_trial_days: 30,
+  //   free_trial_days: 14,
   //   display_features:[""],
   //   features: {
   //     allowed_live_support: true,
@@ -30,7 +30,7 @@ const PLANS = [
       "Customize chat to suit your brand",
     ],
 
-    free_trial_days: 30,
+    free_trial_days: 14,
     features: {
       allowed_external_platforms: [
         CHAT_PLATFORMS.CUSTOM,
@@ -48,7 +48,7 @@ const PLANS = [
     display_name: "Pro",
     price: 49.99,
     duration: PlanDuration.MONTHLY,
-    free_trial_days: 30,
+    free_trial_days: 14,
     icon_class: "bx bx-car",
     display_features: [
       "All Starter features, plus:",
@@ -79,7 +79,7 @@ const PLANS = [
       "Premium customer support",
     ],
     duration: PlanDuration.MONTHLY,
-    free_trial_days: 30,
+    free_trial_days: 14,
     icon_class: "bx bx-car",
     features: {
       allowed_external_platforms: [

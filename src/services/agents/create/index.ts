@@ -5,9 +5,13 @@ import { validate } from "../../../lib/utils";
 import agentsModel from "../../../models/agents";
 import userService from "../../users";
 import chatPlatformService from "../../chat-platforms";
-import { ChatPlatform } from "../../../models/businesses/types";
+import { Business, ChatPlatform } from "../../../models/businesses/types";
 import { ACTION_TYPE_TO_MONGODB_FIELD } from "../../../models/common";
 import { uploadProfile } from "../../users/create";
+import businessService from "../../businesses";
+import H from "highland";
+import { Plan } from "../../../models/plans/types";
+import { STATUS_MAP } from "../../../models/common";
 
 type CreateAgentParams = {
   name: string;
@@ -18,8 +22,43 @@ type CreateAgentParams = {
   country?: string;
 };
 
+const ensureCanAddMoreLiveAgents = async (business: Business) => {
+  const businessAgents = await H(
+    agentsModel.fetch({
+      query: {
+        business: business.id,
+        is_person: true,
+        status: STATUS_MAP.ACTIVE,
+      },
+    })
+  )
+    .collect()
+    .toPromise(Promise as any);
+
+  if (!(business.plan as Plan)) {
+    if (businessAgents.length >= 1) {
+      throw new Error("You have to subscribe to a plan to add more agents");
+    }
+  } else {
+    if (
+      (business.plan as Plan).features.max_number_of_live_agent !==
+        "unlimited" &&
+      businessAgents.length >=
+        ((business.plan as Plan).features.max_number_of_live_agent as number)
+    ) {
+      throw new Error(
+        "You have reached the maximum number of agents for your plan"
+      );
+    }
+  }
+};
+
 export default async function create(data: CreateAgentParams) {
   const payload = validate(schema, data);
+
+  const business = await businessService().getById(payload.business_id);
+
+  await ensureCanAddMoreLiveAgents(business);
 
   const profileUrl = await uploadProfile(payload);
 
@@ -28,7 +67,7 @@ export default async function create(data: CreateAgentParams) {
   }
 
   const {
-    business_id: business,
+    business_id,
     email,
     profile_url,
     name,
@@ -44,7 +83,7 @@ export default async function create(data: CreateAgentParams) {
     }));
 
   const chatPlatforms = await chatPlatformService().list({
-    business_id: business,
+    business_id,
   });
 
   const linkedChatAgents = await Promise.all(
@@ -55,7 +94,7 @@ export default async function create(data: CreateAgentParams) {
       .map(async (chatPlatform: ChatPlatform) => {
         const result = await chatPlatformService().update({
           id: chatPlatform.id,
-          business_id: business,
+          business_id,
           type: chatPlatform.type,
 
           agent: {
@@ -76,7 +115,7 @@ export default async function create(data: CreateAgentParams) {
   );
 
   return agentsModel.create({
-    business,
+    business: business_id,
     user: user?.id,
     is_person,
     ...(!is_person && {

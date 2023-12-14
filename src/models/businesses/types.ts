@@ -2,6 +2,7 @@ import { PLATFORM_MAP } from "./schema/enums";
 import { CHAT_PLATFORMS, CHAT_TYPE } from "../chat-platforms/schema";
 import { STATUS_MAP } from "../common";
 import { User } from "../users/types";
+import { Plan } from "../plans/types";
 
 export type Business = {
   id: string;
@@ -19,6 +20,7 @@ export type Business = {
   chat_platforms: [ChatPlatform];
   user: User | string;
   onboarding: Onboarding;
+  plan: string | Plan;
 };
 
 export type ChatAgent = {
