@@ -1,7 +1,7 @@
 "use strict";
 
 import businessService from "../../../../../services/businesses";
-import deleteAllBusinessChatPlatforms from "../../../../../services/chat-platforms/delete-business-chat-platforms";
+import disableAllBusinessChatPlatforms from "../../../../../services/chat-platforms/disable-business-chat-platforms";
 
 // const {
 //   getAndPopulateSettingsByDomain,
@@ -26,6 +26,6 @@ export default async function uninstall(domain: string) {
 
   await businessService().delete(business.id);
 
-  await deleteAllBusinessChatPlatforms(business.id);
+  await disableAllBusinessChatPlatforms(business.id);
   return;
 }

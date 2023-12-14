@@ -14,9 +14,9 @@ const schema = new mongoose.Schema(
     },
     domain: {
       type: String,
-      // required: true,
-      // unique: true,
-      // sparse: true,
+      required: true,
+      unique: true,
+      sparse: true,
     },
     email: {
       type: String,
@@ -33,11 +33,11 @@ const schema = new mongoose.Schema(
     },
     external_id: {
       type: String,
-      // sparse: true,
-      // index: {
-      //   unique: true,
-      //   partialFilterExpression: { external_id: { $type: "string" } },
-      // },
+      sparse: true,
+      index: {
+        unique: true,
+        partialFilterExpression: { external_id: { $type: "string" } },
+      },
     },
     platform: {
       type: String,
@@ -51,8 +51,8 @@ const schema = new mongoose.Schema(
     business_name: String,
     account_name: {
       type: String,
-      // required: true,
-      // unique: true,
+      required: true,
+      unique: true,
     },
     location: {
       country: String,

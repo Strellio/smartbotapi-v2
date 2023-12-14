@@ -3,7 +3,7 @@
 import gql from "graphql-tag";
 import { AGENT_AVAILABILTY_STATUS } from "../../../../models/agents/schema";
 
-const agentAvailabilityStatus = Object.values(AGENT_AVAILABILTY_STATUS)
+const agentAvailabilityStatus = Object.values(AGENT_AVAILABILTY_STATUS);
 
 export default gql`
   type Agent {
@@ -15,6 +15,8 @@ export default gql`
     linked_chat_agents: [ChatAgent!]
     created_at: DateTime!
     updated_at: DateTime!
+    status: StatusEnum!
+
   }
 
   input CreateAgentInput {
@@ -36,6 +38,8 @@ export default gql`
     linked_chat_agents: [ID]!
     is_person: Boolean
     availability_status:AgentAvailabiltiyStatusEnum
+    status: StatusEnum!
+
   }
 
   type BotInfo{

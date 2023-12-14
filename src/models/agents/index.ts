@@ -11,8 +11,9 @@ const create = (data: any = required("data")) =>
     data,
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user"}
-    ]  });
+      { path: "user" },
+    ],
+  });
 const update = (
   _id: string = required("id"),
   business: string = required("business"),
@@ -23,17 +24,18 @@ const update = (
     update: data,
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user"}
-    ]  });
+      { path: "user" },
+    ],
+  });
 
-const listByBusinessId = (businessId:string = required("businessId")) =>
+const listByBusinessId = (businessId: string = required("businessId")) =>
   AgentModel.fetch({
     query: {
       business: businessId,
     },
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user"}
+      { path: "user" },
     ],
   });
 
@@ -42,54 +44,58 @@ const getById = (_id: string = required("id")) =>
     query: { _id },
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user"}
-
+      { path: "user" },
     ],
   });
 
-
-  const listByUserId = (userId:string = required("userId")) =>
+const listByUserId = (userId: string = required("userId")) =>
   AgentModel.fetch({
     query: {
       user: userId,
     },
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user"}
+      { path: "user" },
     ],
   });
 
-  const getByBusinessAndUserId = ({userId, businessId}: {userId:string, businessId:string}) =>
+const getByBusinessAndUserId = ({
+  userId,
+  businessId,
+}: {
+  userId: string;
+  businessId: string;
+}) =>
   AgentModel.get({
     query: {
       user: userId,
-      business: businessId
+      business: businessId,
     },
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user"}
+      { path: "user" },
     ],
   });
 
-
-  const getBotAgent = (businessId:string) =>
+const getBotAgent = (businessId: string) =>
   AgentModel.get({
     query: {
       is_person: false,
-      business: businessId
+      business: businessId,
     },
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user"}
+      { path: "user" },
     ],
   });
 
 export default {
+  ...AgentModel,
   create,
   listByBusinessId,
   update,
   getById,
   listByUserId,
   getByBusinessAndUserId,
-  getBotAgent
+  getBotAgent,
 };

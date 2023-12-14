@@ -4,6 +4,7 @@ import customError from "../../lib/errors/custom-error";
 import businessService from "../../services/businesses";
 import agentService from "../../services/agents";
 import logger from "../../lib/logger";
+import { STATUS_MAP } from "../../models/common";
 
 const throwAuthError = () =>
   customError({
@@ -25,7 +26,7 @@ export default async function isAuthenticated(
       }),
     ]);
 
-    if (!business) {
+    if (!business || business.status !== STATUS_MAP.ACTIVE) {
       throw throwAuthError();
     }
     return {

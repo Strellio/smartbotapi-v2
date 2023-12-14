@@ -1,6 +1,7 @@
 "use strict";
 
 import mongoose from "mongoose";
+import { STATUS_MAP } from "../../common";
 
 export enum AGENT_AVAILABILTY_STATUS {
   AVAILABLE = "available",
@@ -24,6 +25,11 @@ const schema = new mongoose.Schema(
       required: function () {
         return this.is_person;
       },
+    },
+    status: {
+      type: String,
+      enum: Object.values(STATUS_MAP),
+      default: STATUS_MAP.ACTIVE,
     },
     bot_info: {
       type: {
