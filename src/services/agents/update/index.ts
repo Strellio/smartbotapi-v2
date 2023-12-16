@@ -24,6 +24,7 @@ type UpdateAgentParams = {
   is_person: boolean;
   email?: string;
   linked_chat_agents: [string];
+  status: STATUS_MAP;
 };
 
 type UpdateAvailabilityParams = {
