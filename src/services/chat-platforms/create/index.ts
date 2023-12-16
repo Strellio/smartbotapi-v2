@@ -65,9 +65,11 @@ export default async function create(params: CreateParams) {
   );
 
   // Get a list of agents associated with the business
-  const agents: Agent[] = (await H(agentService.listByBusinessId(params.business_id))
-    .collect()
-    .toPromise(Promise)).map((agent:any)=>agent.toObject()) as any
+  const agents: Agent[] = (
+    await H(agentService.listByBusinessId(params.business_id))
+      .collect()
+      .toPromise(Promise)
+  ).map((agent: any) => agent.toObject()) as any;
 
   // Find or create a default bot agent if it doesn't exist
   const botAgent = agents.find((agent) => !agent.is_person);
@@ -105,9 +107,16 @@ export default async function create(params: CreateParams) {
         payload: {
           agent: {
             ...(agent.is_person
-              ? { name: agent.user.full_name, email :agent.user.email, profile_url:agent.user.profile_url }
-              : { name: agent.bot_info.name, profile_url: agent.bot_info.profile_url }),
-              is_person: agent.is_person,
+              ? {
+                  name: agent.user.full_name,
+                  email: agent.user.email,
+                  profile_url: agent.user.profile_url,
+                }
+              : {
+                  name: agent.bot_info.name,
+                  profile_url: agent.bot_info.profile_url,
+                }),
+            is_person: agent.is_person,
             action_type: ACTION_TYPE_TO_MONGODB_FIELD.CREATE,
           },
           platform: chatPlatform.platform,
@@ -115,7 +124,7 @@ export default async function create(params: CreateParams) {
         dbPayload: chatPlatform,
       });
 
-      const agentExternalId = transformedPayload?.agent?.external_id
+      const agentExternalId = transformedPayload?.agent?.external_id;
 
       if (agentExternalId) {
         // create agent in chat platorm
@@ -126,30 +135,32 @@ export default async function create(params: CreateParams) {
 
         const createdAgent = result.agents.find(
           (chatPlatformAgent) =>
-            chatPlatformAgent.external_id ===agentExternalId
+            chatPlatformAgent.external_id === agentExternalId
         );
 
-
-
-
         const newLinkedAgents: [string] = [
-          ...agent.linked_chat_agents.map(id=>id.toString()),
+          ...agent.linked_chat_agents.map((id) => id.toString()),
           createdAgent.id,
         ] as any;
 
         // console.log(agent.to)
 
-
-
-
         await agentService.update({
           id: agent.id.toString(),
           ...(agent.is_person
-            ? { name: agent.user.full_name, email :agent.user.email, profile_url:agent.user.profile_url }
-            : {name: agent.bot_info.name, profile_url:agent.bot_info.profile_url}),
+            ? {
+                name: agent.user.full_name,
+                email: agent.user.email,
+                profile_url: agent.user.profile_url,
+              }
+            : {
+                name: agent.bot_info.name,
+                profile_url: agent.bot_info.profile_url,
+              }),
           is_person: agent.is_person,
           business_id: params.business_id,
           linked_chat_agents: newLinkedAgents,
+          status: agent.status,
         });
       }
     })

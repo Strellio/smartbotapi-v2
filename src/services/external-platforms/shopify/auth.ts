@@ -130,7 +130,7 @@ export const callback = async (
 
         const knowlegeBaseUpdateQueue = queues.knowledgeBaseUpdateQueue();
 
-        knowlegeBaseUpdateQueue.add({
+        await knowlegeBaseUpdateQueue.add({
           data: { business, knowlegeBase: knowlegeBaseRes },
           jobId: knowlegeBaseRes.id,
         });
@@ -206,12 +206,12 @@ export const callback = async (
       }
     )}&business_id=${business.id}&user_id=${business.user.toString()}` as any;
 
-    res.redirect(redirectUrl);
+    return res.redirect(redirectUrl);
   } catch (error) {
     // logger().error(error);
 
     console.log("Error in shopify callback", error.message);
     console.log(error);
-    next(error);
+    return next(error);
   }
 };
