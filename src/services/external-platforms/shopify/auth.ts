@@ -142,7 +142,7 @@ export const callback = async (
       });
     }
 
-    await shopifyClient.scriptTag.list().then(async (scriptTags) => {
+    shopifyClient.scriptTag.list().then(async (scriptTags) => {
       await Promise.all(
         scriptTags.map(async (scriptTag) => {
           if (scriptTag.src.includes(`static/js/wl.js`)) {
@@ -205,6 +205,8 @@ export const callback = async (
         user_id: business.user.toString(),
       }
     )}&business_id=${business.id}&user_id=${business.user.toString()}` as any;
+
+    console.log("sucessfull redirect ", redirectUrl);
 
     return res.redirect(redirectUrl);
   } catch (error) {
