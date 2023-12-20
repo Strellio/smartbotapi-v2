@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import shopifyLib from "../../../lib/shopify";
-import { required, validate, generateJwt } from "../../../lib/utils";
+import { validate, generateJwt } from "../../../lib/utils";
 import businessService from "../../businesses";
 import schema from "./schema";
 import { STATUS_MAP } from "../../../models/common";
@@ -169,6 +169,10 @@ export const callback = async (
       };
 
       const getHandler = (path: string): HttpWebhookHandler => {
+        console.log(
+          "registered webhook url is ",
+          `${config.WEBHOOK_URL}/webhooks/shopify/${path}`
+        );
         return {
           deliveryMethod: DeliveryMethod.Http,
           callbackUrl: `${config.WEBHOOK_URL}/webhooks/shopify/${path}`,
@@ -191,6 +195,8 @@ export const callback = async (
           ...req.query,
         } as any,
       });
+
+      console.log("done registering webhooks ");
 
       logger().info("done registering webhooks ");
       logger().info(result);
