@@ -27,7 +27,7 @@ export function validateShopifyHmac(
 
     req.shop = req.headers["x-shopify-shop-domain"];
 
-    console.log(req.shop);
+    console.log("valid signature ", req.shop);
 
     next();
   } catch (error) {
