@@ -17,8 +17,6 @@ import {
 import logger from "../../../lib/logger";
 import knowlegeBase from "../../knowlege-base";
 import queues from "../../../lib/queues";
-import { rest } from "lodash";
-
 export const install = (req: Request, res: Response, next: NextFunction) => {
   try {
     return shopifyLib.auth.begin({
@@ -162,6 +160,7 @@ export const callback = async (
       });
 
     try {
+      console.log("Webhook topic is ", config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC);
       const pubsubHandler: PubSubWebhookHandler = {
         deliveryMethod: DeliveryMethod.PubSub,
         pubSubProject: config.GOOGLE_CLOUD_PROJECT,
@@ -188,6 +187,8 @@ export const callback = async (
         PRODUCTS_DELETE: [pubsubHandler],
         APP_UNINSTALLED: [getHandler("uninstall")],
       });
+
+      console.log("req query is ", req.query);
       const result = await shopifyLib.webhooks.register({
         session: {
           shop: response.shop,
