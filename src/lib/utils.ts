@@ -11,12 +11,8 @@ import bcrypt from "bcrypt";
 const saltRounds = 10;
 
 export const hashPassword = (password: string = required("password")) => {
-
-  console.log(password, saltRounds, "saltRounds")
-  return   bcrypt.hashSync(password, saltRounds);
-
-  
-}
+  return bcrypt.hashSync(password, saltRounds);
+};
 
 export const comparePassword = (
   hashedPassword: string = required("hashedPassword"),
@@ -77,7 +73,7 @@ export const calculateTrialDays = (bonusDays: number, date?: Date) => {
   if (!date) {
     return {
       date: moment(new Date()).add("days", bonusDays).toDate(),
-      days: 30,
+      days: 14,
     };
   }
   const isAfter = moment(date).diff(new Date(), "days");
