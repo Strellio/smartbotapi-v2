@@ -25,7 +25,7 @@ export const createCharge = async ({
     price: plan.price,
     trial_days: trialDays,
     return_url: returnUrl,
-    test: config.isProduction,
+    test: true,
   });
   return recurringCharge.confirmation_url;
 };
