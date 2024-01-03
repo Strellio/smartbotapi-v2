@@ -1,0 +1,33 @@
+{% assign token = block.settings.access_token %}
+
+<script>
+  var shop = "{{ shop.domain }}"; // Use shop.domain for consistency
+
+
+  var token = "{{block.settings.access_token}}";
+
+
+  (function() {
+
+    window.smartBotScriptOverrides = {
+      token: token,
+      shop: shop
+    };
+
+
+  })();
+</script>
+<script src="{{ 'smartbot-widget.js?token=' | append: token | asset_url }}" defer></script>
+{% schema %}
+  {
+    "name": "Smartbot Widget Embed",
+    "target": "head",
+    "settings": [
+      {
+        "label": "Access Token",
+        "id": "access_token",
+        "type": "text"
+      }
+    ]
+  }
+{% endschema %}

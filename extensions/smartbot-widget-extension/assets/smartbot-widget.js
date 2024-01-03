@@ -58,10 +58,12 @@ thisWindow.smartbotBotScript = Object.assign(
   {
     token: getParameter(location.href, "token"),
   },
-  getParams("js/wl")
+  window.smartBotScriptOverrides
 );
+
+console.log("thisWindow.smartbotBotScript", thisWindow.smartbotBotScript);
 var jsSrc = WIDGET_URL + "/smartbot-widget.min.js";
-var cssSrc = WIDGET_URL + "/smartbot-widget.min.css";
+// var cssSrc = WIDGET_URL + "/smartbot-widget.min.css";
 
 function addWidgetRoot() {
   var body = document.getElementsByTagName("body")[0];
@@ -80,5 +82,6 @@ function addWidgetRoot() {
 
 addWidgetRoot();
 
-addCssScriptToHeader(cssSrc);
+// addCssScriptToHeader(cssSrc);
 addJsScriptToHeader(jsSrc);
+console.log(window.smartBotScriptOverrides);

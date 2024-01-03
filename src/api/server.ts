@@ -22,7 +22,6 @@ import { BullMonitorExpress } from "@bull-monitor/express";
 import { BullMQAdapter } from "@bull-monitor/root/dist/bullmq-adapter";
 import { Queue } from "bullmq";
 import { BULL_QUEUES_NAMES, ioredis } from "../lib/queues";
-import { subscribeAppToPage } from "../lib/facebook";
 
 const PORT = config.PORT;
 

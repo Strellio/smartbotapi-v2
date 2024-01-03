@@ -150,14 +150,14 @@ export const callback = async (
       );
     });
 
-    await shopifyClient.scriptTag
-      .create({
-        src: getWidgetCode(business.id),
-        event: "onload",
-      })
-      .catch((err) => {
-        console.log(err.response.body.errors);
-      });
+    // await shopifyClient.scriptTag
+    //   .create({
+    //     src: getWidgetCode(business.id),
+    //     event: "onload",
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.response.body.errors);
+    //   });
 
     try {
       console.log("Webhook topic is ", config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC);
