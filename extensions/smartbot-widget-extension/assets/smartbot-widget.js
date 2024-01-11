@@ -1,5 +1,5 @@
 var WIDGET_URL =
-  // "https://smartbotwidget.strellio.co" ||
+  "https://smartbotwidget.strellio.co" ||
   "https://smartbot-widget.serveo.net" ||
   "https://widgetv2.onrender.com" ||
   "https://smartbotwidget.com";

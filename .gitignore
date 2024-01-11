@@ -8,3 +8,4 @@ egs-service-account-dev.json
 .env.enc
 service-account-dev.json.enc
 .env.production
+.env.strellio-smartbot
