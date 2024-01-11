@@ -1,4 +1,5 @@
-const WIDGET_URL = "https://smartbotwidget.strellio.co" ||
+const WIDGET_URL =
+  "https://smartbotwidget.strellio.co" ||
   "https://smartbot-widget.serveo.net" ||
   "https://widgetv2.onrender.com" ||
   "https://smartbotwidget.com";
@@ -62,7 +63,7 @@ function addWidgetRoot() {
   const el = document.createElement("div");
 
   // ✅ Set ID attribute on the element
-  el.setAttribute("id", "chat-widget");
+  el.setAttribute("id", "smb-chat-widget");
 
   body.appendChild(el);
 }

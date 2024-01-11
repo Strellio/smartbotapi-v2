@@ -7,5 +7,6 @@ export default gql`
     listChatPlatforms(input: ListChatPlatformsInput): [ChatPlatform!]
     getBusiness: Business!
     getWidgetSettings: ChatPlatform
+    getBusinessAPiKeys: [APIKey!]
   }
 `;

@@ -9,6 +9,7 @@ import agentService from "../../agents";
 import queues from "../../../lib/queues";
 import { createSearchIndex } from "../../../lib/db/atlas";
 import logger from "../../../lib/logger";
+import APIKeyModel from "../../../models/auth";
 
 interface CreateBusinessParams {
   domain: string;
@@ -67,13 +68,22 @@ export default async function create(
     },
   });
 
-  await agentService.create({
-    email: params.email,
-    name: params.full_name,
-    country: params.location?.country,
-    business_id: business.id,
-    is_person: true,
-  });
+  await Promise.all([
+    agentService.create({
+      email: params.email,
+      name: params.full_name,
+      country: params.location?.country,
+      business_id: business.id,
+      is_person: true,
+    }),
+
+    APIKeyModel().create({
+      data: {
+        business: business.id,
+        description: "default",
+      },
+    }),
+  ]);
 
   const productSyncQueue = queues.productSyncQueue();
   const orderSyncQueue = queues.orderSyncQueue();

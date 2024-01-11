@@ -68,14 +68,14 @@ var jsSrc = WIDGET_URL + "/smartbot-widget.min.js";
 function addWidgetRoot() {
   var body = document.getElementsByTagName("body")[0];
 
-  var chatWidget = document.getElementById("chat-widget");
+  var chatWidget = document.getElementById("smb-chat-widget");
 
   if (chatWidget) return;
 
   const el = document.createElement("div");
 
   // ✅ Set ID attribute on the element
-  el.setAttribute("id", "chat-widget");
+  el.setAttribute("id", "smb-chat-widget");
 
   body.appendChild(el);
 }

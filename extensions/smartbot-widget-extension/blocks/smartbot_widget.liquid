@@ -1,31 +1,31 @@
-{% assign token = block.settings.access_token %}
+{% assign apiKey = block.settings.api_key %}
 
 <script>
   var shop = "{{ shop.domain }}"; // Use shop.domain for consistency
 
 
-  var token = "{{block.settings.access_token}}";
+  var apiKey = "{{block.settings.api_key}}";
 
 
   (function() {
 
     window.smartBotScriptOverrides = {
-      token: token,
+      api_key: apiKey,
       shop: shop
     };
 
 
   })();
 </script>
-<script src="{{ 'smartbot-widget.js?token=' | append: token | asset_url }}" defer></script>
+<script src="{{ 'smartbot-widget.js?api_key=' | append: apiKey | asset_url }}" defer></script>
 {% schema %}
   {
     "name": "Smartbot Widget Embed",
     "target": "head",
     "settings": [
       {
-        "label": "Access Token",
-        "id": "access_token",
+        "label": "API Key",
+        "id": "api_key",
         "type": "text"
       }
     ]
