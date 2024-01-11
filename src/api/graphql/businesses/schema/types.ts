@@ -115,4 +115,11 @@ export default gql`
   input DeleteChatPlatformInput {
     id: ID!
   }
+
+  type APIKey {
+    id: ID!
+    key: String!
+    description: String
+    business: Business!
+  }
 `;

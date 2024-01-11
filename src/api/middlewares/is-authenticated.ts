@@ -6,6 +6,7 @@ import agentService from "../../services/agents";
 import logger from "../../lib/logger";
 import { STATUS_MAP } from "../../models/common";
 import { Agent } from "../../models/businesses/types";
+import APIKeyModel from "../../models/auth";
 
 const throwAuthError = () =>
   customError({
@@ -15,9 +16,22 @@ const throwAuthError = () =>
 
 export default async function isAuthenticated(
   token: string = required("token"),
+  type: "TOKEN" | "API_KEY",
   req: object = {}
 ) {
   try {
+    if (type === "API_KEY") {
+      const apiKey = await APIKeyModel().getByKey(token);
+      const business = apiKey?.business;
+      if (!business || business.status !== STATUS_MAP.ACTIVE) {
+        throw throwAuthError();
+      }
+      return {
+        business,
+        agent: null,
+        ...req,
+      };
+    }
     const decoded: any = await decodeJwt(token);
     const [business, agent] = await Promise.all([
       businessService().getById(decoded.business_id),

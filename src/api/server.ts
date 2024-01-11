@@ -22,7 +22,6 @@ import { BullMonitorExpress } from "@bull-monitor/express";
 import { BullMQAdapter } from "@bull-monitor/root/dist/bullmq-adapter";
 import { Queue } from "bullmq";
 import { BULL_QUEUES_NAMES, ioredis } from "../lib/queues";
-import { subscribeAppToPage } from "../lib/facebook";
 
 const PORT = config.PORT;
 
@@ -67,15 +66,23 @@ const serverCleanup = useServer(
       logger().info("connection established", ctx.connectionParams);
 
       let token;
+      let type;
 
       const headers = ctx.connectionParams.headers ?? ctx.connectionParams;
 
       if (headers) {
-        const authToken = headers["Authorization"] ?? headers["authorization"];
+        if (headers["x-api-key"]) {
+          token = headers["x-api-key"];
+          type = "API_KEY";
+        } else {
+          const authToken =
+            headers["Authorization"] ?? headers["authorization"];
 
-        token = authToken.split(" ")[1];
+          token = authToken.split(" ")[1];
+          type = "TOKEN";
+        }
       }
-      const { business, agent } = await isAuthenticated(token, ctx);
+      const { business, agent } = await isAuthenticated(token, type, ctx);
 
       ctx.business = business;
       ctx.agent = agent;
@@ -138,8 +145,15 @@ export default async function startServer() {
             "VerifyCode",
           ];
           if (operationsToIgnore.includes(req.body.operationName)) return req;
-          const token = req.headers.authorization?.split("Bearer ")[1];
-          const result = await isAuthenticated(token, req);
+          let token, type;
+          if (req.headers["x-api-key"]) {
+            token = req.headers["x-api-key"];
+            type = "API_KEY";
+          } else {
+            token = req.headers.authorization?.split("Bearer ")[1];
+            type = "TOKEN";
+          }
+          const result = await isAuthenticated(token, type, req);
           return result;
         },
       })

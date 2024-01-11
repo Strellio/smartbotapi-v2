@@ -15,5 +15,8 @@ export default {
     getWidgetSettings: (parent: any, { input }: any, { business }: any) => {
       return businessService().getSettings(business.id);
     },
+    getBusinessAPiKeys: (parent: any, { input }: any, { business }: any) => {
+      return businessService().getApiKeys(business.id);
+    },
   },
 };

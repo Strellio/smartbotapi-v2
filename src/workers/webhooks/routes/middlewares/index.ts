@@ -82,8 +82,15 @@ export const isAuthenticatedMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  return isAuthenticated(token)
+  let token, type;
+  if (req.headers["x-api-key"]) {
+    token = req.headers["x-api-key"];
+    type = "API_KEY";
+  } else {
+    token = req.headers.authorization?.split("Bearer ")[1];
+    type = "TOKEN";
+  }
+  return isAuthenticated(token, type, req)
     .then(({ business }) => {
       req.body.business_id = business.id;
       next();

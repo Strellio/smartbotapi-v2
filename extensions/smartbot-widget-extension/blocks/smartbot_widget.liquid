@@ -1,0 +1,33 @@
+{% assign apiKey = block.settings.api_key %}
+
+<script>
+  var shop = "{{ shop.domain }}"; // Use shop.domain for consistency
+
+
+  var apiKey = "{{block.settings.api_key}}";
+
+
+  (function() {
+
+    window.smartBotScriptOverrides = {
+      api_key: apiKey,
+      shop: shop
+    };
+
+
+  })();
+</script>
+<script src="{{ 'smartbot-widget.js?api_key=' | append: apiKey | asset_url }}" defer></script>
+{% schema %}
+  {
+    "name": "Smartbot Widget Embed",
+    "target": "head",
+    "settings": [
+      {
+        "label": "API Key",
+        "id": "api_key",
+        "type": "text"
+      }
+    ]
+  }
+{% endschema %}
