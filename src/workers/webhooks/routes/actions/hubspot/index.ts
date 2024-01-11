@@ -61,7 +61,9 @@ export default async function hubSpotController(
   payload: HubspotWebhookPayload
 ) {
   const chatPlatform = await chatPlatformService().getByExternalIdAndPlatform(
-    CHAT_PLATFORMS.HUBSPOT
+    CHAT_PLATFORMS.HUBSPOT,
+    undefined,
+    `${payload.portalId}`
   );
   if (!chatPlatform || chatPlatform.status !== STATUS_MAP.ACTIVE)
     return logger().info("hubspot not enabled");
