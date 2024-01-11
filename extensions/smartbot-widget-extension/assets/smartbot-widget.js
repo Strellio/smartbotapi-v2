@@ -61,7 +61,6 @@ thisWindow.smartbotBotScript = Object.assign(
   window.smartBotScriptOverrides
 );
 
-console.log("thisWindow.smartbotBotScript", thisWindow.smartbotBotScript);
 var jsSrc = WIDGET_URL + "/smartbot-widget.min.js";
 // var cssSrc = WIDGET_URL + "/smartbot-widget.min.css";
 
