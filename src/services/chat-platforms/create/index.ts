@@ -11,6 +11,7 @@ import config from "../../../config";
 import agentService from "../../agents";
 import { Agent, ChatAgent } from "../../../models/businesses/types";
 import { ACTION_TYPE_TO_MONGODB_FIELD } from "../../../models/common";
+import { PLATFORM_MAP } from "../../../models/businesses/schema/enums";
 
 const defaultBotAgent = {
   is_person: false,
@@ -90,6 +91,9 @@ export default async function create(params: CreateParams) {
         business.domain,
         business.shop.external_platform_domain,
         config.WIDGET_URL,
+        ...(business.platform === PLATFORM_MAP.SHOPIFY
+          ? ["https://admin.shopify.com"]
+          : []),
       ]),
     },
   });
