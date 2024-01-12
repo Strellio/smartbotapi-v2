@@ -60,7 +60,14 @@ export const hubspotWebhook = async (
   res: Response,
   next: NextFunction
 ) => {
-  return hubSpotController(req.body).then((data) => res.json(data));
+  return hubSpotController(req.body)
+    .then((data) => res.json(data))
+    .catch((error) => {
+      logger().error(error);
+      return res.status(400).json({
+        message: error.message,
+      });
+    });
 };
 
 export const customActionWebhook = (
@@ -70,7 +77,12 @@ export const customActionWebhook = (
 ) =>
   customController(req.body)
     .then((message) => res.json(message))
-    .catch((error) => res.status(400).json(error));
+    .catch((error) => {
+      logger().error(error);
+      return res.status(400).json({
+        message: error.message,
+      });
+    });
 
 export function shopifyWebhook() {
   const customerRedact = (req: Request, res: Response, next: NextFunction) =>
