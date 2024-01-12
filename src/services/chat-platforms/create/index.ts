@@ -40,7 +40,7 @@ async function ensureChatPlatformNotAddedByExternalId(
 ) {
   const chatPlatform = await chatPlatformModel().getByExternalIdAndPlatform(
     platform,
-    // businessId,
+    undefined,
     externalId
   );
   if (chatPlatform) {
