@@ -46,7 +46,9 @@ async function ensureChatPlatformNotAddedByExternalId(
   if (chatPlatform) {
     throw errors.throwError({
       name: errors.MissingFunctionParamError,
-      message: "platform already exists",
+      message: externalId
+        ? "External chat platform account already in use"
+        : "Platform already exists",
     });
   }
 }
@@ -92,7 +94,7 @@ export default async function create(params: CreateParams) {
         business.shop.external_platform_domain,
         config.WIDGET_URL,
         ...(business.platform === PLATFORM_MAP.SHOPIFY
-          ? ["https://admin.shopify.com"]
+          ? ["https://admin.shopify.com", "https://shopify.com"]
           : []),
       ]),
     },
