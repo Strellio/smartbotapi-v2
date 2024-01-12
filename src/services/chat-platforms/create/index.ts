@@ -35,18 +35,18 @@ interface CreateParams {
 
 async function ensureChatPlatformNotAddedByExternalId(
   platform: string,
-  // businessId: string,
+  businessId: string,
   externalId?: string
 ) {
   const chatPlatform = await chatPlatformModel().getByExternalIdAndPlatform(
     platform,
-    undefined,
+    externalId ? undefined : businessId,
     externalId
   );
   if (chatPlatform) {
     throw errors.throwError({
       name: errors.MissingFunctionParamError,
-      message: "chat platform already exists",
+      message: "platform already exists",
     });
   }
 }
@@ -61,7 +61,7 @@ export default async function create(params: CreateParams) {
   // Ensure a chat platform with the same external ID doesn't already exist
   await ensureChatPlatformNotAddedByExternalId(
     params.platform,
-    // business.id,
+    business.id,
     params?.external_id
   );
 
