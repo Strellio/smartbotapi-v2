@@ -14,6 +14,7 @@ import {
 import * as customerService from "../../../../../services/customers";
 import { formatAndSaveMessage } from "../common";
 import logger from "../../../../../lib/logger";
+import { Customer } from "../../../../../models/customers/types";
 
 const ATTACHMENT_MESSAGE = "Sorry i cannot process attachments";
 
@@ -116,17 +117,27 @@ export default async function facebookWebhookController(
 
   // message reads should not be handled yet
   if (facebookPayload.read) return; //console.log("handle message reads")
-  const userProfile = await getChatUserProfile({
-    accessToken: chatPlatform.external_access_token,
-    userId: facebookPayload.sender.id,
-  });
-  const customer = await customerService.createOrUpdate({
-    external_id: facebookPayload.sender.id,
+
+  let customer = (await customerService.getByExternalId({
+    externalId: facebookPayload.sender.id,
     source: chatPlatform.id,
-    business_id: chatPlatform.business.id,
-    name: userProfile.name,
-    profile_url: userProfile.profile_pic,
-  });
+  })) as any;
+
+  if (!customer) {
+    const userProfile = await getChatUserProfile({
+      accessToken: chatPlatform.external_access_token,
+      userId: facebookPayload.sender.id,
+    });
+    customer = await customerService.create({
+      data: {
+        external_id: facebookPayload.sender.id,
+        source: chatPlatform.id,
+        business: chatPlatform.business.id,
+        name: userProfile.name,
+        profile_url: userProfile.profile_pic,
+      },
+    });
+  }
 
   const [_, response] = await Promise.all([
     formatAndSaveMessage({
