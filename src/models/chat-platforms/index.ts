@@ -53,14 +53,16 @@ const getByExternalIdAndPlatform = (
   }) as Promise<any>;
 };
 
-const updateById = (
+const updateById = async (
   id: string = required("id"),
   update: any = required("update")
 ): Promise<ChatPlatform> => {
   const query =
-    update.agent?.action_type === ACTION_TYPE_TO_MONGODB_FIELD.EDIT
+    update.agent?.action_type !== ACTION_TYPE_TO_MONGODB_FIELD.CREATE &&
+    update.agent
       ? {
           _id: id,
+
           "agents._id": update.agent.id,
         }
       : {
@@ -72,6 +74,7 @@ const updateById = (
     updatePayload: update,
     dbFieldName: "agents",
   });
+
   return chatPlatformModel.updateOne({
     query,
     update: newUpdate,

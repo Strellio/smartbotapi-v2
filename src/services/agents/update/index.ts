@@ -105,6 +105,7 @@ export default async function update(data: UpdateAgentParams) {
               ...rest,
               id: agent.id,
               action_type: ACTION_TYPE_TO_MONGODB_FIELD.EDIT,
+              main_agent_id: data.id,
             },
           });
         }

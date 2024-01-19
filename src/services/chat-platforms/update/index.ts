@@ -16,6 +16,10 @@ import {
 import errors from "../errors";
 import businessModel from "../../../models/businesses";
 import { Plan } from "../../../models/plans/types";
+import agentService from "../../agents";
+import { Agent } from "../../../models/businesses/types";
+import agentsModel from "../../../models/agents";
+import { tr } from "date-fns/locale";
 
 interface updateParams {
   id: string;
@@ -36,6 +40,7 @@ interface updateParams {
     profile_url: string;
     is_person: boolean;
     action_type: ACTION_TYPE_TO_MONGODB_FIELD;
+    main_agent_id?: string;
   };
 }
 
@@ -95,6 +100,8 @@ export default async function update(params: updateParams) {
     chatPlatform.platform,
     rest.type
   );
+
+  console.log("rest", rest);
   const transformedPayload = await chatPlatforms.transformByPlatform({
     payload: {
       ...rest,
@@ -103,5 +110,41 @@ export default async function update(params: updateParams) {
     dbPayload: chatPlatform,
   });
 
-  return chatPlatformModel().updateById(chatPlatform.id, transformedPayload);
+  const result = await chatPlatformModel().updateById(chatPlatform.id, {
+    ...transformedPayload,
+  });
+
+  const agentExternalId = transformedPayload?.agent?.external_id;
+
+  const agentId = rest.agent?.main_agent_id;
+
+  if (agentId) {
+    const agent = (await agentService.getAgentById(agentId)) as never as Agent;
+
+    let newLinkedAgents: string[] = [
+      ...agent.linked_chat_agents.map((id) => id.toString()),
+    ];
+
+    if (rest?.agent?.action_type === ACTION_TYPE_TO_MONGODB_FIELD.CREATE) {
+      const agentToUpdate = result.agents.find(
+        (chatPlatformAgent) => chatPlatformAgent.external_id === agentExternalId
+      );
+      newLinkedAgents = [...newLinkedAgents, agentToUpdate.id] as any;
+    } else if (
+      rest?.agent?.action_type === ACTION_TYPE_TO_MONGODB_FIELD.DELETE
+    ) {
+      newLinkedAgents = newLinkedAgents.filter((id) => id !== rest.agent.id);
+    }
+
+    await agentsModel.update(
+      agent.id.toString(),
+      businessId,
+
+      {
+        linked_chat_agents: newLinkedAgents,
+      }
+    );
+  }
+
+  return result;
 }

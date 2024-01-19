@@ -1,7 +1,6 @@
 "use strict";
 import queues from "../../lib/queues";
 import KnowlegeBaseModel from "../../models/knowledge-base";
-import createOrUpdateKnowledgeBaseVectorStore from "./create-vector-store";
 
 async function createOrUpdateKnowlegeBase({ businessId, ...rest }) {
   const result = await KnowlegeBaseModel().upsert({
@@ -12,10 +11,12 @@ async function createOrUpdateKnowlegeBase({ businessId, ...rest }) {
 
   const knowlegeBaseUpdateQueue = queues.knowledgeBaseUpdateQueue();
 
-  knowlegeBaseUpdateQueue.add({
+  await knowlegeBaseUpdateQueue.add({
     data: { business: result.business, knowlegeBase: result },
-    jobId: result.id,
+    jobId: `${result.id}${Math.random()}}`,
   });
+
+  console.log("added knowlegebase to queue ", result.id);
   return result;
 }
 

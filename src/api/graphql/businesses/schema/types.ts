@@ -104,6 +104,7 @@ export default gql`
     is_person: Boolean!
     profile_url: String
     action_type: ActionTypes = CREATE
+    main_agent_id: String
   }
 
   input ListChatPlatformsInput {
