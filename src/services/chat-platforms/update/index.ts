@@ -136,6 +136,8 @@ export default async function update(params: updateParams) {
       newLinkedAgents = newLinkedAgents.filter((id) => id !== rest.agent.id);
     }
 
+    console.log("newLinkedAgents", newLinkedAgents);
+
     await agentsModel.update(
       agent.id.toString(),
       businessId,
