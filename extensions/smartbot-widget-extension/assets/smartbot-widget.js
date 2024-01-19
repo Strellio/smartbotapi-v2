@@ -83,4 +83,3 @@ addWidgetRoot();
 
 // addCssScriptToHeader(cssSrc);
 addJsScriptToHeader(jsSrc);
-console.log(window.smartBotScriptOverrides);
