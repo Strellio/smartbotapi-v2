@@ -139,7 +139,7 @@ export default async function create(params: CreateParams) {
           transformedPayload
         );
 
-        const createdAgent = result.agents.find(
+        const createdAgent = result.agents.findLast(
           (chatPlatformAgent) =>
             chatPlatformAgent.external_id === agentExternalId
         );
