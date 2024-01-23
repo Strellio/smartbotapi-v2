@@ -50,7 +50,7 @@ const ensureNoPlatformIsOnsiteAndActive = async (
   platform: CHAT_PLATFORMS,
   type: CHAT_TYPE
 ) => {
-  if (status === STATUS_MAP.DEACTIVATED) return;
+  if (!status || status === STATUS_MAP.DEACTIVATED) return;
   const list: Array<any> = await H(
     chatPlatformModel().listByBusinessId(businessId, {
       status: STATUS_MAP.ACTIVE,
