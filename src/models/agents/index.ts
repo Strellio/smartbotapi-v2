@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import schema from "./schema";
 import BaseModel from "../common/base-model";
 import { required } from "../../lib/utils";
+import { Agent } from "../businesses/types";
 const Model = mongoose.model("agents", schema);
 const AgentModel = BaseModel(Model);
 
@@ -39,14 +40,14 @@ const listByBusinessId = (businessId: string = required("businessId")) =>
     ],
   });
 
-const getById = (_id: string = required("id")) =>
+const getById = (_id: string = required("id")): Promise<Agent> =>
   AgentModel.get({
     query: { _id },
     populate: [
       { path: "linked_chat_agents_platforms", select: "agents platform" },
       { path: "user" },
     ],
-  });
+  }) as any;
 
 const listByUserId = (userId: string = required("userId")) =>
   AgentModel.fetch({

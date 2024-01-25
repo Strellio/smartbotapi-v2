@@ -69,6 +69,8 @@ const ensureCanAddMoreLiveAgents = async (
 export default async function update(data: UpdateAgentParams) {
   const payload = validate(schema, data);
 
+  const mainAgent = await agentsModel.getById(payload.id);
+
   const business = await businessService().getById(payload.business_id);
 
   await ensureCanAddMoreLiveAgents(business, payload.status as STATUS_MAP);
@@ -85,32 +87,40 @@ export default async function update(data: UpdateAgentParams) {
 
   const { id, business_id, ...rest }: UpdateAgentParams = payload;
 
-  await Promise.all(
-    chatPlatforms
-      .filter(
-        (chatPlatform: ChatPlatform) => chatPlatform.is_external_agent_supported
-      )
-      .map(async (chatPlatform: ChatPlatform) => {
-        const agent = chatPlatform.agents.find((agent) =>
-          rest.linked_chat_agents.includes(agent.id)
-        );
-
-        if (agent) {
-          return chatPlatformService().update({
-            id: chatPlatform.id,
-            business_id,
-            type: chatPlatform.type,
-
-            agent: {
-              ...rest,
-              id: agent.id,
-              action_type: ACTION_TYPE_TO_MONGODB_FIELD.EDIT,
-              main_agent_id: data.id,
-            },
+  if (
+    rest.name !== mainAgent.user.full_name ||
+    rest.profile_url !== mainAgent.user.profile_url
+  ) {
+    await Promise.all(
+      chatPlatforms
+        .filter(
+          (chatPlatform: ChatPlatform) =>
+            chatPlatform.is_external_agent_supported
+        )
+        .map(async (chatPlatform: ChatPlatform) => {
+          const chatPlatformAgent = chatPlatform.agents.find((agent) => {
+            return mainAgent.linked_chat_agents
+              .map((id) => id.toString())
+              .includes(agent.id.toString());
           });
-        }
-      })
-  );
+
+          if (chatPlatformAgent) {
+            return chatPlatformService().update({
+              id: chatPlatform.id,
+              business_id,
+              type: chatPlatform.type,
+
+              agent: {
+                ...rest,
+                id: chatPlatformAgent.id,
+                action_type: ACTION_TYPE_TO_MONGODB_FIELD.EDIT,
+                main_agent_id: data.id,
+              },
+            });
+          }
+        })
+    );
+  }
 
   if (rest.is_person && rest.email) {
     await userService().updateOrCreate({

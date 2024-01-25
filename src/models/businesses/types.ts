@@ -74,7 +74,7 @@ export type Agent = {
     profile_url: string;
   };
   is_person: boolean;
-  linked_chat_agents: [ChatAgent];
+  linked_chat_agents: string[];
   status: STATUS_MAP;
   availability_status: AGENT_AVAILABILTY_STATUS;
   created_at: Date;
