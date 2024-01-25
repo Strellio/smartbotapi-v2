@@ -87,10 +87,11 @@ export default async function update(data: UpdateAgentParams) {
 
   const { id, business_id, ...rest }: UpdateAgentParams = payload;
 
-  if (
-    rest.name !== mainAgent.user.full_name ||
-    rest.profile_url !== mainAgent.user.profile_url
-  ) {
+  const mainAgentName = mainAgent.user?.full_name || mainAgent.bot_info?.name;
+  const mainAgentProfileUrl =
+    mainAgent.user?.profile_url || mainAgent.bot_info?.profile_url;
+
+  if (rest.name !== mainAgentName || rest.profile_url !== mainAgentProfileUrl) {
     await Promise.all(
       chatPlatforms
         .filter(

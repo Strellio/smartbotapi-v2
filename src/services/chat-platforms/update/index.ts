@@ -101,7 +101,6 @@ export default async function update(params: updateParams) {
     rest.type
   );
 
-  console.log("rest", rest);
   const transformedPayload = await chatPlatforms.transformByPlatform({
     payload: {
       ...rest,
@@ -135,8 +134,6 @@ export default async function update(params: updateParams) {
     ) {
       newLinkedAgents = newLinkedAgents.filter((id) => id !== rest.agent.id);
     }
-
-    console.log("newLinkedAgents", newLinkedAgents);
 
     await agentsModel.update(
       agent.id.toString(),
