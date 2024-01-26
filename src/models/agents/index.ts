@@ -23,10 +23,7 @@ const update = (
   AgentModel.updateOne({
     query: { _id, business },
     update: data,
-    populate: [
-      { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user" },
-    ],
+    populate: [{ path: "linked_chat_agents_platforms" }, { path: "user" }],
   });
 
 const listByBusinessId = (businessId: string = required("businessId")) =>
@@ -34,19 +31,13 @@ const listByBusinessId = (businessId: string = required("businessId")) =>
     query: {
       business: businessId,
     },
-    populate: [
-      { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user" },
-    ],
+    populate: [{ path: "linked_chat_agents_platforms" }, { path: "user" }],
   });
 
 const getById = (_id: string = required("id")): Promise<Agent> =>
   AgentModel.get({
     query: { _id },
-    populate: [
-      { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user" },
-    ],
+    populate: [{ path: "linked_chat_agents_platforms" }, { path: "user" }],
   }) as any;
 
 const listByUserId = (userId: string = required("userId")) =>
@@ -54,10 +45,7 @@ const listByUserId = (userId: string = required("userId")) =>
     query: {
       user: userId,
     },
-    populate: [
-      { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user" },
-    ],
+    populate: [{ path: "linked_chat_agents_platforms" }, { path: "user" }],
   });
 
 const getByBusinessAndUserId = ({
@@ -72,10 +60,7 @@ const getByBusinessAndUserId = ({
       user: userId,
       business: businessId,
     },
-    populate: [
-      { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user" },
-    ],
+    populate: [{ path: "linked_chat_agents_platforms" }, { path: "user" }],
   });
 
 const getBotAgent = (businessId: string) =>
@@ -84,10 +69,7 @@ const getBotAgent = (businessId: string) =>
       is_person: false,
       business: businessId,
     },
-    populate: [
-      { path: "linked_chat_agents_platforms", select: "agents platform" },
-      { path: "user" },
-    ],
+    populate: [{ path: "linked_chat_agents_platforms" }, { path: "user" }],
   });
 
 export default {
