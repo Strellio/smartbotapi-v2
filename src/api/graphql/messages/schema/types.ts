@@ -55,6 +55,7 @@ enum MessageTypeEnum{
   type MessageSource{
     id:String!
     platform: String
+    is_deleted: Boolean
   }
 
   type MessageMedia {
