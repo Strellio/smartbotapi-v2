@@ -25,7 +25,6 @@ export default async function charge(
       business.trial_expiry_date
     )?.days,
     return_url: `${config.APP_URL}/plans/charge?business_id=${business.id}&plan_id=${plan.id}&platform=${business.platform}`,
-    test: true,
   });
 
   return recurringCharge.confirmation_url;
