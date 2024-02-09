@@ -36,7 +36,7 @@ on:
         required: false
         type: string
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.SERVICE_NAME }} 
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.SERVICE_NAME }}
   cancel-in-progress: true
 env:
   PROJECT_NUMBER: ${{ inputs.PROJECT_NUMBER }}
@@ -129,7 +129,7 @@ jobs:
       - name: Deploy
         id: deploy
         run: |
-          output=$(gcloud run deploy ${{ env.SERVICE_NAME }} --image us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} --region us-central1 --platform managed  --vpc-connector=smartbot --vpc-egress=all-traffic)
+          output=$(gcloud run deploy ${{ env.SERVICE_NAME }} --image us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} --region us-central1 --platform managed  --vpc-connector=smartbot-connector --vpc-egress=all-traffic)
           echo "service_url=$output" >> "$GITHUB_OUTPUT"
       - id: "test"
         run: 'echo "${{ steps.deploy.outputs.service_url }}/health"'
