@@ -9,6 +9,7 @@ import customController from "./custom";
 import logger from "../../../../lib/logger";
 import { handleGdpr, handleUninstall } from "./shopify";
 import { TYPES } from "../../../../models/gdpr/schema";
+import instagramWebhookController from "./instagram";
 
 export const intercomWebhook = async (
   req: Request,
@@ -48,6 +49,25 @@ export const facebookWebhook = async (
     body.entry.forEach(
       (singleEntry: { messaging: FaceBookWebhookPayload[] }) => {
         return singleEntry.messaging.map(facebookWebhookController);
+      }
+    );
+  } catch (error) {
+    logger().error(error);
+  }
+};
+
+export const instagramWebhook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.sendStatus(200);
+  const body = req.body;
+  if (body.object !== "instagram") return;
+  try {
+    body.entry.forEach(
+      (singleEntry: { messaging: FaceBookWebhookPayload[] }) => {
+        return singleEntry.messaging.map(instagramWebhookController);
       }
     );
   } catch (error) {

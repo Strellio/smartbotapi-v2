@@ -1,54 +1,47 @@
 "use strict";
-import { PubSub } from '@google-cloud/pubsub'
+import { PubSub } from "@google-cloud/pubsub";
 import { redisPubSub } from "../redis";
-import config from '../../config';
+import config from "../../config";
 
+import { GooglePubSub } from "@axelspringer/graphql-google-pubsub";
+import { parseString } from "../utils";
 
-
-import { GooglePubSub } from '@axelspringer/graphql-google-pubsub'
-import { parseString } from '../utils'
+console.log("config.GOOGLE_CLOUD_PROJECT", config.GOOGLE_CLOUD_PROJECT);
 
 const pubsub = new GooglePubSub(
   {
-    projectId: config.GOOGLE_CLOUD_PROJECT
+    projectId: config.GOOGLE_CLOUD_PROJECT,
   },
-    topicName => {
-        return `${topicName}-sub`
-    },
-    ({ data }) => {
-    return parseString(data.toString())
+  (topicName) => {
+    return `${topicName}-sub`;
+  },
+  ({ data }) => {
+    return parseString(data.toString());
   }
-)
+);
 
 // export default pubsub
 
 const pubSubClient = new PubSub({
   projectId: config.GOOGLE_CLOUD_PROJECT,
-  keyFilename: config.GOOGLE_APPLICATION_CREDENTIALS
-  
-})
+  keyFilename: config.GOOGLE_APPLICATION_CREDENTIALS,
+});
 
 const subscribe = ({
   subscriberName,
-  handler
+  handler,
 }: {
-  subscriberName: string
-  handler: (...args: any[]) => void
-    }) => {
-  const subscription = pubSubClient.subscription(subscriberName)
-  return subscription.on('message', handler)
-}
-
-
-
-
-
-
+  subscriberName: string;
+  handler: (...args: any[]) => void;
+}) => {
+  const subscription = pubSubClient.subscription(subscriberName);
+  return subscription.on("message", handler);
+};
 
 export default {
-    redisPubSub: redisPubSub(),
-    graphqlGooglePubSub: pubsub,
-    googlePubSub: {
-        subscribe
-    }
+  redisPubSub: redisPubSub(),
+  graphqlGooglePubSub: pubsub,
+  googlePubSub: {
+    subscribe,
+  },
 };

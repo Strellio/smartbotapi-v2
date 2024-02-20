@@ -10,6 +10,7 @@ export enum CHAT_PLATFORMS {
   INTERCOM = "intercom",
   HUBSPOT = "hubspot",
   WHATSAPP = "whatsapp",
+  INSTAGRAM = "instagram",
 }
 
 export enum CHAT_TYPE {
