@@ -7,6 +7,7 @@ import {
   hubspotWebhook,
   customActionWebhook,
   shopifyWebhook,
+  instagramWebhook,
 } from "./actions";
 import {
   isAuthenticatedMiddleware,
@@ -36,6 +37,16 @@ export default function routes() {
         hasSplit: true,
       }),
       facebookWebhook
+    )
+    .get("/instagram/message", facebookHubVerify)
+    .post(
+      "/instagram/message",
+      verifyWebhook({
+        path: "headers.x-hub-signature",
+        secret: config.FB_CLIENT_SECRET,
+        hasSplit: true,
+      }),
+      instagramWebhook
     )
     .post("/hubspot/message", hubspotWebhook)
     .post("/custom/message", isAuthenticatedMiddleware, customActionWebhook)

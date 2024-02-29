@@ -27,6 +27,7 @@ export const facebookHubVerify = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("facebookHubVerify");
   if (
     req.query["hub.mode"] === "subscribe" &&
     req.query["hub.verify_token"] === config.FB_VALIDATION_TOKEN

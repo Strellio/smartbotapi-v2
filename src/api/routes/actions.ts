@@ -50,7 +50,6 @@ export const checkWordpressStatus = (
   wordpressService()
     .checkDomainStatus(req.query)
     .then((result) => {
-      console.log("checkWordpressStatus", result);
       res.json(result);
     })
     .catch(next);

@@ -13,7 +13,6 @@ export const attachChatPlatform = (agent: any) => {
     flattenDeep(linked_chat_agents_platforms)
       .filter((chatPlatform: any) => !chatPlatform.is_deleted)
       .map((chatPlatform: any) => {
-        console.log(chatPlatform);
         return chatPlatform.agents.map((chatAgent: any) => ({
           ...chatAgent,
           platform: chatPlatform.platform,

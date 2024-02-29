@@ -140,15 +140,15 @@ export const callback = async (
       });
     }
 
-    shopifyClient.scriptTag.list().then(async (scriptTags) => {
-      await Promise.all(
-        scriptTags.map(async (scriptTag) => {
-          if (scriptTag.src.includes(`static/js/wl.js`)) {
-            await shopifyClient.scriptTag.delete(scriptTag.id);
-          }
-        })
-      );
-    });
+    // shopifyClient.scriptTag.list().then(async (scriptTags) => {
+    //   await Promise.all(
+    //     scriptTags.map(async (scriptTag) => {
+    //       if (scriptTag.src.includes(`static/js/wl.js`)) {
+    //         await shopifyClient.scriptTag.delete(scriptTag.id);
+    //       }
+    //     })
+    //   );
+    // });
 
     // await shopifyClient.scriptTag
     //   .create({
@@ -188,7 +188,6 @@ export const callback = async (
         APP_UNINSTALLED: [getHandler("uninstall")],
       });
 
-      console.log("req query is ", req.query);
       const result = await shopifyLib.webhooks.register({
         session: {
           shop: response.shop,
@@ -196,6 +195,9 @@ export const callback = async (
           ...req.query,
         } as any,
       });
+
+
+      shopifyLib.webhooks.
 
       console.log("done registering webhooks ");
 

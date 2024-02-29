@@ -32,9 +32,17 @@ app
   )
   .use(express.urlencoded({ extended: false }))
   .use(reqLogger)
-  .use("/webhooks", routes())
+  .use(
+    "/webhooks",
+    (req, res, next) => {
+      console.log(req.body);
+      next();
+    },
+    routes()
+  )
   .use((err: any, req: Request, res: Response, next: NextFunction) => {
-    res.status(500).json({
+    console.error(res);
+    res.status?.(500).json({
       message: err.message,
     });
   })

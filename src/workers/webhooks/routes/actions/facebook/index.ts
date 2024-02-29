@@ -115,6 +115,8 @@ export default async function facebookWebhookController(
     facebookPayload.recipient.id
   );
 
+  console.log("chatPlatform", chatPlatform);
+
   // message reads should not be handled yet
   if (facebookPayload.read) return; //console.log("handle message reads")
 

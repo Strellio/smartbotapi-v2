@@ -31,8 +31,8 @@ async function callSendApi({ pageAccesToken, ...requestBody }) {
   }
 }
 
-async function getUserProfile({ senderIgsid, pageAccesToken }) {
-  let url = new URL(`${apiUrl}/${senderIgsid}`) as any;
+async function getUserProfile({ userId, pageAccesToken }) {
+  let url = new URL(`${apiUrl}/${userId}`) as any;
   url.search = new URLSearchParams({
     access_token: pageAccesToken,
     fields: "name,profile_pic",
@@ -42,11 +42,12 @@ async function getUserProfile({ senderIgsid, pageAccesToken }) {
     let userProfile = await response.json();
     return {
       name: userProfile.name,
-      profilePic: userProfile.profile_pic,
+      profile_pic: userProfile.profile_pic,
     };
   } else {
+    console.log(response);
     console.warn(
-      `Could not load profile for ${senderIgsid}: ${response.statusText}`
+      `Could not load profile for ${userId}: ${response.statusText}`
     );
     return null;
   }

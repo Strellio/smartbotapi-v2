@@ -6,8 +6,6 @@ import config from "../../config";
 import { GooglePubSub } from "@axelspringer/graphql-google-pubsub";
 import { parseString } from "../utils";
 
-console.log("config.GOOGLE_CLOUD_PROJECT", config.GOOGLE_CLOUD_PROJECT);
-
 const pubsub = new GooglePubSub(
   {
     projectId: config.GOOGLE_CLOUD_PROJECT,

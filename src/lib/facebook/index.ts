@@ -227,12 +227,12 @@ const getChatUserProfile = ({
   return client.getUserProfile(userId, [
     "id",
     "name",
-    "first_name",
-    "last_name",
+    // "first_name",
+    // "last_name",
     "profile_pic",
-    "locale",
-    "timezone",
-    "gender",
+    // "locale",
+    // "timezone",
+    // "gender",
   ]);
 };
 

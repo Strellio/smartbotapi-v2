@@ -15,6 +15,7 @@ import * as customerService from "../../../../../services/customers";
 import { formatAndSaveMessage } from "../common";
 import logger from "../../../../../lib/logger";
 import { Customer } from "../../../../../models/customers/types";
+import { getUserProfile } from "../../../../../lib/instagram";
 
 const ATTACHMENT_MESSAGE = "Sorry i cannot process attachments";
 
@@ -48,11 +49,11 @@ const handleAsBot = async ({
           chat_platform_id: String(chatPlatform.id),
         },
       }),
-      sendSenderAction({
-        accessToken: chatPlatform.external_access_token,
-        recipientId: facebookPayload.sender.id,
-        action: "typing_on",
-      }),
+      // sendSenderAction({
+      //   accessToken: chatPlatform.external_access_token,
+      //   recipientId: facebookPayload.sender.id,
+      //   action: "typing_on",
+      // }),
     ]);
     for (let i = 0; i < response.length; i++) {
       const singleEntity = response[i];
@@ -108,11 +109,12 @@ const handleAsBot = async ({
 export default async function facebookWebhookController(
   facebookPayload: FaceBookWebhookPayload
 ) {
-  logger().info("Webhook received from Facebook");
+  console.log("facebookPayload", facebookPayload);
+  logger().info("Webhook received from Instagram");
   const chatPlatform = await chatPlatformService().getByExternalIdAndPlatform(
-    CHAT_PLATFORMS.FACEBOOK,
+    CHAT_PLATFORMS.INSTAGRAM,
     undefined,
-    facebookPayload.recipient.id
+    "109704760381071" // facebookPayload.recipient.id
   );
 
   // message reads should not be handled yet
@@ -123,9 +125,15 @@ export default async function facebookWebhookController(
     source: chatPlatform.id,
   })) as any;
 
+  console.log(" customer", customer);
+
   if (!customer) {
-    const userProfile = await getChatUserProfile({
-      accessToken: chatPlatform.external_access_token,
+    console.log("customer not found", {
+      pageAccesToken: chatPlatform.external_access_token,
+      userId: facebookPayload.sender.id,
+    });
+    const userProfile = await getUserProfile({
+      pageAccesToken: chatPlatform.external_access_token,
       userId: facebookPayload.sender.id,
     });
     customer = await customerService.create({
@@ -138,6 +146,8 @@ export default async function facebookWebhookController(
       },
     });
   }
+
+  console.log("saving message");
 
   const [_, response] = await Promise.all([
     formatAndSaveMessage({
