@@ -36,9 +36,9 @@ export default async function transformData({
       );
       payload.external_user_access_token = access_token;
     }
-    if (payload.external_id) {
+    if (payload.linked_page_id) {
       const pageResponse = await generatePageAccessToken({
-        pageId: payload.external_id,
+        pageId: payload.linked_page_id,
         accessToken: payload.external_user_access_token,
       });
 
@@ -49,7 +49,7 @@ export default async function transformData({
         }),
 
         subscribeAppToPage({
-          pageId: payload.external_id,
+          pageId: payload.linked_page_id,
           pageAccessToken: pageResponse.access_token,
         }),
       ]);
@@ -78,7 +78,7 @@ export default async function transformData({
     }
     return payload;
   } catch (error) {
-    console.log(error.response?.data);
+    console.log(error);
     throw error;
   }
 }

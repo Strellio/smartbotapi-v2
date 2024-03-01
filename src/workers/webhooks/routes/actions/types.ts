@@ -125,6 +125,7 @@ export type FaceBookWebhookPayload = {
     mid: string;
     text: string;
     tags: { source: string };
+    is_echo: boolean;
     attachments?: {
       type: MESSAGE_MEDIA_TYPE;
       payload: { url: string };

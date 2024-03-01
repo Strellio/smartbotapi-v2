@@ -29,6 +29,7 @@ interface CreateParams {
   external_user_name?: string;
   external_access_token?: string;
   external_id?: string;
+  linked_page_id?: string;
   type: string;
   workspace_id?: string;
 }
@@ -56,6 +57,8 @@ async function ensureChatPlatformNotAddedByExternalId(
 export default async function create(params: CreateParams) {
   // Validate the input parameters
   const payload = validate(schema, params);
+
+  console.log("payload", payload);
 
   // Retrieve the business details
   const business = await businessModel().getById(params.business_id);
@@ -93,12 +96,11 @@ export default async function create(params: CreateParams) {
         business.domain,
         business.shop.external_platform_domain,
         config.WIDGET_URL,
-        ...(business.platform === PLATFORM_MAP.SHOPIFY
-          ? ["https://admin.shopify.com", "https://shopify.com"]
-          : []),
       ]),
     },
   });
+
+  console.log("transformedPayload", transformedPayload);
 
   // Create a chat platform
   const chatPlatform = await chatPlatformModel().create({

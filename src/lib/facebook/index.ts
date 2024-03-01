@@ -8,7 +8,7 @@ import { MessengerClient } from "messaging-api-messenger";
 
 const FB_LONG_ACCESS_TOKEN_URL = `https://graph.facebook.com/oauth/access_token`;
 const MESSENGER_PROFILE_BASE_URL =
-  "https://graph.facebook.com/v8.0/me/messenger_profile";
+  "https://graph.facebook.com/v19.0/me/messenger_profile";
 
 const formPageOrPersonaUrl = (pageId: string) =>
   `https://graph.facebook.com/${pageId}`;
@@ -144,7 +144,7 @@ export const messengerClient = (accessToken: string) =>
     accessToken,
     appId: config.FB_CLIENT_ID,
     appSecret: config.FB_CLIENT_SECRET,
-    version: "8.0",
+    version: "19.0",
   });
 
 const sendTextMessage = async ({

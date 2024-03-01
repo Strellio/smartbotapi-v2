@@ -14,6 +14,8 @@ import { URLSearchParams, URL } from "url";
 
 import fetch from "node-fetch";
 
+import request from "../request";
+
 const apiUrl = "https://graph.facebook.com/v11.0";
 
 async function callSendApi({ pageAccesToken, ...requestBody }) {

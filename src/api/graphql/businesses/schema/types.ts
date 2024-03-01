@@ -56,6 +56,7 @@ export default gql`
     logged_out_greetings: String
     theme_color: String
     workspace_id: String
+    linked_page_id: String
   }
   type IntercomAgent {
     id: ID!
@@ -78,6 +79,7 @@ export default gql`
     external_user_id: String
     external_user_name: String
     external_id: String
+    linked_page_id: String
     type: ChatTypeEnum
   }
 
@@ -88,6 +90,7 @@ export default gql`
     external_user_id: String
     external_user_name: String
     external_id: String
+    linked_page_id: String
     agent: ChatAgentInput
     workspace_id: String
     logged_in_greetings: String

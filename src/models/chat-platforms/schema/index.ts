@@ -41,6 +41,8 @@ export default new mongoose.Schema(
       type: [agent],
       default: [],
     },
+    linked_page_id: String,
+
     external_user_id: String,
     external_user_access_token: String,
     external_user_name: String,

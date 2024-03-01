@@ -106,15 +106,16 @@ const handleAsBot = async ({
   }
 };
 
-export default async function facebookWebhookController(
+export default async function instagramWebhookController(
   facebookPayload: FaceBookWebhookPayload
 ) {
-  console.log("facebookPayload", facebookPayload);
+  if (facebookPayload.message?.is_echo) return; //console.log("handle message echo"
+
   logger().info("Webhook received from Instagram");
   const chatPlatform = await chatPlatformService().getByExternalIdAndPlatform(
     CHAT_PLATFORMS.INSTAGRAM,
     undefined,
-    "109704760381071" // facebookPayload.recipient.id
+    facebookPayload.recipient.id
   );
 
   // message reads should not be handled yet
@@ -125,13 +126,7 @@ export default async function facebookWebhookController(
     source: chatPlatform.id,
   })) as any;
 
-  console.log(" customer", customer);
-
   if (!customer) {
-    console.log("customer not found", {
-      pageAccesToken: chatPlatform.external_access_token,
-      userId: facebookPayload.sender.id,
-    });
     const userProfile = await getUserProfile({
       pageAccesToken: chatPlatform.external_access_token,
       userId: facebookPayload.sender.id,
