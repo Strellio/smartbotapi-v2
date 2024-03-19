@@ -81,6 +81,8 @@ export default gql`
     external_id: String
     linked_page_id: String
     type: ChatTypeEnum
+    external_phone_number_id: String
+    external_auth_code: String
   }
 
   input UpdateChatPlatformInput {
@@ -98,6 +100,8 @@ export default gql`
     theme_color: String
     type: ChatTypeEnum
     status: StatusEnum
+    external_phone_number_id: String
+    external_auth_code: String
   }
 
   input ChatAgentInput {

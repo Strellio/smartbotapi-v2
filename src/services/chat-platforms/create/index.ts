@@ -32,6 +32,8 @@ interface CreateParams {
   linked_page_id?: string;
   type: string;
   workspace_id?: string;
+  external_phone_number_id?: string;
+  external_auth_code?: string;
 }
 
 async function ensureChatPlatformNotAddedByExternalId(

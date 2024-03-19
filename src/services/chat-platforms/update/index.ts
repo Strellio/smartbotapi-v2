@@ -42,6 +42,8 @@ interface updateParams {
     action_type: ACTION_TYPE_TO_MONGODB_FIELD;
     main_agent_id?: string;
   };
+  external_phone_number_id?: string;
+  external_auth_code?: string;
 }
 
 const ensureNoPlatformIsOnsiteAndActive = async (

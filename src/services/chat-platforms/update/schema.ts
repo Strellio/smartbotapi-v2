@@ -36,4 +36,6 @@ export default joi.object({
       main_agent_id: joi.string(),
     })
     .optional(),
+  external_phone_number_id: joi.string(),
+  external_auth_code: joi.string(),
 });

@@ -5,6 +5,9 @@ import config from "../../config";
 import { omitBy } from "lodash/fp";
 import { isNil } from "highland";
 import { MessengerClient } from "messaging-api-messenger";
+const GRAPH_API_VERSION = "v19.0";
+
+const FB_CODE_TO_ACCESS_TOKEN_URL = `https://graph.facebook.com/${GRAPH_API_VERSION}/oauth/access_token`;
 
 const FB_LONG_ACCESS_TOKEN_URL = `https://graph.facebook.com/oauth/access_token`;
 const MESSENGER_PROFILE_BASE_URL =
@@ -54,6 +57,21 @@ function generateLongAccessToken(
         client_id: config.FB_CLIENT_ID,
         client_secret: config.FB_CLIENT_SECRET,
         fb_exchange_token: accessToken,
+      },
+    })
+    .then((response) => response.data);
+}
+
+/**
+ * Generate long access token for fb
+ */
+function generateCodeAccessToken(code: string = required("code")) {
+  return request
+    .get(FB_LONG_ACCESS_TOKEN_URL, {
+      params: {
+        client_id: config.FB_CLIENT_ID,
+        client_secret: config.FB_CLIENT_SECRET,
+        code,
       },
     })
     .then((response) => response.data);
@@ -144,7 +162,7 @@ export const messengerClient = (accessToken: string) =>
     accessToken,
     appId: config.FB_CLIENT_ID,
     appSecret: config.FB_CLIENT_SECRET,
-    version: "19.0",
+    version: GRAPH_API_VERSION,
   });
 
 const sendTextMessage = async ({
@@ -248,4 +266,5 @@ export {
   createPersona,
   subscribeAppToPage,
   sendSenderAction,
+  generateCodeAccessToken,
 };

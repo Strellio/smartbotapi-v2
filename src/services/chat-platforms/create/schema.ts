@@ -38,4 +38,6 @@ export default joi.object({
     .string()
     .valid(...chatTypes)
     .required(),
+  external_phone_number_id: joi.string(),
+  external_auth_code: joi.string(),
 });
