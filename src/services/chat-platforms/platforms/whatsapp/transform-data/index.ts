@@ -1,23 +1,12 @@
 "use strict";
 import {
   generateLongAccessToken,
-  generatePageAccessToken,
-  deletePersona,
-  createPersona,
-  updateMessengerProfile,
-  subscribeAppToPage,
   generateCodeAccessToken,
+  debugToken,
 } from "../../../../../lib/facebook";
 import { required } from "../../../../../lib/utils";
+import { getWabaInfo } from "../../../../../lib/whatsapp";
 import { ChatPlatform } from "../../../../../models/businesses/types";
-import { ACTION_TYPE_TO_MONGODB_FIELD } from "../../../../../models/common";
-
-const defaultBotAgent = {
-  is_person: false,
-  name: "SmartBot",
-  profile_url:
-    "https://res.cloudinary.com/strellio/image/upload/v1596998837/smartbot-assets/smartbot-logo_hfkihs.png",
-};
 
 export default async function transformData({
   payload = required("payload"),
@@ -44,6 +33,28 @@ export default async function transformData({
 
       payload.external_access_token = access_token;
     }
+
+    const tokenData = await debugToken(payload.external_access_token);
+
+    if (tokenData.data?.user_id) {
+      payload.external_user_id = tokenData.data.user_id;
+    }
+
+    const wabaIds = tokenData.data.granular_scopes.find(
+      ({ scope }) => scope === "whatsapp_business_management"
+    ).target_ids;
+    const wabaId =
+      wabaIds.find((id) => id === payload.external_id) || wabaIds[0];
+    if (wabaId) {
+      payload.external_id = wabaId;
+    }
+
+    const wabaInfo = await getWabaInfo({
+      accessToken: payload.external_access_token,
+      wabaId: payload.external_id,
+    });
+
+    payload.external_name = wabaInfo.name;
 
     return payload;
   } catch (error) {

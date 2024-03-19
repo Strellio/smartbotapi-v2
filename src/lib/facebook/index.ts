@@ -10,6 +10,9 @@ const GRAPH_API_VERSION = "v19.0";
 const FB_CODE_TO_ACCESS_TOKEN_URL = `https://graph.facebook.com/${GRAPH_API_VERSION}/oauth/access_token`;
 
 const FB_LONG_ACCESS_TOKEN_URL = `https://graph.facebook.com/oauth/access_token`;
+
+const DEBUG_TOKEN_URL = `https://graph.facebook.com/${GRAPH_API_VERSION}/debug_token`;
+
 const MESSENGER_PROFILE_BASE_URL =
   "https://graph.facebook.com/v19.0/me/messenger_profile";
 
@@ -67,11 +70,25 @@ function generateLongAccessToken(
  */
 function generateCodeAccessToken(code: string = required("code")) {
   return request
-    .get(FB_LONG_ACCESS_TOKEN_URL, {
+    .get(FB_CODE_TO_ACCESS_TOKEN_URL, {
       params: {
         client_id: config.FB_CLIENT_ID,
         client_secret: config.FB_CLIENT_SECRET,
         code,
+      },
+    })
+    .then((response) => response.data);
+}
+
+/**
+ * Debug a token
+ */
+function debugToken(token: string = required("token")) {
+  return request
+    .get(DEBUG_TOKEN_URL, {
+      params: {
+        input_token: token,
+        access_token: `${config.FB_CLIENT_ID}|${config.FB_CLIENT_SECRET}`,
       },
     })
     .then((response) => response.data);
@@ -267,4 +284,5 @@ export {
   subscribeAppToPage,
   sendSenderAction,
   generateCodeAccessToken,
+  debugToken,
 };
