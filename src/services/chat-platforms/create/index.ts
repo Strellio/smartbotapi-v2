@@ -60,8 +60,6 @@ export default async function create(params: CreateParams) {
   // Validate the input parameters
   const payload = validate(schema, params);
 
-  console.log("payload", payload);
-
   // Retrieve the business details
   const business = await businessModel().getById(params.business_id);
 

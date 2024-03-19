@@ -2,9 +2,10 @@
 import * as facebook from "./facebook";
 import * as intercom from "./intercom";
 import * as instagram from "./instagram";
+import * as whatsapp from "./whatsapp";
 import { required } from "../../../lib/utils";
 
-export const chatPlatforms = { facebook, intercom, instagram };
+export const chatPlatforms = { facebook, intercom, instagram, whatsapp };
 
 export const transformByPlatform = async ({
   payload = required("payload"),

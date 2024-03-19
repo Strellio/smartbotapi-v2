@@ -32,29 +32,29 @@ export default async function transformData({
       );
 
       payload.external_access_token = access_token;
+
+      const tokenData = await debugToken(payload.external_access_token);
+
+      if (tokenData.data?.user_id) {
+        payload.external_user_id = tokenData.data.user_id;
+      }
+
+      const wabaIds = tokenData.data.granular_scopes.find(
+        ({ scope }) => scope === "whatsapp_business_management"
+      ).target_ids;
+      const wabaId =
+        wabaIds.find((id) => id === payload.external_id) || wabaIds[0];
+      if (wabaId) {
+        payload.external_id = wabaId;
+      }
+
+      const wabaInfo = await getWabaInfo({
+        accessToken: payload.external_access_token,
+        wabaId: payload.external_id,
+      });
+
+      payload.external_name = wabaInfo.name;
     }
-
-    const tokenData = await debugToken(payload.external_access_token);
-
-    if (tokenData.data?.user_id) {
-      payload.external_user_id = tokenData.data.user_id;
-    }
-
-    const wabaIds = tokenData.data.granular_scopes.find(
-      ({ scope }) => scope === "whatsapp_business_management"
-    ).target_ids;
-    const wabaId =
-      wabaIds.find((id) => id === payload.external_id) || wabaIds[0];
-    if (wabaId) {
-      payload.external_id = wabaId;
-    }
-
-    const wabaInfo = await getWabaInfo({
-      accessToken: payload.external_access_token,
-      wabaId: payload.external_id,
-    });
-
-    payload.external_name = wabaInfo.name;
 
     return payload;
   } catch (error) {

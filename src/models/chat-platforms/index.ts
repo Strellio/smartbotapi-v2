@@ -43,12 +43,6 @@ const getByExternalIdAndPlatform = (
     isNil
   );
 
-  console.log({
-    ...rest,
-    ...(external_id && {
-      $or: [{ external_id }, { workspace_id: external_id }],
-    }),
-  });
   return chatPlatformModel.get({
     query: {
       ...rest,

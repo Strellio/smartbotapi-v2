@@ -41,6 +41,9 @@ export default new mongoose.Schema(
       type: [agent],
       default: [],
     },
+    external_phone_number_id: String,
+    external_auth_code: String,
+    external_name: String,
     linked_page_id: String,
 
     external_user_id: String,
@@ -78,7 +81,8 @@ export default new mongoose.Schema(
       default: function () {
         return (
           this.platform === CHAT_PLATFORMS.FACEBOOK ||
-          this.platform === CHAT_PLATFORMS.INTERCOM
+          this.platform === CHAT_PLATFORMS.INTERCOM ||
+          this.platform === CHAT_PLATFORMS.INSTAGRAM
         );
       },
     },
