@@ -14,7 +14,7 @@ export default joi.object({
   id: objectId().required(),
   business_id: objectId().required(),
   status: joi.string().valid(...statusMap),
-  external_page_name: joi.string().allow(""),
+  external_name: joi.string().allow(""),
   external_user_access_token: joi.string(),
   external_user_id: joi.string(),
   external_user_name: joi.string(),

@@ -25,7 +25,7 @@ interface updateParams {
   id: string;
   status?: STATUS_MAP;
   business_id: string;
-  external_page_name?: string;
+  external_name?: string;
   external_user_access_token?: string;
   external_user_id?: string;
   external_user_name?: string;

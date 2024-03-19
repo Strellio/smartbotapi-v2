@@ -23,7 +23,7 @@ const defaultBotAgent = {
 interface CreateParams {
   business_id: string;
   platform: string;
-  external_page_name?: string;
+  external_name?: string;
   external_user_access_token?: string;
   external_user_id?: string;
   external_user_name?: string;

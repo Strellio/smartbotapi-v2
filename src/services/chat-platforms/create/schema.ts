@@ -14,7 +14,7 @@ export default joi.object({
     .string()
     .valid(...chatPlatforms)
     .required(),
-  external_page_name: joi.string().when("platform", {
+  external_name: joi.string().when("platform", {
     is: CHAT_PLATFORMS.FACEBOOK,
     then: joi.required(),
   }),

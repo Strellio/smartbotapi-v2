@@ -74,7 +74,7 @@ export default gql`
   }
   input CreateChatPlatformInput {
     platform: ChatPlatformEnum!
-    external_page_name: String
+    external_name: String
     external_user_access_token: String
     external_user_id: String
     external_user_name: String
@@ -87,7 +87,7 @@ export default gql`
 
   input UpdateChatPlatformInput {
     id: ID!
-    external_page_name: String
+    external_name: String
     external_user_access_token: String
     external_user_id: String
     external_user_name: String
