@@ -46,6 +46,9 @@ const config = envalid.cleanEnv(
     EMAIL_SMTP_PORT: envalid.port(),
     EMAIL_SMTP_PASSWORD: envalid.str(),
     WEBHOOK_URL: envalid.str(),
+    FB_SYSTEM_USER_ACCESS_TOKEN: envalid.str(),
+    FB_ADMIN_SYSTEM_USER_ACCESS_TOKEN: envalid.str(),
+    FB_BUSINESS_ID: envalid.str(),
   },
   {
     reporter: ({ errors }) => {

@@ -25,7 +25,7 @@ function startServer() {
     .use(cors())
     .use(express.json())
     .use(express.urlencoded({ extended: false }))
-    .use(reqLogger)
+    // .use(reqLogger)
     .get("/health", (req, res) => res.sendStatus(200))
     .listen(PORT, () => {
       loggerMaker().info(`Server started on http://localhost:${PORT}`);

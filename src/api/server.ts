@@ -128,7 +128,7 @@ export default async function startServer() {
     .use(express.json())
     .use(express.urlencoded({ extended: false }))
     .use(attachIpToReq)
-    .use(reqLogger)
+    // .use(reqLogger)
     .use(routes())
     .use("/queues", serveBullDashboard())
     .use(

@@ -1,4 +1,5 @@
 "use strict";
+import config from "../../config";
 import request from "../request";
 import { required } from "../utils";
 const GRAPH_API_VERSION = "v19.0";
@@ -22,4 +23,108 @@ function getWabaInfo({
     .then((response) => response.data);
 }
 
-export { getWabaInfo };
+function getSystemUsers({
+  businessId = required("businessId"),
+}: {
+  businessId: string;
+}) {
+  return request
+    .get(`${BASE_API_URL}/${businessId}/system_users`, {
+      params: {
+        access_token: config.FB_SYSTEM_USER_ACCESS_TOKEN,
+      },
+    })
+    .then((response) => response.data);
+}
+
+function assignSystemUserToWaba({
+  wabaId = required("wabaId"),
+  systemUserId = required("systemUserId"),
+  tasks = ["MANAGE"],
+}: {
+  tasks: ("MANAGE" | "DEVELOP")[];
+  wabaId: string;
+  systemUserId: string;
+}) {
+  return request
+    .post(
+      `${BASE_API_URL}/${wabaId}/assigned_users`,
+      {},
+      {
+        params: {
+          access_token: config.FB_ADMIN_SYSTEM_USER_ACCESS_TOKEN,
+          tasks,
+          user: systemUserId,
+        },
+      }
+    )
+    .then((response) => response.data);
+}
+
+function getWabaUsers({ wabaId = required("wabaId") }) {
+  return request
+    .get(`${BASE_API_URL}/${wabaId}/assigned_users`, {
+      params: {
+        access_token: config.FB_SYSTEM_USER_ACCESS_TOKEN,
+      },
+    })
+    .then((response) => response.data);
+}
+
+function registerPhone({
+  phoneNumber = required("phoneNumber"),
+  pin = "041897",
+}) {
+  return request
+    .post(
+      `${BASE_API_URL}/${phoneNumber}/register`,
+      {
+        messaging_product: "whatsapp",
+        pin,
+      },
+      {
+        params: {
+          access_token: config.FB_SYSTEM_USER_ACCESS_TOKEN,
+        },
+      }
+    )
+    .then((response) => response.data);
+}
+
+function sendTemplateMessage({
+  phoneNumber = required("phoneNumber"),
+  templateName = required("templateName"),
+  languageCode = "en_US",
+  to = required("to"),
+}) {
+  return request
+    .post(
+      `${BASE_API_URL}/${phoneNumber}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to,
+        type: "template",
+        template: {
+          name: templateName,
+          language: {
+            code: languageCode,
+          },
+        },
+      },
+      {
+        params: {
+          access_token: config.FB_SYSTEM_USER_ACCESS_TOKEN,
+        },
+      }
+    )
+    .then((response) => response.data);
+}
+
+export {
+  getWabaInfo,
+  getSystemUsers,
+  assignSystemUserToWaba,
+  getWabaUsers,
+  registerPhone,
+  sendTemplateMessage,
+};

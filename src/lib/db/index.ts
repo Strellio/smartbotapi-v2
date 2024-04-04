@@ -7,13 +7,14 @@ import { MongoClient } from "mongodb";
 
 export const connect = () => {
   return mongoose.connect(config.DB_URL).then(() => {
+    console.log("config.DB_URL", config.DB_URL);
     logger().info("db connected successfully");
   });
 };
 
 export const disconnect = () => mongoose.disconnect();
 
- async function createSearchIndex({ dbName, indexName, collectionName }) {
+async function createSearchIndex({ dbName, indexName, collectionName }) {
   console.log("createSearchIndex", config.ATLAS_DB_URL);
   const client = new MongoClient(config.ATLAS_DB_URL);
 
@@ -41,7 +42,7 @@ export const disconnect = () => mongoose.disconnect();
     };
 
     // run the helper method
-     await collection.createSearchIndex(index);
+    await collection.createSearchIndex(index);
   } finally {
     await client.close();
   }
