@@ -1,11 +1,18 @@
 "use strict";
+import config from "../../../../../config";
 import {
   generateLongAccessToken,
   generateCodeAccessToken,
   debugToken,
 } from "../../../../../lib/facebook";
 import { required } from "../../../../../lib/utils";
-import { getWabaInfo } from "../../../../../lib/whatsapp";
+import {
+  getWabaInfo,
+  getSystemUsers,
+  assignSystemUserToWaba,
+  getWabaUsers,
+  registerPhone,
+} from "../../../../../lib/whatsapp";
 import { ChatPlatform } from "../../../../../models/businesses/types";
 
 export default async function transformData({
@@ -54,11 +61,29 @@ export default async function transformData({
       });
 
       payload.external_name = wabaInfo.name;
+
+      const systemUsers = await getSystemUsers({
+        businessId: config.FB_BUSINESS_ID,
+      });
+
+      await Promise.all(
+        systemUsers.data.map((systemUser) =>
+          assignSystemUserToWaba({
+            wabaId: payload.external_id,
+            systemUserId: systemUser.id,
+            tasks: ["MANAGE"],
+          })
+        )
+      );
+
+      await registerPhone({
+        phoneNumber: payload.external_phone_number_id,
+      });
     }
 
     return payload;
   } catch (error) {
-    console.log(error.response?.data);
+    console.log(error.response);
     throw error;
   }
 }

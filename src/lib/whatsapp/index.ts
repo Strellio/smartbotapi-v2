@@ -74,6 +74,9 @@ function getWabaUsers({ wabaId = required("wabaId") }) {
 function registerPhone({
   phoneNumber = required("phoneNumber"),
   pin = "041897",
+}: {
+  phoneNumber: string;
+  pin?: string;
 }) {
   return request
     .post(
@@ -120,6 +123,33 @@ function sendTemplateMessage({
     .then((response) => response.data);
 }
 
+function sendTextMessage({
+  phoneNumber = required("phoneNumber"),
+  body = required("body"),
+  languageCode = "en_US",
+  to = required("to"),
+}) {
+  return request
+    .post(
+      `${BASE_API_URL}/${phoneNumber}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to,
+        type: "text",
+        text: {
+          body: body,
+          preview_url: true,
+        },
+      },
+      {
+        params: {
+          access_token: config.FB_SYSTEM_USER_ACCESS_TOKEN,
+        },
+      }
+    )
+    .then((response) => response.data);
+}
+
 export {
   getWabaInfo,
   getSystemUsers,
@@ -127,4 +157,5 @@ export {
   getWabaUsers,
   registerPhone,
   sendTemplateMessage,
+  sendTextMessage,
 };
