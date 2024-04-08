@@ -106,6 +106,7 @@ export default async function create(params: CreateMessageParams) {
         platform: chatPlatform.platform,
         access_token: chatPlatform.external_access_token,
         agent_external_id: rest.agent_external_id,
+        external_phone_number_id: chatPlatform.external_phone_number_id,
       });
     }
   }

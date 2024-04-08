@@ -1,16 +1,16 @@
 "use strict";
 
-import { FaceBookWebhookPayload } from "../types";
+import { FaceBookWebhookPayload, WhatsAppWebhookPayload } from "../types";
 import chatPlatformService from "../../../../../services/chat-platforms";
 import { CHAT_PLATFORMS } from "../../../../../models/chat-platforms/schema";
 import { ChatPlatform } from "../../../../../models/businesses/types";
 import getBotResponse from "../../../../../lib/bot-api";
 import {
   sendTextMessage,
-  sendGenericTemplate,
-  getChatUserProfile,
-  sendSenderAction,
-} from "../../../../../lib/facebook";
+  // sendGenericTemplate,
+  // getChatUserProfile,
+  // sendSenderAction,
+} from "../../../../../lib/whatsapp";
 import * as customerService from "../../../../../services/customers";
 import { formatAndSaveMessage } from "../common";
 import logger from "../../../../../lib/logger";
@@ -18,56 +18,56 @@ import logger from "../../../../../lib/logger";
 const ATTACHMENT_MESSAGE = "Sorry i cannot process attachments";
 
 const handleAsBot = async ({
-  facebookPayload,
+  whatsappPayload,
   chatPlatform,
   customer,
 }: {
-  facebookPayload: FaceBookWebhookPayload;
+  whatsappPayload: WhatsAppWebhookPayload["entry"][0]["changes"][0] & {
+    id: string;
+  };
   chatPlatform: ChatPlatform;
   customer: any;
 }) => {
   try {
     const agent = chatPlatform.agents.find((chatAgent) => !chatAgent.is_person);
-    if (facebookPayload.message?.attachments) {
+    if (
+      !whatsappPayload.value.messages.find((message) => message.type === "text")
+    ) {
       return sendTextMessage({
-        recipientId: facebookPayload.sender.id,
-        text: ATTACHMENT_MESSAGE,
-        personaId: agent?.external_id,
-        accessToken: chatPlatform.external_access_token,
+        to: whatsappPayload.value.contacts[0].wa_id,
+        body: ATTACHMENT_MESSAGE,
+        phoneNumber: whatsappPayload.value.metadata.phone_number_id,
       });
     }
-    const textMessage = facebookPayload.message?.text;
+    const textMessage = whatsappPayload.value.messages.find(
+      (message) => message.type === "text"
+    ).text.body;
 
     const [response] = await Promise.all([
       getBotResponse({
-        senderId: facebookPayload.sender.id,
+        senderId: whatsappPayload.value.contacts[0].wa_id,
         message: textMessage as any,
         metadata: {
           business_id: String(chatPlatform.business.id),
           chat_platform_id: String(chatPlatform.id),
         },
       }),
-      sendSenderAction({
-        accessToken: chatPlatform.external_access_token,
-        recipientId: facebookPayload.sender.id,
-        action: "typing_on",
-      }),
     ]);
     for (let i = 0; i < response.length; i++) {
       const singleEntity = response[i];
       if (singleEntity.text) {
         const payload = {
-          recipientId: singleEntity.recipient_id,
-          text: singleEntity.text,
-          personaId: agent?.external_id,
-          accessToken: chatPlatform.external_access_token,
-          options: singleEntity.buttons && {
-            quick_replies: singleEntity.buttons.map((reply: any) => ({
-              content_type: "text",
-              title: reply.title,
-              payload: reply.payload,
-            })),
-          },
+          to: singleEntity.recipient_id,
+          body: singleEntity.text,
+          phoneNumber: whatsappPayload.value.metadata.phone_number_id,
+          // accessToken: chatPlatform.external_access_token,
+          // options: singleEntity.buttons && {
+          //   quick_replies: singleEntity.buttons.map((reply: any) => ({
+          //     content_type: "text",
+          //     title: reply.title,
+          //     payload: reply.payload,
+          //   })),
+          // },
         };
         await Promise.all([
           formatAndSaveMessage({
@@ -88,12 +88,12 @@ const handleAsBot = async ({
             isCustomerMessage: false,
             customGenericTemplate: singleEntity.custom.data,
           }),
-          sendGenericTemplate({
-            accessToken: chatPlatform.external_access_token,
-            recipientId: singleEntity.recipient_id,
-            personaId: agent?.external_id,
-            elements: singleEntity.custom.data,
-          }),
+          // sendGenericTemplate({
+          //   accessToken: chatPlatform.external_access_token,
+          //   recipientId: singleEntity.recipient_id,
+          //   personaId: agent?.external_id,
+          //   elements: singleEntity.custom.data,
+          // }),
         ]);
       }
     }
@@ -104,36 +104,37 @@ const handleAsBot = async ({
   }
 };
 
-export default async function facebookWebhookController(
-  facebookPayload: FaceBookWebhookPayload
+export default async function whatsappWebhookController(
+  whatsappPayload: WhatsAppWebhookPayload["entry"][0]["changes"][0] & {
+    id: string;
+  }
 ) {
-  logger().info("Webhook received from Facebook");
+  logger().info("Webhook received from Whatsapp");
+
+  console.log("whatsappPayload", whatsappPayload);
+
   const chatPlatform = await chatPlatformService().getByExternalIdAndPlatform(
-    CHAT_PLATFORMS.FACEBOOK,
+    CHAT_PLATFORMS.WHATSAPP,
     undefined,
-    facebookPayload.recipient.id
+    whatsappPayload.id
   );
 
-  // message reads should not be handled yet
-  if (facebookPayload.read) return; //console.log("handle message reads")
+  if (!whatsappPayload.value.contacts?.[0]) return;
+
+  console.log(whatsappPayload.value.contacts?.[0]);
 
   let customer = (await customerService.getByExternalId({
-    externalId: facebookPayload.sender.id,
+    externalId: whatsappPayload.value.contacts[0].wa_id,
     source: chatPlatform.id,
   })) as any;
 
   if (!customer) {
-    const userProfile = await getChatUserProfile({
-      accessToken: chatPlatform.external_access_token,
-      userId: facebookPayload.sender.id,
-    });
     customer = await customerService.create({
       data: {
-        external_id: facebookPayload.sender.id,
+        external_id: whatsappPayload.value.contacts[0].wa_id,
         source: chatPlatform.id,
         business: chatPlatform.business.id,
-        name: userProfile.name,
-        profile_url: userProfile.profile_pic,
+        name: whatsappPayload.value.contacts[0].profile.name,
       },
     });
   }
@@ -144,15 +145,13 @@ export default async function facebookWebhookController(
       chatPlatform,
       isChatWithLiveAgent: customer.is_chat_with_live_agent,
       isCustomerMessage: true,
-      text: facebookPayload.message?.text,
-      externalId: facebookPayload.message?.mid,
-      media: (facebookPayload.message?.attachments || []).map((attachment) => ({
-        type: attachment.type,
-        url: attachment.payload.url,
-      })),
+      text: whatsappPayload.value.messages.find(
+        (message) => message.type === "text"
+      ).text.body,
+      externalId: whatsappPayload.value.contacts[0].wa_id,
     }),
     ...(!customer.is_chat_with_live_agent
-      ? [handleAsBot({ facebookPayload, chatPlatform, customer })]
+      ? [handleAsBot({ whatsappPayload, chatPlatform, customer })]
       : []),
   ]);
 

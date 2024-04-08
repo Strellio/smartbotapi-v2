@@ -10,7 +10,7 @@ import {
   getWabaInfo,
   getSystemUsers,
   assignSystemUserToWaba,
-  getWabaUsers,
+  subscribeAppToWaba,
   registerPhone,
 } from "../../../../../lib/whatsapp";
 import { ChatPlatform } from "../../../../../models/businesses/types";
@@ -78,6 +78,11 @@ export default async function transformData({
 
       await registerPhone({
         phoneNumber: payload.external_phone_number_id,
+      });
+
+      await subscribeAppToWaba({
+        wabaId: payload.external_id,
+        accessToken: payload.external_access_token,
       });
     }
 

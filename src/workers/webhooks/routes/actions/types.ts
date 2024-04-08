@@ -168,3 +168,94 @@ export type HubspotWebhookPayload = {
     properties: any;
   };
 };
+
+export interface WhatsAppWebhookPayload {
+  object: "whatsapp_business_account";
+  entry: Entry[];
+}
+
+interface Entry {
+  id: string;
+  changes: Change[];
+}
+
+interface Change {
+  value: Value;
+  field: string;
+}
+
+interface Value {
+  messaging_product: "whatsapp";
+  metadata: Metadata;
+  contacts: Contact[];
+  messages: Message[];
+}
+
+interface Metadata {
+  display_phone_number: string;
+  phone_number_id: string;
+}
+
+interface Contact {
+  profile: {
+    name: string;
+  };
+  wa_id: string;
+}
+
+interface Message {
+  from: string;
+  id: string;
+  timestamp: string;
+  type: string;
+  text?: {
+    body: string;
+  };
+  image?: {
+    id: string;
+    mime_type: string;
+    sha256: string;
+    url: string;
+  };
+  video?: {
+    id: string;
+    mime_type: string;
+    sha256: string;
+    url: string;
+  };
+  audio?: {
+    id: string;
+    mime_type: string;
+    sha256: string;
+    url: string;
+  };
+  document?: {
+    id: string;
+    mime_type: string;
+    sha256: string;
+    url: string;
+  };
+  sticker?: {
+    id: string;
+    mime_type: string;
+    sha256: string;
+    url: string;
+  };
+  location?: {
+    longitude: string;
+    latitude: string;
+    name?: string;
+    address?: string;
+  };
+  interactive?: {
+    type: string;
+    button_reply?: {
+      id: string;
+      title: string;
+    };
+    list_reply?: {
+      id: string;
+      title: string;
+    };
+  };
+}

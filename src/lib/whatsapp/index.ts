@@ -126,8 +126,11 @@ function sendTemplateMessage({
 function sendTextMessage({
   phoneNumber = required("phoneNumber"),
   body = required("body"),
-  languageCode = "en_US",
   to = required("to"),
+}: {
+  phoneNumber: string;
+  body: string;
+  to: string;
 }) {
   return request
     .post(
@@ -150,6 +153,26 @@ function sendTextMessage({
     .then((response) => response.data);
 }
 
+function subscribeAppToWaba({
+  wabaId = required("wabaId"),
+  accessToken = required("accessToken"),
+}: {
+  wabaId: string;
+  accessToken: string;
+}) {
+  return request
+    .post(
+      `${BASE_API_URL}/${wabaId}/subscribed_apps`,
+      {},
+      {
+        params: {
+          access_token: accessToken,
+        },
+      }
+    )
+    .then((response) => response.data);
+}
+
 export {
   getWabaInfo,
   getSystemUsers,
@@ -158,4 +181,5 @@ export {
   registerPhone,
   sendTemplateMessage,
   sendTextMessage,
+  subscribeAppToWaba,
 };

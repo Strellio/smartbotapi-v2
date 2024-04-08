@@ -8,6 +8,7 @@ import {
   customActionWebhook,
   shopifyWebhook,
   instagramWebhook,
+  whatsappWebhook,
 } from "./actions";
 import {
   isAuthenticatedMiddleware,
@@ -50,5 +51,15 @@ export default function routes() {
     )
     .post("/hubspot/message", hubspotWebhook)
     .post("/custom/message", isAuthenticatedMiddleware, customActionWebhook)
+    .get("/whatsapp/message", facebookHubVerify)
+    .post(
+      "/whatsapp/message",
+      verifyWebhook({
+        path: "headers.x-hub-signature",
+        secret: config.FB_CLIENT_SECRET,
+        hasSplit: true,
+      }),
+      whatsappWebhook
+    )
     .use("/shopify", validateShopifyHmac, shopifyWebhook());
 }

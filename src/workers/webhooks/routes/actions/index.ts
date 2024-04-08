@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction, Router } from "express";
 import config from "../../../../config";
 import facebookWebhookController from "./facebook";
-import { FaceBookWebhookPayload } from "./types";
+import { FaceBookWebhookPayload, WhatsAppWebhookPayload } from "./types";
 import intercomWebhookController from "./intercom";
 import hubSpotController from "./hubspot";
 import customController from "./custom";
@@ -10,6 +10,7 @@ import logger from "../../../../lib/logger";
 import { handleGdpr, handleUninstall } from "./shopify";
 import { TYPES } from "../../../../models/gdpr/schema";
 import instagramWebhookController from "./instagram";
+import whatsappWebhookController from "./whatsapp";
 
 export const intercomWebhook = async (
   req: Request,
@@ -139,3 +140,21 @@ export function shopifyWebhook() {
       uninstallRequest
     );
 }
+
+export const whatsappWebhook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.sendStatus(200);
+  const body = req.body as WhatsAppWebhookPayload;
+  try {
+    body.entry.forEach((singleEntry) => {
+      return singleEntry.changes.map((change) =>
+        whatsappWebhookController({ ...change, id: singleEntry.id })
+      );
+    });
+  } catch (error) {
+    logger().error(error);
+  }
+};
