@@ -18,9 +18,22 @@ const schema = new mongoose.Schema(
     country: {
       type: String
     },
+    profile_url: {
+      type: String
+    },
+
     password: {
       type: String,
       set: (value: string) => value && hashPassword(value)
+    },
+
+    verification_code: {
+      type: String,
+      set: (value: string) => value && hashPassword(value)
+    },
+
+    verification_code_expires_at: {
+      type: Date
     }
   },
   {

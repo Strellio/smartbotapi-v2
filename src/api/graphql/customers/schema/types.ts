@@ -8,6 +8,7 @@ export default gql`
     external_id: String
     source: MessageSource!
     email: EmailAddress
+    is_chat_with_live_agent:Boolean!
     name: String
     profile_url: URL
     subscribed: Boolean
@@ -31,6 +32,15 @@ export default gql`
     email: EmailAddress
     external_id: String
     source: ObjectID!
+    profile_url: String
+  }
+
+
+  input UpdateCustomerInput {
+    customer_id: ID!
+    is_chat_with_live_agent:Boolean
+    name: String
+    email: EmailAddress
     profile_url: String
   }
 `;

@@ -49,6 +49,5 @@ export async function activateCharge({
   }
   if (!isFree) {
     const transaction = await verifyTransaction(chargeId);
-    console.log(transaction);
   }
 }

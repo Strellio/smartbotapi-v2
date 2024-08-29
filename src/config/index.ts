@@ -1,10 +1,7 @@
 "use strict";
 import * as envalid from "envalid";
 
-if (!process.env.NODE_ENV) process.env.NODE_ENV = "development";
-
-if (process.env.NODE_ENV === "development") require("dotenv").config();
-
+require("dotenv").config();
 const config = envalid.cleanEnv(
   process.env,
   {
@@ -25,13 +22,11 @@ const config = envalid.cleanEnv(
     BOT_API: envalid.url(),
     REDIS_URL: envalid.url(),
     NEW_ADMIN_MESSAGE_TOPIC: envalid.str({
-      default: "NEW_ADMIN_MESSAGE_TOPIC",
+      default: `${process.env.NODE_ENV.toUpperCase()}-NEW_ADMIN_MESSAGE_TOPIC`,
     }),
     NEW_CUSTOMER_MESSAGE_TOPIC: envalid.str({
-      default: "NEW_CUSTOMER_MESSAGE_TOPIC",
+      default: `${process.env.NODE_ENV.toUpperCase()}-NEW_CUSTOMER_MESSAGE_TOPIC`,
     }),
-    PUBSUB_PROJECT_ID: envalid.str(),
-    PUBSUB_CREDENTIALS: envalid.str(),
     FLUTTERWAVE_SEC_KEY: envalid.str(),
     OPENAI_API_KEY: envalid.str(),
     MONGODB_PUBLIC_KEY: envalid.str(),
@@ -41,6 +36,18 @@ const config = envalid.cleanEnv(
     IS_TS_RUNTIME: envalid.bool({
       default: false,
     }),
+    IMAGES_BUCKET_NAME: envalid.str({
+      default: "smartbot-assets",
+    }),
+    GOOGLE_CLOUD_PROJECT: envalid.str(),
+    GOOGLE_APPLICATION_CREDENTIALS: envalid.str(),
+    SHOPIFY_GOOGLE_PUB_SUB_TOPIC: envalid.str({
+      default: `${process.env.NODE_ENV.toUpperCase()}-SHOPIFY-UPDATES`,
+    }),
+    EMAIL_SMTP_HOST: envalid.str(),
+    EMAIL_SMTP_PORT: envalid.port(),
+    EMAIL_SMTP_PASSWORD: envalid.str(),
+    WEBHOOK_URL: envalid.str(),
   },
   {
     reporter: ({ errors }) => {
@@ -57,4 +64,9 @@ const config = envalid.cleanEnv(
   }
 );
 
-export default config;
+export default {
+  ...config,
+  SHOPIFY_GOOGLE_PUB_SUB_SUBSCRIPTION_NAME: `projects/${config.GOOGLE_CLOUD_PROJECT}/subscriptions/${config.SHOPIFY_GOOGLE_PUB_SUB_TOPIC}-sub`,
+  isProduction: process.env.NODE_ENV === "production",
+  isTest: process.env.NODE_ENV === "test",
+};

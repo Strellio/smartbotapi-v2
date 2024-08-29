@@ -12,11 +12,10 @@ export async function createVectoreStore({
   textKey = "text",
   embeddingKey = "embedding",
 }) {
+  console.log("createVectoreStore", dbName, indexName, collectionName);
   const client = new MongoClient(config.ATLAS_DB_URL);
 
   const collection = client.db(dbName).collection(collectionName);
-
-
 
   await MongoDBAtlasVectorSearch.fromDocuments(documents, embeddings, {
     collection,
@@ -24,7 +23,6 @@ export async function createVectoreStore({
     textKey, // The name of the collection field containing the raw content. Defaults to "text"
     embeddingKey, // The name of the collection field containing the embedded text. Defaults to "embedding"
   });
-
 
   await client.close();
 }

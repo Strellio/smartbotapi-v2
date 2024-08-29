@@ -3,7 +3,6 @@
 import { required, calculateTrialDays } from "../../../lib/utils";
 import businessModel from "../../../models/businesses";
 import planModel from "../../../models/plans";
-import shopifyLib from "../../../lib/shopify";
 import changePlan from "../change-plan";
 import config from "../../../config";
 import externalPlatforms from "../../external-platforms/subscriptions";
@@ -37,7 +36,6 @@ export default async function activateCharge({
       isFree: PLANS_TO_IGNORE.has(plan.name),
       chargeId: charge_id,
     });
-    console.log(response);
 
     await changePlan({
       business_id,

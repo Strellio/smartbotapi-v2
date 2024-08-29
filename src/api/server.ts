@@ -16,12 +16,11 @@ import loggerMaker from "../lib/logger";
 import isAuthenticated from "./middlewares/is-authenticated";
 import logger from "../lib/logger";
 import attachIpToReq from "./middlewares/attach-ip";
-import {makeExecutableSchema} from "graphql-tools"
+import { makeExecutableSchema } from "graphql-tools";
 
-
-import { BullMonitorExpress } from '@bull-monitor/express'
-import { BullMQAdapter } from '@bull-monitor/root/dist/bullmq-adapter'
-import { Queue } from 'bullmq'
+import { BullMonitorExpress } from "@bull-monitor/express";
+import { BullMQAdapter } from "@bull-monitor/root/dist/bullmq-adapter";
+import { Queue } from "bullmq";
 import { BULL_QUEUES_NAMES, ioredis } from "../lib/queues";
 
 const PORT = config.PORT;
@@ -30,25 +29,21 @@ const reqLogger = require("express-pino-logger")({
   logger: loggerMaker(),
 });
 
-
-
 const serveBullDashboard = () => async (req, res, next) => {
   const monitor = new BullMonitorExpress({
     queues: Object.values(BULL_QUEUES_NAMES).map(
       (name) =>
         new BullMQAdapter(
           new Queue(name, {
-            connection: ioredis
+            connection: ioredis,
           })
         )
     ),
-    gqlIntrospection: !config.isProd
-  })
-  await monitor.init()
-  return monitor.router(req, res, next)
-}
-
-
+    gqlIntrospection: !config.isProd,
+  });
+  await monitor.init();
+  return monitor.router(req, res, next);
+};
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -59,7 +54,7 @@ const wsServer = new WebSocketServer({
 });
 
 const getContext = async (ctx, msg, args) => {
-  return { business: ctx.business };
+  return { business: ctx.business, agent: ctx.agent };
 };
 
 const schema = makeExecutableSchema({ typeDefs: schemas, resolvers });
@@ -71,18 +66,26 @@ const serverCleanup = useServer(
       logger().info("connection established", ctx.connectionParams);
 
       let token;
+      let type;
 
-      const headers = ctx.connectionParams.headers;
+      const headers = ctx.connectionParams.headers ?? ctx.connectionParams;
 
       if (headers) {
-        const authToken = headers["Authorization"] ?? headers["authorization"];
+        if (headers["x-api-key"]) {
+          token = headers["x-api-key"];
+          type = "API_KEY";
+        } else {
+          const authToken =
+            headers["Authorization"] ?? headers["authorization"];
 
-        token = authToken.split(" ")[1];
+          token = authToken.split(" ")[1];
+          type = "TOKEN";
+        }
       }
-      const { business } = await isAuthenticated(token, ctx);
-
+      const { business, agent } = await isAuthenticated(token, type, ctx);
 
       ctx.business = business;
+      ctx.agent = agent;
     },
     onDisconnect: (ctx) => {
       logger().error("Connection disconnected", ctx.connectionParams);
@@ -107,7 +110,11 @@ const graphqlServer = new ApolloServer({
       },
     },
   ],
-  formatError: formatError as any,
+  formatError: (error) => {
+    console.log(error);
+
+    return formatError(error) as any;
+  },
   introspection: config.isDev,
   csrfPrevention: true,
   logger: logger(),
@@ -129,11 +136,25 @@ export default async function startServer() {
       // @ts-ignore
       expressMiddleware(graphqlServer, {
         context: async ({ req }) => {
-          const token = req.headers.authorization?.split(" ")[1];
-          const operationsToIgnore = ["createAccount", "login"];
+          const operationsToIgnore = [
+            "createAccount",
+            "CreateAccount",
+            "login",
+            "Login",
+            "verifyCode",
+            "VerifyCode",
+          ];
           if (operationsToIgnore.includes(req.body.operationName)) return req;
-          const result = await isAuthenticated(token, req);
-          return result
+          let token, type;
+          if (req.headers["x-api-key"]) {
+            token = req.headers["x-api-key"];
+            type = "API_KEY";
+          } else {
+            token = req.headers.authorization?.split("Bearer ")[1];
+            type = "TOKEN";
+          }
+          const result = await isAuthenticated(token, type, req);
+          return result;
         },
       })
     );
@@ -141,7 +162,7 @@ export default async function startServer() {
   httpServer.listen(PORT, () => {
     loggerMaker().info(`Server started on http://localhost:${PORT}`);
     loggerMaker().info(
-      `🚀 Subscriptions ready at ws://localhost:${PORT}${graphqlServer}`
+      `🚀 Subscriptions ready at ws://localhost:${PORT}/graphql}`
     );
   });
 }

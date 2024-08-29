@@ -5,15 +5,17 @@ import { Business } from "../../../models/businesses/types";
 import { validate } from "../../../lib/utils";
 import errors from "../../../lib/errors";
 import userService from "../../users";
+import agentService from "../../agents";
 import queues from "../../../lib/queues";
 import { createSearchIndex } from "../../../lib/db/atlas";
 import logger from "../../../lib/logger";
+import APIKeyModel from "../../../models/auth";
 
 interface CreateBusinessParams {
   domain: string;
   email: string;
   status: string;
-  external_id: string;
+  external_id?: string;
   business_name: string;
   shop: {
     external_created_at?: string;
@@ -49,6 +51,7 @@ export default async function create(
 ): Promise<Business> {
   validate(schema, params);
   await ensureBusinessDoesNotExist(params.shop.external_platform_domain);
+
   const user = await userService().updateOrCreate({
     email: params.email,
     full_name: params.full_name,
@@ -58,32 +61,42 @@ export default async function create(
   const business = await BusinessModel().create({
     data: {
       ...params,
-      account_name: params.business_name.replace(" ", "-").toLocaleLowerCase(),
+      account_name: params.business_name
+        .replaceAll(" ", "-")
+        .toLocaleLowerCase(),
       user: user.id,
     },
   });
 
+  await Promise.all([
+    agentService.create({
+      email: params.email,
+      name: params.full_name,
+      country: params.location?.country,
+      business_id: business.id,
+      is_person: true,
+    }),
+
+    APIKeyModel().create({
+      data: {
+        business: business.id,
+        description: "default",
+      },
+    }),
+  ]);
+
   const productSyncQueue = queues.productSyncQueue();
   const orderSyncQueue = queues.orderSyncQueue();
 
-  await Promise.all([
+  Promise.all([
     productSyncQueue.add({ data: { business }, jobId: business.id }),
     orderSyncQueue.add({ data: { business }, jobId: business.id }),
-  ]);
+  ]).catch((err) => {
+    logger().info("error while adding to queue");
+    logger().error(err);
+  });
 
   logger().info("queue added for ", business.business_name);
-  await Promise.all([
-    createSearchIndex({
-      dbName: business.account_name,
-      indexName: "products-retriever",
-      collectionName: "products-store",
-    }),
-    createSearchIndex({
-      dbName: business.account_name,
-      indexName: "orders-retriever",
-      collectionName: "orders-store",
-    }),
-  ]);
-  logger().info("Done adding indexes for ", business.business_name);
+
   return business;
 }

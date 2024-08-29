@@ -33,27 +33,36 @@ const getByExternalIdAndPlatform = (
   platform: string = required("platform"),
   businessId?: string,
   externalId?: string
-): Promise<ChatPlatform> =>
-  chatPlatformModel.get({
-    query: omitBy(
-      {
-        platform,
-        external_id: externalId,
-        business: businessId,
-      },
-      isNil
-    ),
+): Promise<ChatPlatform> => {
+  const { external_id, ...rest } = omitBy(
+    {
+      platform,
+      external_id: externalId,
+      business: businessId,
+    },
+    isNil
+  );
+  return chatPlatformModel.get({
+    query: {
+      ...rest,
+      ...(external_id && {
+        $or: [{ external_id }, { workspace_id: external_id }],
+      }),
+    },
     populate: FIELDS_TO_POPULATE,
-  }) as  Promise<any>
+  }) as Promise<any>;
+};
 
-const updateById = (
+const updateById = async (
   id: string = required("id"),
   update: any = required("update")
 ): Promise<ChatPlatform> => {
   const query =
-    update.agent?.action_type === ACTION_TYPE_TO_MONGODB_FIELD.EDIT
+    update.agent?.action_type !== ACTION_TYPE_TO_MONGODB_FIELD.CREATE &&
+    update.agent
       ? {
           _id: id,
+
           "agents._id": update.agent.id,
         }
       : {
@@ -65,6 +74,7 @@ const updateById = (
     updatePayload: update,
     dbFieldName: "agents",
   });
+
   return chatPlatformModel.updateOne({
     query,
     update: newUpdate,

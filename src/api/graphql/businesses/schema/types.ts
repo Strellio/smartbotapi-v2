@@ -34,7 +34,7 @@ export default gql`
 
   type ChatAgent {
     id: ID!
-    external_id: String!
+    external_id: String
     name: String!
     profile_url: URL
     is_person: Boolean
@@ -104,11 +104,23 @@ export default gql`
     is_person: Boolean!
     profile_url: String
     action_type: ActionTypes = CREATE
+    main_agent_id: String
   }
 
   input ListChatPlatformsInput {
     status: StatusEnum
     type: ChatTypeEnum
     platform: ChatPlatformEnum
+  }
+
+  input DeleteChatPlatformInput {
+    id: ID!
+  }
+
+  type APIKey {
+    id: ID!
+    key: String!
+    description: String
+    business: Business!
   }
 `;

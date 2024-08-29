@@ -12,8 +12,8 @@ export default async function charge(
 ) {
   const business = await businessModel().getById(businessId);
   const plan = await planModel().getById(planId);
-  const client = shopifyLib().shopifyClient({
-    shop: business.shop.external_platform_domain,
+  const client = shopifyLib.api({
+    platformDomain: business.shop.external_platform_domain,
     accessToken: business.shop.external_access_token,
   });
 
@@ -25,7 +25,6 @@ export default async function charge(
       business.trial_expiry_date
     )?.days,
     return_url: `${config.APP_URL}/plans/charge?business_id=${business.id}&plan_id=${plan.id}&platform=${business.platform}`,
-    test: !config.isProduction,
   });
 
   return recurringCharge.confirmation_url;

@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 import { HubspotWebhookPayload } from "../types";
 import chatPlatformService from "../../../../../services/chat-platforms";
@@ -7,50 +7,109 @@ import { STATUS_MAP } from "../../../../../models/common";
 import logger from "../../../../../lib/logger";
 import { ChatPlatform } from "../../../../../models/businesses/types";
 import getBotResponse from "../../../../../lib/bot-api";
+import * as customerService from "../../../../../services/customers";
+import { Customer } from "../../../../../models/customers/types";
+import { formatAndSaveMessage } from "../common";
 
-
-
-const handleAsBot = async ({ hubspotPayload, chatPlatform }: {
-    hubspotPayload: HubspotWebhookPayload
-    chatPlatform: ChatPlatform
+const handleAsBot = async ({
+  hubspotPayload,
+  chatPlatform,
+  customer,
+}: {
+  hubspotPayload: HubspotWebhookPayload;
+  chatPlatform: ChatPlatform;
+  customer: Customer;
 }) => {
-    const response = await getBotResponse({
-        senderId: hubspotPayload.session.vid,
-        message: hubspotPayload.userMessage.message,
-        metadata: {
-            business_id: String(chatPlatform.business.id),
-            chat_platform_id: String(chatPlatform.id)
-        }
-    })
+  const response = await getBotResponse({
+    senderId: `${hubspotPayload.session.vid}`,
+    message: hubspotPayload.userMessage.message,
+    metadata: {
+      business_id: String(chatPlatform.business.id),
+      chat_platform_id: String(chatPlatform.id),
+    },
+  });
 
-    const result = response.reduce((acc: {
-        nextModuleNickname: string
-        responseExpected: boolean
-        botMessage?: string
-        quickReplies?: Array<any>
-        botMedia?: any
-    }, singleElement) => {
-        if (singleElement.text) {
-            acc.botMessage += `. ${singleElement.text}`
-        }
-        acc.quickReplies = singleElement.buttons?.map(button => ({
-            value: button.payload,
-            label: button.title
-        }))
+  for (let i = 0; i < response.length; i++) {
+    const singleEntity = response[i];
+    if (singleEntity.text) {
+      await formatAndSaveMessage({
+        customer,
+        chatPlatform,
+        isChatWithLiveAgent: false,
+        isCustomerMessage: false,
+        text: singleEntity.text,
+      });
+    } else if (singleEntity.custom?.data) {
+      await formatAndSaveMessage({
+        customer,
+        chatPlatform,
+        isChatWithLiveAgent: false,
+        isCustomerMessage: false,
+        customGenericTemplate: singleEntity.custom.data,
+      });
+    }
+  }
 
-        return acc
-    }, {
-        nextModuleNickname: 'PromptForCollectUserInput',
-        responseExpected: true,
-        botMessage: "<span> <hi> Title here </strong> <br /> <a target='_blank' rel='noopener' href='https://strellio.com'> <img style='width: 100%' src='https://i1.wp.com/crackedkey.org/wp-content/uploads/2019/08/UBot-Studio-Cracked.jpg?resize=592%2C229&ssl=1' />  </a> </span>",
-        quickReplies: []
-    })
+  const result = response.reduce(
+    (
+      acc: {
+        nextModuleNickname: string;
+        responseExpected: boolean;
+        botMessage?: string;
+        quickReplies?: Array<any>;
+        botMedia?: any;
+      },
+      singleElement
+    ) => {
+      if (singleElement.text) {
+        acc.botMessage += `. ${singleElement.text}`;
+      }
+      acc.quickReplies = singleElement.buttons?.map((button) => ({
+        value: button.payload,
+        label: button.title,
+      }));
 
-    return result
-}
+      return acc;
+    },
+    {
+      nextModuleNickname: "",
+      responseExpected: true,
+      botMessage: "",
+      quickReplies: [],
+      botMedia: null,
+    }
+  );
 
-export default async function hubSpotController(payload: HubspotWebhookPayload) {
-    const chatPlatform = await chatPlatformService().getByExternalIdAndPlatform(CHAT_PLATFORMS.HUBSPOT)
-    if (!chatPlatform || chatPlatform.status !== STATUS_MAP.ACTIVE) return logger().info("hubspot not enabled")
-    return handleAsBot({ hubspotPayload: payload, chatPlatform })
+  return result;
+};
+
+export default async function hubSpotController(
+  payload: HubspotWebhookPayload
+) {
+  const chatPlatform = await chatPlatformService().getByExternalIdAndPlatform(
+    CHAT_PLATFORMS.HUBSPOT,
+    undefined,
+    `${payload.portalId}`
+  );
+  if (!chatPlatform || chatPlatform.status !== STATUS_MAP.ACTIVE)
+    return logger().info("hubspot not enabled");
+
+  const customer = await customerService.createOrUpdate({
+    external_id: `${payload.session.vid}`,
+    source: chatPlatform.id,
+    business_id: chatPlatform.business.id,
+    name: `Guest ${payload.session.vid}`,
+  });
+
+  const [_, response] = await Promise.all([
+    formatAndSaveMessage({
+      customer,
+      chatPlatform,
+      isChatWithLiveAgent: customer.is_chat_with_live_agent,
+      isCustomerMessage: true,
+      text: payload.userMessage.message,
+    }),
+    handleAsBot({ hubspotPayload: payload, chatPlatform, customer }),
+  ]);
+  return response;
 }

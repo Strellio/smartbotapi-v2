@@ -1,0 +1,26 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "Smartbot Development"
+client_id = "5a75334d3ff832d4ab73326c0142d432"
+application_url = "http://localhost:4008/shopify/install"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+use_legacy_install_flow = true
+
+[auth]
+redirect_urls = [
+  "https://smartbot-backend.serveo.net/shopify/callback",
+  "http://localhost:4008/shopify/callback",
+  "http://smartbot-backend.serveo.net/shopify/callback"
+]
+
+[webhooks]
+api_version = "2023-07"
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "design-studios-hub.myshopify.com"

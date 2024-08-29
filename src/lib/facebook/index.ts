@@ -4,8 +4,8 @@ import { required, createHmac } from "../utils";
 import config from "../../config";
 import { omitBy } from "lodash/fp";
 import { isNil } from "highland";
+import { MessengerClient } from "messaging-api-messenger";
 
-const { MessengerClient } = require("messaging-api-messenger");
 const FB_LONG_ACCESS_TOKEN_URL = `https://graph.facebook.com/oauth/access_token`;
 const MESSENGER_PROFILE_BASE_URL =
   "https://graph.facebook.com/v8.0/me/messenger_profile";
@@ -18,6 +18,28 @@ const generateAppProf = (accessToken: string) =>
     secret: config.FB_CLIENT_SECRET,
     data: accessToken,
   });
+
+function subscribeAppToPage({
+  pageId = required("pageId"),
+  pageAccessToken = required("pageAccessToken"),
+}: {
+  pageId: string;
+  pageAccessToken: string;
+}) {
+  return request.post(
+    `${formPageOrPersonaUrl(pageId)}/subscribed_apps`,
+    {
+      subscribed_fields: "messages,messaging_postbacks,message_reads",
+    },
+
+    {
+      params: {
+        access_token: pageAccessToken,
+        appsecret_proof: generateAppProf(pageAccessToken),
+      },
+    }
+  );
+}
 
 /**
  * Generate long access token for fb
@@ -117,7 +139,7 @@ const updateMessengerProfile = ({
     }
   );
 
-const messengerClient = (accessToken: string) =>
+export const messengerClient = (accessToken: string) =>
   MessengerClient.connect({
     accessToken,
     appId: config.FB_CLIENT_ID,
@@ -133,9 +155,22 @@ const sendTextMessage = async ({
   options = { persona_id: personaId },
 }: any) => {
   const client = messengerClient(accessToken);
-  await client.sendSenderAction(recipientId, "typing_on");
+  // await client.sendSenderAction(recipientId, "typing_on");
 
   return client.sendText(recipientId, text, options);
+};
+
+const sendSenderAction = async ({
+  accessToken = required("accessToken"),
+  recipientId = required("recipientId"),
+  action = "typing_on",
+}: {
+  accessToken: string;
+  recipientId: string;
+  action?: string;
+}) => {
+  const client = messengerClient(accessToken);
+  return client.sendSenderAction(recipientId, action);
 };
 
 const sendMediaMessage = async ({
@@ -211,4 +246,6 @@ export {
   generatePageAccessToken,
   deletePersona,
   createPersona,
+  subscribeAppToPage,
+  sendSenderAction,
 };

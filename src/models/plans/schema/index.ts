@@ -1,9 +1,9 @@
-'use strict'
-import mongoose from 'mongoose'
-import featureSchema from './features'
+"use strict";
+import mongoose from "mongoose";
+import featureSchema from "./features";
 export enum PlanDuration {
-  MONTHLY = 'monthly',
-  YEARLY = 'yearly'
+  MONTHLY = "monthly",
+  YEARLY = "yearly",
 }
 
 const schema = new mongoose.Schema(
@@ -12,46 +12,47 @@ const schema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      index: true
+      index: true,
     },
     display_name: {
       type: String,
-      required: true
+      required: true,
     },
     duration: {
       type: String,
       required: true,
       enum: Object.values(PlanDuration),
-      default: PlanDuration.MONTHLY
+      default: PlanDuration.MONTHLY,
     },
     icon_class: {
       type: String,
-      required: true
+      required: true,
     },
     price: {
       type: Number,
       required: true,
       min: 0,
-      default: 0
+      default: 0,
     },
     free_trial_days: {
       type: Number,
-      default: 0
+      default: 0,
     },
-    features: featureSchema
+    display_features: { type: Array, requuired: true },
+    features: featureSchema,
   },
   {
     timestamps: {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at'
+      createdAt: "created_at",
+      updatedAt: "updated_at",
     },
     toJSON: {
-      virtuals: true
+      virtuals: true,
     },
     toObject: {
-      virtuals: true
-    }
+      virtuals: true,
+    },
   }
-)
+);
 
-export default schema
+export default schema;
