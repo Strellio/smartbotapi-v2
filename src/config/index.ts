@@ -33,15 +33,14 @@ const config = envalid.cleanEnv(
     PUBSUB_PROJECT_ID: envalid.str(),
     PUBSUB_CREDENTIALS: envalid.str(),
     FLUTTERWAVE_SEC_KEY: envalid.str(),
-
     OPENAI_API_KEY: envalid.str(),
     MONGODB_PUBLIC_KEY: envalid.str(),
     MONGODB_PRIVATE_KEY: envalid.str(),
     MONGODB_PROJECT_ID: envalid.str(),
     MONGODB_CLUSTER_NAME: envalid.str(),
     IS_TS_RUNTIME: envalid.bool({
-      default:false
-    })
+      default: false,
+    }),
   },
   {
     reporter: ({ errors }) => {

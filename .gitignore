@@ -3,3 +3,10 @@ node_modules
 dist
 .DS_Store
 .env.old
+egs-service-account-dev.json
+service-account-dev-old.json
+service-account-dev.json
+service-account-dev.json.enc
+.env.strellio-smartbot
+.env.production
+.env.enc
